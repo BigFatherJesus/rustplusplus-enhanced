@@ -119,6 +119,8 @@
     "commandSyntaxConnection": "połączenie",
     "commandSyntaxConnections": "połączenia",
     "commandSyntaxCraft": "stwórz",
+    "commandSyntaxCraftchain": "craftchain",
+    "commandSyntaxChaincraft": "chaincraft",
     "commandSyntaxDeath": "death",
     "commandSyntaxDeaths": "deaths",
     "commandSyntaxDecay": "decay",

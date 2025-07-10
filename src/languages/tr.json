@@ -119,6 +119,8 @@
     "commandSyntaxConnection": "connection",
     "commandSyntaxConnections": "connections",
     "commandSyntaxCraft": "üret",
+    "commandSyntaxCraftchain": "craftchain",
+    "commandSyntaxChaincraft": "chaincraft",
     "commandSyntaxDeath": "death",
     "commandSyntaxDeaths": "deaths",
     "commandSyntaxDecay": "çürüme",

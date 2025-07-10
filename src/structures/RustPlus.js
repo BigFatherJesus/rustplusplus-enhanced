@@ -1038,6 +1038,70 @@ class RustPlus extends RustPlusLib {
         return str;
     }
 
+    async getCommandChaincraft(command) {
+        const prefix = this.generalSettings.prefix;
+        const commandChaincraft = `${prefix}${Client.client.intlGet(this.guildId, 'commandSyntaxChaincraft')}`;
+        const commandChaincraftEn = `${prefix}${Client.client.intlGet('en', 'commandSyntaxChaincraft')}`;
+
+        if (command.toLowerCase().startsWith(`${commandChaincraft} `)) {
+            command = command.slice(`${commandChaincraft} `.length).trim();
+        }
+        else {
+            command = command.slice(`${commandChaincraftEn} `.length).trim();
+        }
+
+        const words = command.split(' ');
+        const lastWord = words[words.length - 1];
+        const lastWordLength = lastWord.length;
+        const restString = command.slice(0, -(lastWordLength)).trim();
+
+        let itemSearchName = null, itemSearchQuantity = null;
+        if (isNaN(lastWord)) {
+            itemSearchName = command;
+            itemSearchQuantity = 1;
+        }
+        else {
+            itemSearchName = restString;
+            itemSearchQuantity = parseInt(lastWord);
+        }
+
+        const item = Client.client.items.getClosestItemIdByName(itemSearchName)
+        if (item === null || itemSearchName === '') {
+            const str = Client.client.intlGet(this.guildId, 'noItemWithNameFound', {
+                name: itemSearchName
+            });
+            return str;
+        }
+
+        const itemId = item;
+        const itemName = Client.client.items.getName(itemId);
+        const quantity = itemSearchQuantity;
+
+        // Get base materials for the item
+        const baseMaterials = await RusthelpScraper.getBaseMaterials(Client.client, itemId, quantity);
+        if (baseMaterials === null || Object.keys(baseMaterials).length === 0) {
+            const str = Client.client.intlGet(this.guildId, 'couldNotFindCraftDetails', {
+                name: itemName
+            });
+            return str;
+        }
+
+        let str = `${itemName} `;
+        if (quantity === 1) {
+            str += `${Client.client.intlGet(this.guildId, 'baseMaterials')}: `;
+        }
+        else {
+            str += `x${quantity} ${Client.client.intlGet(this.guildId, 'baseMaterials')}: `;
+        }
+
+        for (const [itemId, materialData] of Object.entries(baseMaterials)) {
+            str += `${materialData.name} x${materialData.quantity}, `;
+        }
+
+        str = str.slice(0, -2);
+
+        return str;
+    }
 
     async getCommandDeath(command, callerSteamId) {
         const prefix = this.generalSettings.prefix;
