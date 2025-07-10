@@ -551,18 +551,18 @@ module.exports = {
         await Client.client.interactionEditReply(interaction, content);
     },
 
-    sendCraftMessage: async function (interaction, craftDetails, quantity) {
+    sendCraftMessage: async function (interaction, craftDetails, quantity, itemId = null) {
         const content = {
-            embeds: [DiscordEmbeds.getCraftEmbed(interaction.guildId, craftDetails, quantity)],
+            embeds: [DiscordEmbeds.getCraftEmbed(interaction.guildId, craftDetails, quantity, itemId)],
             ephemeral: true
         }
 
         await Client.client.interactionEditReply(interaction, content);
     },
 
-    sendCraftchainMessage: async function (interaction, itemName, baseMaterials, quantity) {
+    sendCraftchainMessage: async function (interaction, itemName, baseMaterials, quantity, itemId = null) {
         const content = {
-            embeds: [DiscordEmbeds.getCraftchainEmbed(interaction.guildId, itemName, baseMaterials, quantity)],
+            embeds: [DiscordEmbeds.getCraftchainEmbed(interaction.guildId, itemName, baseMaterials, quantity, itemId)],
             ephemeral: true
         }
 
@@ -632,5 +632,14 @@ module.exports = {
             instance.serverList[serverId].recyclers[recyclerId].messageId = message.id;
             Client.client.setInstance(guildId, instance);
         }
+    },
+
+    sendFindMessage: async function (interaction, searchResults) {
+        const content = {
+            embeds: [DiscordEmbeds.getFindEmbed(interaction.guildId, searchResults)],
+            ephemeral: true
+        }
+
+        await Client.client.interactionEditReply(interaction, content);
     },
 }

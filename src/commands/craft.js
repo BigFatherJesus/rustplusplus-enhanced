@@ -110,7 +110,7 @@ module.exports = {
 			value: `${craftItemName} ${craftItemId} ${craftItemQuantity}`
 		}));
 
-		await DiscordMessages.sendCraftMessage(interaction, craftDetails, quantity);
+		await DiscordMessages.sendCraftMessage(interaction, craftDetails, quantity, itemId);
 		client.log(client.intlGet(null, 'infoCap'), client.intlGet(guildId, 'commandsCraftDesc'));
 	},
 };

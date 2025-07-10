@@ -970,6 +970,20 @@ class RustPlus extends RustPlusLib {
 
         str = str.slice(0, -2);
 
+        // Add craftable quantity from linked storage
+        try {
+            const CraftingCalculator = require('../util/craftingCalculator.js');
+            const craftable = CraftingCalculator.calculateCraftableQuantity(
+                Client.client, this, this.guildId, this.serverId, itemId, craftDetails[2].ingredients
+            );
+            
+            if (craftable > 0) {
+                this.sendTeamMessage(`Craftable in linked chests: ${craftable}`);
+            }
+        } catch (error) {
+            // Silently ignore errors
+        }
+
         return str;
     }
 
@@ -1034,6 +1048,25 @@ class RustPlus extends RustPlusLib {
         }
 
         str = str.slice(0, -2);
+
+        // Add craftable quantity from linked storage
+        try {
+            const CraftingCalculator = require('../util/craftingCalculator.js');
+            const materials = Object.entries(baseMaterials).map(([id, data]) => ({
+                id: id,
+                quantity: data.quantity
+            }));
+            
+            const craftable = CraftingCalculator.calculateCraftableQuantity(
+                Client.client, this, this.guildId, this.serverId, item, materials
+            );
+            
+            if (craftable > 0) {
+                this.sendTeamMessage(`Craftable in linked chests: ${craftable}`);
+            }
+        } catch (error) {
+            // Silently ignore errors
+        }
 
         return str;
     }
@@ -1100,7 +1133,63 @@ class RustPlus extends RustPlusLib {
 
         str = str.slice(0, -2);
 
+        // Add craftable quantity from linked storage
+        try {
+            const CraftingCalculator = require('../util/craftingCalculator.js');
+            const materials = Object.entries(baseMaterials).map(([id, data]) => ({
+                id: id,
+                quantity: data.quantity
+            }));
+            
+            const craftable = CraftingCalculator.calculateCraftableQuantity(
+                Client.client, this, this.guildId, this.serverId, item, materials
+            );
+            
+            if (craftable > 0) {
+                this.sendTeamMessage(`Craftable in linked chests: ${craftable}`);
+            }
+        } catch (error) {
+            // Silently ignore errors
+        }
+
         return str;
+    }
+
+    getCommandFind(command) {
+        const prefix = this.generalSettings.prefix;
+        const commandFind = `${prefix}find `;
+
+        if (command.toLowerCase().startsWith(commandFind)) {
+            command = command.slice(commandFind.length).trim();
+        }
+
+        if (!command) {
+            return 'Please specify an item to find.';
+        }
+
+        const CraftingCalculator = require('../util/craftingCalculator.js');
+        const searchResults = CraftingCalculator.findItemsInStorage(
+            Client.client, this, this.guildId, this.serverId, command
+        );
+
+        if (!searchResults.found) {
+            return `No ${searchResults.itemName} found in linked storage containers.`;
+        }
+
+        let result = `${searchResults.itemName}: ${searchResults.totalQuantity} total`;
+        
+        if (searchResults.locations.length > 1) {
+            result += ` in ${searchResults.locations.length} containers`;
+        }
+        
+        // Send detailed breakdown as separate messages
+        setTimeout(() => {
+            for (const location of searchResults.locations) {
+                this.sendTeamMessage(`${location.name}: ${location.quantity}`);
+            }
+        }, 100);
+
+        return result;
     }
 
     async getCommandDeath(command, callerSteamId) {

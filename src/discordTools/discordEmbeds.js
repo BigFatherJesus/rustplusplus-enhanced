@@ -1094,7 +1094,9 @@ module.exports = {
         });
     },
 
-    getCraftEmbed: function (guildId, craftDetails, quantity) {
+    getCraftEmbed: function (guildId, craftDetails, quantity, itemId = null) {
+        const CraftingCalculator = require('../util/craftingCalculator.js');
+        
         let title = '';
         let description = '';
 
@@ -1115,18 +1117,48 @@ module.exports = {
             quantities += `${item.quantity * quantity}\n`;
         }
 
+        const fields = [
+            { name: Client.client.intlGet(guildId, 'quantity'), value: items, inline: true },
+            { name: Client.client.intlGet(guildId, 'hoster'), value: quantities, inline: true }
+        ];
+
+        // Add craftable quantity if we have the required data
+        if (itemId && Client.client.rustplusInstances) {
+            try {
+                const instance = Client.client.getInstance(guildId);
+                const serverIds = Object.keys(instance.serverList);
+                
+                if (serverIds.length > 0) {
+                    const serverId = serverIds[0]; // Use first server for now
+                    const rustplus = Client.client.rustplusInstances[guildId];
+                    
+                    if (rustplus && rustplus[serverId]) {
+                        const craftable = CraftingCalculator.calculateCraftableQuantity(
+                            Client.client, rustplus[serverId], guildId, serverId, itemId, craftDetails[2].ingredients
+                        );
+                        
+                        if (craftable > 0) {
+                            description += `\n\n**Craftable in linked chests:** ${craftable}`;
+                        }
+                    }
+                }
+            } catch (error) {
+                // Silently ignore errors to not break the embed
+            }
+        }
+
         return module.exports.getEmbed({
             title: title,
             description: description,
             color: Constants.COLOR_DEFAULT,
             timestamp: true,
-            fields: [
-                { name: Client.client.intlGet(guildId, 'quantity'), value: items, inline: true },
-                { name: Client.client.intlGet(guildId, 'hoster'), value: quantities, inline: true }]
+            fields: fields
         });
     },
 
-    getCraftchainEmbed: function (guildId, itemName, baseMaterials, quantity) {
+    getCraftchainEmbed: function (guildId, itemName, baseMaterials, quantity, itemId = null) {
+        const CraftingCalculator = require('../util/craftingCalculator.js');
+        
         let title = '';
         let description = '';
 
@@ -1150,6 +1182,37 @@ module.exports = {
             quantities = '-';
         }
 
+        // Add craftable quantity if we have the required data
+        if (itemId && Client.client.rustplusInstances) {
+            try {
+                const instance = Client.client.getInstance(guildId);
+                const serverIds = Object.keys(instance.serverList);
+                
+                if (serverIds.length > 0) {
+                    const serverId = serverIds[0]; // Use first server for now
+                    const rustplus = Client.client.rustplusInstances[guildId];
+                    
+                    if (rustplus && rustplus[serverId]) {
+                        // Convert baseMaterials to the format expected by calculateCraftableQuantity
+                        const materials = Object.entries(baseMaterials).map(([id, data]) => ({
+                            id: id,
+                            quantity: data.quantity
+                        }));
+                        
+                        const craftable = CraftingCalculator.calculateCraftableQuantity(
+                            Client.client, rustplus[serverId], guildId, serverId, itemId, materials
+                        );
+                        
+                        if (craftable > 0) {
+                            description += `\n\n**Craftable in linked chests:** ${craftable}`;
+                        }
+                    }
+                }
+            } catch (error) {
+                // Silently ignore errors to not break the embed
+            }
+        }
+
         return module.exports.getEmbed({
             title: title,
             description: description,
@@ -1158,6 +1221,42 @@ module.exports = {
             fields: [
                 { name: Client.client.intlGet(guildId, 'baseMaterial'), value: items, inline: true },
                 { name: Client.client.intlGet(guildId, 'quantity'), value: quantities, inline: true }]
+        });
+    },
+
+    getFindEmbed: function (guildId, searchResults) {
+        let title = `Find: ${searchResults.itemName}`;
+        let description = '';
+        
+        if (!searchResults.found) {
+            description = `No ${searchResults.itemName} found in linked storage containers.`;
+            return module.exports.getEmbed({
+                title: title,
+                description: description,
+                color: Constants.COLOR_DEFAULT,
+                timestamp: true
+            });
+        }
+        
+        description = `Found **${searchResults.totalQuantity}** ${searchResults.itemName} in linked storage containers:`;
+        
+        let locations = '';
+        let quantities = '';
+        
+        for (const location of searchResults.locations) {
+            locations += `${location.name}\n`;
+            quantities += `${location.quantity}\n`;
+        }
+        
+        return module.exports.getEmbed({
+            title: title,
+            description: description,
+            color: Constants.COLOR_DEFAULT,
+            timestamp: true,
+            fields: [
+                { name: 'Storage Container', value: locations, inline: true },
+                { name: 'Quantity', value: quantities, inline: true }
+            ]
         });
     },
 
