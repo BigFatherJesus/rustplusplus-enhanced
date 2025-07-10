@@ -609,4 +609,28 @@ module.exports = {
 
         await Client.client.interactionEditReply(interaction, content);
     },
+
+    sendRecyclerMessage: async function (guildId, serverId, recyclerId, interaction = null) {
+        const instance = Client.client.getInstance(guildId);
+        
+        if (!instance.serverList[serverId].recyclers || 
+            !instance.serverList[serverId].recyclers[recyclerId]) {
+            return;
+        }
+        
+        const recycler = instance.serverList[serverId].recyclers[recyclerId];
+        
+        const content = {
+            embeds: [DiscordEmbeds.getRecyclerEmbed(guildId, serverId, recyclerId)],
+            components: DiscordButtons.getRecyclerButtons(guildId, serverId, recyclerId)
+        }
+
+        const message = await module.exports.sendMessage(guildId, content, recycler.messageId,
+            instance.channelId.recycler, interaction);
+
+        if (!interaction && message) {
+            instance.serverList[serverId].recyclers[recyclerId].messageId = message.id;
+            Client.client.setInstance(guildId, instance);
+        }
+    },
 }

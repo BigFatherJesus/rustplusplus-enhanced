@@ -20,6 +20,7 @@
 
 const Constants = require('../util/constants.js');
 const DiscordMessages = require('../discordTools/discordMessages.js');
+const RecyclerHandler = require('./recyclerHandler.js');
 
 module.exports = {
     handler: async function (rustplus, client) {
@@ -101,6 +102,9 @@ module.exports = {
                 }
 
                 await DiscordMessages.sendStorageMonitorMessage(guildId, serverId, entityId);
+                
+                // Update any recycler displays linked to this storage monitor
+                await RecyclerHandler.updateRecyclerForStorage(client, guildId, serverId, entityId);
             }
         }
     },

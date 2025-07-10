@@ -1443,4 +1443,121 @@ module.exports = {
 
         return embed;
     },
+
+    getRecyclerEmbed: function (guildId, serverId, recyclerId) {
+        const instance = Client.client.getInstance(guildId);
+        const recycler = instance.serverList[serverId].recyclers[recyclerId];
+        const rustplus = Client.client.rustplusInstances[guildId];
+        
+        if (!recycler || !rustplus) {
+            return module.exports.getEmbed({
+                title: 'Recycler - Error',
+                description: 'Recycler not found or server not connected',
+                color: Constants.COLOR_DEFAULT,
+                timestamp: true
+            });
+        }
+
+        // Get all items from linked storage monitors
+        const RecyclerHandler = require('../handlers/recyclerHandler.js');
+        const allItems = RecyclerHandler.getAllItemsFromLinkedStorages(Client.client, rustplus, recycler.linkedStorages);
+        
+        if (allItems.length === 0) {
+            return module.exports.getEmbed({
+                title: `♻️ ${recycler.name}`,
+                description: 'No items found in linked storage monitors',
+                color: Constants.COLOR_DEFAULT,
+                timestamp: true,
+                fields: [
+                    {
+                        name: 'Linked Storage Monitors',
+                        value: recycler.linkedStorages.length > 0 ? 
+                            recycler.linkedStorages.map(id => {
+                                const storage = instance.serverList[serverId].storageMonitors[id];
+                                return storage ? storage.name : `Unknown (${id})`;
+                            }).join('\n') : 'None',
+                        inline: false
+                    }
+                ]
+            });
+        }
+
+        // Calculate recycle yields for both recycler types
+        const recycleData = Client.client.rustlabs.getRecycleDataFromArray(
+            allItems.map(item => ({ itemId: item.itemId, quantity: item.quantity, itemIsBlueprint: false }))
+        );
+
+        let normalRecyclerItems = '';
+        let normalRecyclerQuantities = '';
+        let safeZoneRecyclerItems = '';
+        let safeZoneRecyclerQuantities = '';
+
+        // Normal Recycler yields
+        for (const item of recycleData['recycler']) {
+            normalRecyclerItems += `${Client.client.items.getName(item.itemId)}\n`;
+            normalRecyclerQuantities += `${item.quantity}\n`;
+        }
+
+        // Safe Zone Recycler yields
+        for (const item of recycleData['safe-zone-recycler']) {
+            safeZoneRecyclerItems += `${Client.client.items.getName(item.itemId)}\n`;
+            safeZoneRecyclerQuantities += `${item.quantity}\n`;
+        }
+
+        // If no yields, show message
+        if (normalRecyclerItems === '') {
+            normalRecyclerItems = 'No recyclable items';
+            normalRecyclerQuantities = '-';
+        }
+        
+        if (safeZoneRecyclerItems === '') {
+            safeZoneRecyclerItems = 'No recyclable items';
+            safeZoneRecyclerQuantities = '-';
+        }
+
+        const fields = [
+            {
+                name: 'Linked Storage Monitors',
+                value: recycler.linkedStorages.length > 0 ? 
+                    recycler.linkedStorages.map(id => {
+                        const storage = instance.serverList[serverId].storageMonitors[id];
+                        return storage ? storage.name : `Unknown (${id})`;
+                    }).join('\n') : 'None',
+                inline: false
+            },
+            {
+                name: '🔧 Normal Recycler Yields',
+                value: normalRecyclerItems,
+                inline: true
+            },
+            {
+                name: '\u200B',
+                value: normalRecyclerQuantities,
+                inline: true
+            },
+            {
+                name: '\u200B',
+                value: '\u200B',
+                inline: false
+            },
+            {
+                name: '🛡️ Safe Zone Recycler Yields',
+                value: safeZoneRecyclerItems,
+                inline: true
+            },
+            {
+                name: '\u200B',
+                value: safeZoneRecyclerQuantities,
+                inline: true
+            }
+        ];
+
+        return module.exports.getEmbed({
+            title: `♻️ ${recycler.name}`,
+            description: `Total items: ${allItems.reduce((sum, item) => sum + item.quantity, 0)}`,
+            color: Constants.COLOR_DEFAULT,
+            timestamp: true,
+            fields: fields
+        });
+    },
 }

@@ -564,4 +564,35 @@ module.exports = {
                     style: instance.generalSettings.battlemetricsGlobalLogout ? SUCCESS : DANGER
                 }))];
     },
+
+    getRecyclerButtons: function (guildId, serverId, recyclerId) {
+        const SECONDARY = Discord.ButtonStyle.Secondary;
+        const DANGER = Discord.ButtonStyle.Danger;
+        const SUCCESS = Discord.ButtonStyle.Success;
+
+        return [
+            new Discord.ActionRowBuilder().addComponents(
+                module.exports.getButton({
+                    customId: `RecyclerRefresh${serverId}${recyclerId}`,
+                    label: '🔄 Refresh',
+                    style: SECONDARY
+                }),
+                module.exports.getButton({
+                    customId: `RecyclerLinkStorage${serverId}${recyclerId}`,
+                    label: '🔗 Link Storage',
+                    style: SUCCESS
+                }),
+                module.exports.getButton({
+                    customId: `RecyclerUnlinkStorage${serverId}${recyclerId}`,
+                    label: '🔓 Unlink Storage',
+                    style: DANGER
+                }),
+                module.exports.getButton({
+                    customId: `RecyclerDelete${serverId}${recyclerId}`,
+                    label: '🗑️ Delete',
+                    style: DANGER
+                })
+            )
+        ];
+    },
 }
