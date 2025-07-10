@@ -46,7 +46,7 @@ module.exports = async (client, guild) => {
             client.intlGet(null, 'makeSureApplicationsCommandsEnabled'),
             'error'
         );
-        process.exit(1);
+        // Don't exit - continue with other guilds
     }
     client.log(client.intlGet(null, 'infoCap'),
         client.intlGet(null, 'slashCommandsSuccessRegister', { guildId: guild.id }));

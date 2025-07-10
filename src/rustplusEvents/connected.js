@@ -109,6 +109,9 @@ module.exports = {
         rustplus.pollingTaskId = setInterval(PollingHandler.pollingHandler, client.pollingIntervalMs, rustplus, client);
         rustplus.isOperational = true;
 
+        // Mark successful connection in reconnection manager
+        client.reconnectionManager.handleSuccessfulReconnection(guildId);
+
         rustplus.updateLeaderRustPlusLiteInstance();
     },
 };

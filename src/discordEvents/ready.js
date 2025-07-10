@@ -77,6 +77,17 @@ module.exports = {
         BattlemetricsHandler.handler(client, true);
         client.battlemetricsIntervalId = setInterval(BattlemetricsHandler.handler, 60000, client, false);
 
+        client.log(client.intlGet(null, 'infoCap'), 'Creating RustPlus instances from configuration...');
         client.createRustplusInstancesFromConfig();
+        
+        // Start connection health monitoring
+        client.log(client.intlGet(null, 'infoCap'), 'Starting connection health monitoring...');
+        client.connectionHealthMonitor.start();
+        
+        // Start scheduled scraper for weekly data updates
+        client.log(client.intlGet(null, 'infoCap'), 'Starting scheduled scraper...');
+        client.scheduledScraper.start();
+        
+        client.log(client.intlGet(null, 'infoCap'), 'Bot initialization completed successfully');
     },
 };

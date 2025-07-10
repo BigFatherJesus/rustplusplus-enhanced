@@ -28,6 +28,7 @@ const Constants = require('../util/constants.js');
 const Decay = require('../util/decay.js');
 const DiscordEmbeds = require('../discordTools/discordEmbeds');
 const DiscordMessages = require('../discordTools/discordMessages.js');
+const RusthelpScraper = require('../util/rusthelpScraper.js');
 const DiscordVoice = require('../discordTools/discordVoice.js');
 const DiscordTools = require('../discordTools/discordTools.js');
 const InGameChatHandler = require('../handlers/inGameChatHandler.js');
@@ -971,6 +972,72 @@ class RustPlus extends RustPlusLib {
 
         return str;
     }
+
+    async getCommandCraftchain(command) {
+        const prefix = this.generalSettings.prefix;
+        const commandCraftchain = `${prefix}${Client.client.intlGet(this.guildId, 'commandSyntaxCraftchain')}`;
+        const commandCraftchainEn = `${prefix}${Client.client.intlGet('en', 'commandSyntaxCraftchain')}`;
+
+        if (command.toLowerCase().startsWith(`${commandCraftchain} `)) {
+            command = command.slice(`${commandCraftchain} `.length).trim();
+        }
+        else {
+            command = command.slice(`${commandCraftchainEn} `.length).trim();
+        }
+
+        const words = command.split(' ');
+        const lastWord = words[words.length - 1];
+        const lastWordLength = lastWord.length;
+        const restString = command.slice(0, -(lastWordLength)).trim();
+
+        let itemSearchName = null, itemSearchQuantity = null;
+        if (isNaN(lastWord)) {
+            itemSearchName = command;
+            itemSearchQuantity = 1;
+        }
+        else {
+            itemSearchName = restString;
+            itemSearchQuantity = parseInt(lastWord);
+        }
+
+        const item = Client.client.items.getClosestItemIdByName(itemSearchName)
+        if (item === null || itemSearchName === '') {
+            const str = Client.client.intlGet(this.guildId, 'noItemWithNameFound', {
+                name: itemSearchName
+            });
+            return str;
+        }
+
+        const itemId = item;
+        const itemName = Client.client.items.getName(itemId);
+        const quantity = itemSearchQuantity;
+
+        // Get base materials for the item
+        const baseMaterials = await RusthelpScraper.getBaseMaterials(Client.client, itemId, quantity);
+        if (baseMaterials === null || Object.keys(baseMaterials).length === 0) {
+            const str = Client.client.intlGet(this.guildId, 'couldNotFindCraftDetails', {
+                name: itemName
+            });
+            return str;
+        }
+
+        let str = `${itemName} `;
+        if (quantity === 1) {
+            str += `${Client.client.intlGet(this.guildId, 'baseMaterials')}: `;
+        }
+        else {
+            str += `x${quantity} ${Client.client.intlGet(this.guildId, 'baseMaterials')}: `;
+        }
+
+        for (const [itemId, materialData] of Object.entries(baseMaterials)) {
+            str += `${materialData.name} x${materialData.quantity}, `;
+        }
+
+        str = str.slice(0, -2);
+
+        return str;
+    }
+
 
     async getCommandDeath(command, callerSteamId) {
         const prefix = this.generalSettings.prefix;

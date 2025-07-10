@@ -24,6 +24,11 @@ module.exports = {
         pollingIntervalMs: process.env.RPP_POLLING_INTERVAL || 10000,
         showCallStackError: process.env.RPP_LOG_CALL_STACK || false,
         reconnectIntervalMs: process.env.RPP_RECONNECT_INTERVAL || 15000,
+        maxReconnectDelay: process.env.RPP_MAX_RECONNECT_DELAY || 300000,
+        maxReconnectRetries: process.env.RPP_MAX_RECONNECT_RETRIES || 10,
+        reconnectBackoffMultiplier: process.env.RPP_RECONNECT_BACKOFF_MULTIPLIER || 2,
+        resetRetriesAfterSuccess: process.env.RPP_RESET_RETRIES_AFTER_SUCCESS || 60000,
+        connectionHealthCheckInterval: process.env.RPP_CONNECTION_HEALTH_CHECK_INTERVAL || 60000,
     },
     discord: {
         username: process.env.RPP_DISCORD_USERNAME || 'rustplusplus',

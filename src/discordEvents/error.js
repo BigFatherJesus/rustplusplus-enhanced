@@ -21,7 +21,18 @@
 module.exports = {
     name: 'error',
     async execute(client, error) {
-        client.log(client.intlGet(null, 'errorCap'), error, 'error');
-        process.exit(1);
+        const errorMessage = error.message || error.toString();
+        const errorStack = error.stack || 'No stack trace';
+        
+        client.log(client.intlGet(null, 'errorCap'), `Discord Error: ${errorMessage} | Stack: ${errorStack}`, 'error');
+        
+        // Only exit on truly fatal errors
+        if (error.code === 'TOKEN_INVALID' || error.code === 'DISALLOWED_INTENTS') {
+            client.log(client.intlGet(null, 'errorCap'), 'Fatal Discord error - exiting', 'error');
+            process.exit(1);
+        }
+        
+        // For all other errors, let Discord.js handle reconnection automatically
+        client.log(client.intlGet(null, 'warningCap'), 'Discord error occurred, allowing Discord.js to handle reconnection', 'warn');
     },
 }

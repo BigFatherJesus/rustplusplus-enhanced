@@ -32,8 +32,11 @@ const InstanceUtils = require('../util/instanceUtils.js');
 const Items = require('./Items');
 const Logger = require('./Logger.js');
 const PermissionHandler = require('../handlers/permissionHandler.js');
+const ReconnectionManager = require('../util/reconnectionManager.js');
+const ConnectionHealthMonitor = require('../util/connectionHealthMonitor.js');
 const RustLabs = require('../structures/RustLabs');
 const RustPlus = require('../structures/RustPlus');
+const ScheduledScraper = require('../util/scheduledScraper.js');
 
 class DiscordBot extends Discord.Client {
     constructor(props) {
@@ -59,9 +62,17 @@ class DiscordBot extends Discord.Client {
 
         this.uptimeBot = null;
 
-        this.items = new Items();
-        this.rustlabs = new RustLabs();
-        this.cctv = new Cctv();
+        try {
+            this.items = new Items();
+            this.rustlabs = new RustLabs();
+            this.cctv = new Cctv();
+            this.reconnectionManager = new ReconnectionManager(this);
+            this.connectionHealthMonitor = new ConnectionHealthMonitor(this);
+            this.scheduledScraper = new ScheduledScraper();
+        } catch (error) {
+            this.logger.log('ERROR', `Failed to initialize bot components: ${error.message || error.toString()} | Stack: ${error.stack || 'No stack trace'}`, 'error');
+            throw error;
+        }
 
         this.pollingIntervalMs = Config.general.pollingIntervalMs;
 
@@ -170,19 +181,35 @@ class DiscordBot extends Discord.Client {
 
     build() {
         this.login(Config.discord.token).catch(error => {
+            const errorMessage = error.message || error.toString();
+            const errorStack = error.stack || 'No stack trace';
+            
             switch (error.code) {
                 case 502: {
                     this.log(this.intlGet(null, 'errorCap'),
-                        this.intlGet(null, 'badGateway', { error: JSON.stringify(error) }), 'error')
+                        this.intlGet(null, 'badGateway', { error: errorMessage }), 'error');
+                    // Don't exit - let Discord.js retry
                 } break;
 
                 case 503: {
                     this.log(this.intlGet(null, 'errorCap'),
-                        this.intlGet(null, 'serviceUnavailable', { error: JSON.stringify(error) }), 'error')
+                        this.intlGet(null, 'serviceUnavailable', { error: errorMessage }), 'error');
+                    // Don't exit - let Discord.js retry
+                } break;
+
+                case 'TOKEN_INVALID': {
+                    this.log(this.intlGet(null, 'errorCap'), 'Invalid Discord token - cannot continue', 'error');
+                    process.exit(1);
+                } break;
+
+                case 'DISALLOWED_INTENTS': {
+                    this.log(this.intlGet(null, 'errorCap'), 'Discord intents not allowed - check bot permissions', 'error');
+                    process.exit(1);
                 } break;
 
                 default: {
-                    this.log(this.intlGet(null, 'errorCap'), `${JSON.stringify(error)}`, 'error');
+                    this.log(this.intlGet(null, 'errorCap'), `Discord login error: ${errorMessage} | Stack: ${errorStack}`, 'error');
+                    // Don't exit for rate limits or temporary issues - let Discord.js handle it
                 } break;
             }
         });
@@ -235,8 +262,11 @@ class DiscordBot extends Discord.Client {
         }
 
         await require('../discordTools/SetupSettingsMenu')(this, guild);
-
-        if (firstTime) await PermissionHandler.resetPermissionsAllChannels(this, guild);
+        
+        if (firstTime) {
+            await require('../discordTools/commandsGuide').createCommandsGuide(this, guild);
+            await PermissionHandler.resetPermissionsAllChannels(this, guild);
+        }
 
         this.resetRustplusVariables(guild.id);
     }

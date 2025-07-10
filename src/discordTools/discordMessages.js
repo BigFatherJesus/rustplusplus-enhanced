@@ -560,6 +560,15 @@ module.exports = {
         await Client.client.interactionEditReply(interaction, content);
     },
 
+    sendCraftchainMessage: async function (interaction, itemName, baseMaterials, quantity) {
+        const content = {
+            embeds: [DiscordEmbeds.getCraftchainEmbed(interaction.guildId, itemName, baseMaterials, quantity)],
+            ephemeral: true
+        }
+
+        await Client.client.interactionEditReply(interaction, content);
+    },
+
     sendResearchMessage: async function (interaction, researchDetails) {
         const content = {
             embeds: [DiscordEmbeds.getResearchEmbed(interaction.guildId, researchDetails)],

@@ -70,20 +70,19 @@ module.exports = {
 
             delete client.rustplusInstances[guildId];
 
+            // Clear old reconnection timers
             if (client.rustplusReconnectTimers[guildId]) {
                 clearTimeout(client.rustplusReconnectTimers[guildId]);
                 client.rustplusReconnectTimers[guildId] = null;
             }
 
-            client.rustplusReconnectTimers[guildId] = setTimeout(
-                client.createRustplusInstance.bind(client),
-                Config.general.reconnectIntervalMs,
-                guildId,
-                rustplus.server,
-                rustplus.port,
-                rustplus.playerId,
-                rustplus.playerToken
-            );
+            // Use the new reconnection manager with exponential backoff
+            client.reconnectionManager.attemptReconnection(guildId, 'disconnected', {
+                server: rustplus.server,
+                port: rustplus.port,
+                playerId: rustplus.playerId,
+                playerToken: rustplus.playerToken
+            });
         }
     },
 };

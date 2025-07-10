@@ -52,6 +52,9 @@ function errorTimedOut(rustplus, client, err) {
         rustplus.log(client.intlGet(null, 'errorCap'), client.intlGet(null, 'couldNotConnectTo', {
             id: rustplus.serverId
         }), 'error');
+        
+        // Trigger reconnection on connection timeout
+        triggerReconnection(rustplus, client, 'connection_timeout');
     }
 }
 
@@ -60,6 +63,9 @@ function errorNotFound(rustplus, client, err) {
         rustplus.log(client.intlGet(null, 'errorCap'), client.intlGet(null, 'couldNotConnectTo', {
             id: rustplus.serverId
         }), 'error');
+        
+        // Trigger reconnection on DNS resolution failure
+        triggerReconnection(rustplus, client, 'dns_resolution_failure');
     }
 }
 
@@ -67,11 +73,39 @@ async function errorConnRefused(rustplus, client, err) {
     rustplus.log(client.intlGet(null, 'errorCap'), client.intlGet(null, 'connectionRefusedTo', {
         id: rustplus.serverId
     }), 'error');
+    
+    // Trigger reconnection on connection refused
+    triggerReconnection(rustplus, client, 'connection_refused');
 }
 
 function errorOther(rustplus, client, err) {
     if (err.toString() === 'Error: WebSocket was closed before the connection was established') {
         rustplus.log(client.intlGet(null, 'errorCap'),
             client.intlGet(null, 'websocketClosedBeforeConnection'), 'error');
+        
+        // Trigger reconnection on WebSocket closure
+        triggerReconnection(rustplus, client, 'websocket_closed');
     }
+}
+
+/**
+ * Trigger reconnection using the new reconnection manager
+ * @param {Object} rustplus - RustPlus instance
+ * @param {Object} client - Discord client
+ * @param {string} reason - Reason for reconnection
+ */
+function triggerReconnection(rustplus, client, reason) {
+    if (rustplus.isDeleted || !client.activeRustplusInstances[rustplus.guildId]) {
+        return;
+    }
+
+    const guildId = rustplus.guildId;
+    
+    // Use the new reconnection manager with exponential backoff
+    client.reconnectionManager.attemptReconnection(guildId, reason, {
+        server: rustplus.server,
+        port: rustplus.port,
+        playerId: rustplus.playerId,
+        playerToken: rustplus.playerToken
+    });
 }

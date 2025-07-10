@@ -31,13 +31,32 @@ module.exports = async (client, guild, forced = false) => {
     const instance = client.getInstance(guild.id);
     const channel = DiscordTools.getTextChannelById(guild.id, instance.channelId.settings);
 
+    client.log(client.intlGet(null, 'infoCap'), `SetupSettingsMenu: firstTime=${instance.firstTime}, forced=${forced}, channelExists=${!!channel}`);
+
     if (!channel) {
         client.log(client.intlGet(null, 'errorCap'), 'SetupSettingsMenu: ' +
             client.intlGet(null, 'invalidGuildOrChannel'), 'error');
         return;
     }
 
-    if (instance.firstTime || forced) {
+    // Check if channel is empty (no messages)
+    let shouldRecreate = instance.firstTime || forced;
+    
+    if (!shouldRecreate) {
+        try {
+            const messages = await channel.messages.fetch({ limit: 1 });
+            if (messages.size === 0) {
+                client.log(client.intlGet(null, 'infoCap'), 'SetupSettingsMenu: Channel is empty, recreating settings...');
+                shouldRecreate = true;
+            }
+        } catch (error) {
+            client.log(client.intlGet(null, 'warningCap'), `SetupSettingsMenu: Could not check messages, recreating: ${error.message}`);
+            shouldRecreate = true;
+        }
+    }
+
+    if (shouldRecreate) {
+        client.log(client.intlGet(null, 'infoCap'), 'SetupSettingsMenu: Creating settings menu...');
         await DiscordTools.clearTextChannel(guild.id, instance.channelId.settings, 100);
 
         await setupGeneralSettings(client, guild.id, channel);
@@ -45,6 +64,9 @@ module.exports = async (client, guild, forced = false) => {
 
         instance.firstTime = false;
         client.setInstance(guild.id, instance);
+        client.log(client.intlGet(null, 'infoCap'), 'SetupSettingsMenu: Settings menu created successfully');
+    } else {
+        client.log(client.intlGet(null, 'infoCap'), 'SetupSettingsMenu: Settings menu already exists, skipping creation');
     }
 
 };

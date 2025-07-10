@@ -1126,6 +1126,41 @@ module.exports = {
         });
     },
 
+    getCraftchainEmbed: function (guildId, itemName, baseMaterials, quantity) {
+        let title = '';
+        let description = '';
+
+        if (quantity === 1) {
+            title = `${itemName} - ${Client.client.intlGet(guildId, 'baseMaterials')}`;
+            description += `${Client.client.intlGet(guildId, 'baseMaterialsRequiredFor')} ${itemName}`;
+        }
+        else {
+            title = `${itemName} x${quantity} - ${Client.client.intlGet(guildId, 'baseMaterials')}`;
+            description += `${Client.client.intlGet(guildId, 'baseMaterialsRequiredFor')} ${itemName} x${quantity}`;
+        }
+
+        let items = '', quantities = '';
+        for (const [itemId, materialData] of Object.entries(baseMaterials)) {
+            items += `${materialData.name}\n`;
+            quantities += `${materialData.quantity}\n`;
+        }
+
+        if (items === '') {
+            items = Client.client.intlGet(guildId, 'noMaterialsRequired');
+            quantities = '-';
+        }
+
+        return module.exports.getEmbed({
+            title: title,
+            description: description,
+            color: Constants.COLOR_DEFAULT,
+            timestamp: true,
+            fields: [
+                { name: Client.client.intlGet(guildId, 'baseMaterial'), value: items, inline: true },
+                { name: Client.client.intlGet(guildId, 'quantity'), value: quantities, inline: true }]
+        });
+    },
+
     getResearchEmbed: function (guildId, researchDetails) {
         let typeString = '', scrapString = '';
         if (researchDetails[2].researchTable !== null) {
