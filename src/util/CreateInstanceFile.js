@@ -37,12 +37,14 @@ module.exports = (client, guild) => {
                 servers: null,
                 settings: null,
                 commands: null,
+                commandsGuide: null,
                 events: null,
                 teamchat: null,
                 switches: null,
                 switchGroups: null,
                 alarms: null,
                 storageMonitors: null,
+                recycler: null,
                 activity: null,
                 trackers: null
             },
@@ -121,12 +123,14 @@ module.exports = (client, guild) => {
                 servers: null,
                 settings: null,
                 commands: null,
+                commandsGuide: null,
                 events: null,
                 teamchat: null,
                 switches: null,
                 switchGroups: null,
                 alarms: null,
                 storageMonitors: null,
+                recycler: null,
                 activity: null,
                 trackers: null
             }
@@ -144,6 +148,7 @@ module.exports = (client, guild) => {
             if (!instance.channelId.hasOwnProperty('switchGroups')) instance.channelId.switchGroups = null;
             if (!instance.channelId.hasOwnProperty('alarms')) instance.channelId.alarms = null;
             if (!instance.channelId.hasOwnProperty('storageMonitors')) instance.channelId.storageMonitors = null;
+            if (!instance.channelId.hasOwnProperty('recycler')) instance.channelId.recycler = null;
             if (!instance.channelId.hasOwnProperty('activity')) instance.channelId.activity = null;
             if (!instance.channelId.hasOwnProperty('trackers')) instance.channelId.trackers = null;
         }

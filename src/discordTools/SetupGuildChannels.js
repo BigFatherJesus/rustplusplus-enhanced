@@ -34,6 +34,7 @@ module.exports = async (client, guild, category) => {
     await addTextChannel(client.intlGet(guild.id, 'channelNameAlarms'), 'alarms', client, guild, category);
     await addTextChannel(client.intlGet(guild.id, 'channelNameStorageMonitors'),
         'storageMonitors', client, guild, category);
+    await addTextChannel(client.intlGet(guild.id, 'channelNameRecycler'), 'recycler', client, guild, category);
     await addTextChannel(client.intlGet(guild.id, 'channelNameActivity'), 'activity', client, guild, category);
     await addTextChannel(client.intlGet(guild.id, 'channelNameTrackers'), 'trackers', client, guild, category);
 };
