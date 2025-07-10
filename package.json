@@ -1,6 +1,6 @@
 {
     "name": "rustplusplus-enhanced",
-    "version": "1.22.1",
+    "version": "1.23.0",
     "description": "Enhanced RustPlus bot with advanced crafting features, automatic reconnection, and storage integration. Fork of rustplusplus by Alexemanuelol with enhancements by Nuallan.",
     "main": "index.ts",
     "scripts": {
