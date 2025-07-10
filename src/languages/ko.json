@@ -189,6 +189,7 @@
     "commandsBlacklistSteamidDesc": "The steamid of the user.",
     "commandsCctvDesc": "파밍지역에 있는 CCTV 코드를 표시합니다.",
     "commandsCraftDesc": "Display the cost to craft an item.",
+    "commandsChainCraftDesc": "아이템 제작을 위한 기본 자원까지의 상세한 재료 분해를 표시합니다.",
     "commandsCraftQuantityDesc": "The quantity of items to craft.",
     "commandsCredentialsAddDesc": "FCM 자격 증명을 추가합니다.",
     "commandsCredentialsDesc": "사용자 계정에 대한 FCM 자격 증명을 설정/해제합니다.",

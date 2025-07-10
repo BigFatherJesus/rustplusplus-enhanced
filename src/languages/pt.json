@@ -189,6 +189,7 @@
     "commandsBlacklistSteamidDesc": "A steamid do utilizador.",
     "commandsCctvDesc": "Exibir códigos CCTV para um monumento",
     "commandsCraftDesc": "Exibir o custo para criar um item.",
+    "commandsChainCraftDesc": "Exibir o detalhamento detalhado de materiais até recursos básicos para criar um item.",
     "commandsCraftQuantityDesc": "A quantidade de itens a serem criados.",
     "commandsCredentialsAddDesc": "Adicionar credenciais FCM.",
     "commandsCredentialsDesc": "Definir/Limpar as Credenciais FCM para a conta do usuário.",

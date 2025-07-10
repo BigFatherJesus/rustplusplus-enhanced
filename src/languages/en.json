@@ -201,6 +201,8 @@
     "commandsCraftDesc": "Display the cost to craft an item.",
     "commandsCraftchainDesc": "Display the base materials required to craft an item.",
     "commandsCraftchainQuantityDesc": "The quantity of items to craft.",
+    "commandsChainCraftDesc": "Display the base materials required to craft an item.",
+    "commandsChainCraftQuantityDesc": "The quantity of items to craft.",
     "commandsCraftQuantityDesc": "The quantity of items to craft.",
     "commandsCredentialsAddDesc": "Add FCM Credentials.",
     "commandsCredentialsDesc": "Set/Clear the FCM Credentials for the user account.",

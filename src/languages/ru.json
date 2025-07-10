@@ -189,6 +189,7 @@
     "commandsBlacklistSteamidDesc": "Steamid пользователя.",
     "commandsCctvDesc": "Отображение кодов для камер на Монументах",
     "commandsCraftDesc": "Отображение стоимости для создания предмета.",
+    "commandsChainCraftDesc": "Показать подробную разбивку материалов до основных ресурсов для создания предмета.",
     "commandsCraftQuantityDesc": "Количество предметов для создания.",
     "commandsCredentialsAddDesc": "Добавить учетные данные FCM.",
     "commandsCredentialsDesc": "Установите/очистите учетные данные FCM для пользователя.",

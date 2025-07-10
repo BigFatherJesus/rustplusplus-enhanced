@@ -189,6 +189,7 @@
     "commandsBlacklistSteamidDesc": "Die SteamId des Users.",
     "commandsCctvDesc": "Zeige Überwachungskamera-Codes für ein Monument an",
     "commandsCraftDesc": "Zeige die Kosten an einen Gegenstand herzustellen.",
+    "commandsChainCraftDesc": "Zeige detaillierte Materialaufschlüsselung bis zu Grundressourcen für die Herstellung eines Gegenstands.",
     "commandsCraftQuantityDesc": "Die Menge der herzustellenden Gegenstände.",
     "commandsCredentialsAddDesc": "FCM-Anmeldedaten hinzufügen.",
     "commandsCredentialsDesc": "Festlegen/Entfernen der FCM-Anmeldedaten für das Benutzerkonto.",

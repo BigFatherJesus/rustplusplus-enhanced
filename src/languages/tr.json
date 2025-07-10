@@ -189,6 +189,7 @@
     "commandsBlacklistSteamidDesc": "The steamid of the user.",
     "commandsCctvDesc": "Display CCTV codes for a monument",
     "commandsCraftDesc": "Display the cost to craft an item.",
+    "commandsChainCraftDesc": "Bir öğe yapmak için temel kaynaklara kadar ayrıntılı malzeme dökümünü göster.",
     "commandsCraftQuantityDesc": "The quantity of items to craft.",
     "commandsCredentialsAddDesc": "FCM Bilgilerini ekle.",
     "commandsCredentialsDesc": "Kullanıcı hesabı için FCM Bilgilerini ayarla/temizle.",

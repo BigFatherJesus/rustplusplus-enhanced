@@ -189,6 +189,7 @@
     "commandsBlacklistSteamidDesc": "Steamid uživatele.",
     "commandsCctvDesc": "Zobrazit CCTV kódy pro monument",
     "commandsCraftDesc": "Zobrazit náklady na výrobu položky.",
+    "commandsChainCraftDesc": "Zobrazit podrobný rozklad materiálů až na základní suroviny pro výrobu předmětu.",
     "commandsCraftQuantityDesc": "Množství předmětů k výrobě.",
     "commandsCredentialsAddDesc": "Přidat FCM údaje.",
     "commandsCredentialsDesc": "Přidat/vymazat FCM údaje pro uživatelský účet.",

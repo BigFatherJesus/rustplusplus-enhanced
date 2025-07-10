@@ -189,6 +189,7 @@
     "commandsBlacklistSteamidDesc": "L'Id Steam de l'utilisateur.",
     "commandsCctvDesc": "Afficher les codes de vidéosurveillance d'un monument",
     "commandsCraftDesc": "Affichez le coût de fabrication d'un item.",
+    "commandsChainCraftDesc": "Afficher la décomposition détaillée des matériaux jusqu'aux ressources de base pour fabriquer un objet.",
     "commandsCraftQuantityDesc": "La quantité d'un item à fabriquer.",
     "commandsCredentialsAddDesc": "Ajouter des identifiants FCM.",
     "commandsCredentialsDesc": "Définir/Effacer les informations d'identification FCM pour le compte utilisateur.",

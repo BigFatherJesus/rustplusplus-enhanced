@@ -189,6 +189,7 @@
     "commandsBlacklistSteamidDesc": "The steamid of the user.",
     "commandsCctvDesc": "Display CCTV codes for a monument",
     "commandsCraftDesc": "Display the cost to craft an item.",
+    "commandsChainCraftDesc": "Visa detaljerad materialuppdelning ner till grundresurser för att tillverka ett föremål.",
     "commandsCraftQuantityDesc": "The quantity of items to craft.",
     "commandsCredentialsAddDesc": "Lägg till FCM-uppgifter.",
     "commandsCredentialsDesc": "Ställ in/rensa FCM-uppgifterna för användarkontot.",

@@ -25,12 +25,12 @@ const DiscordMessages = require('../discordTools/discordMessages.js');
 const RusthelpScraper = require('../util/rusthelpScraper.js');
 
 module.exports = {
-	name: 'craftchain',
+	name: 'chaincraft',
 
 	getData(client, guildId) {
 		return new Builder.SlashCommandBuilder()
-			.setName('craftchain')
-			.setDescription(client.intlGet(guildId, 'commandsCraftchainDesc'))
+			.setName('chaincraft')
+			.setDescription(client.intlGet(guildId, 'commandsChainCraftDesc'))
 			.addStringOption(option => option
 				.setName('name')
 				.setDescription(client.intlGet(guildId, 'theNameOfTheItem'))
@@ -41,7 +41,7 @@ module.exports = {
 				.setRequired(false))
 			.addIntegerOption(option => option
 				.setName('quantity')
-				.setDescription(client.intlGet(guildId, 'commandsCraftchainQuantityDesc'))
+				.setDescription(client.intlGet(guildId, 'commandsChainCraftQuantityDesc'))
 				.setRequired(false));
 	},
 
