@@ -28,7 +28,7 @@ module.exports = {
         maxReconnectRetries: process.env.RPP_MAX_RECONNECT_RETRIES || 10,
         reconnectBackoffMultiplier: process.env.RPP_RECONNECT_BACKOFF_MULTIPLIER || 2,
         resetRetriesAfterSuccess: process.env.RPP_RESET_RETRIES_AFTER_SUCCESS || 60000,
-        connectionHealthCheckInterval: process.env.RPP_CONNECTION_HEALTH_CHECK_INTERVAL || 60000,
+        connectionHealthCheckInterval: process.env.RPP_CONNECTION_HEALTH_CHECK_INTERVAL || 30000,
     },
     discord: {
         username: process.env.RPP_DISCORD_USERNAME || 'rustplusplus',

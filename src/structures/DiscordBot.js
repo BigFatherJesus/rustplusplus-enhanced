@@ -34,6 +34,7 @@ const Logger = require('./Logger.js');
 const PermissionHandler = require('../handlers/permissionHandler.js');
 const ReconnectionManager = require('../util/reconnectionManager.js');
 const ConnectionHealthMonitor = require('../util/connectionHealthMonitor.js');
+const AutoReconnectManager = require('../util/autoReconnectManager.js');
 const RustLabs = require('../structures/RustLabs');
 const RustPlus = require('../structures/RustPlus');
 const ScheduledScraper = require('../util/scheduledScraper.js');
@@ -68,6 +69,7 @@ class DiscordBot extends Discord.Client {
             this.cctv = new Cctv();
             this.reconnectionManager = new ReconnectionManager(this);
             this.connectionHealthMonitor = new ConnectionHealthMonitor(this);
+            this.autoReconnectManager = new AutoReconnectManager(this);
             this.scheduledScraper = new ScheduledScraper();
         } catch (error) {
             this.logger.log('ERROR', `Failed to initialize bot components: ${error.message || error.toString()} | Stack: ${error.stack || 'No stack trace'}`, 'error');

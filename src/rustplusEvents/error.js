@@ -79,12 +79,33 @@ async function errorConnRefused(rustplus, client, err) {
 }
 
 function errorOther(rustplus, client, err) {
-    if (err.toString() === 'Error: WebSocket was closed before the connection was established') {
+    const errorString = err.toString();
+    
+    if (errorString === 'Error: WebSocket was closed before the connection was established') {
         rustplus.log(client.intlGet(null, 'errorCap'),
             client.intlGet(null, 'websocketClosedBeforeConnection'), 'error');
         
         // Trigger reconnection on WebSocket closure
         triggerReconnection(rustplus, client, 'websocket_closed');
+    }
+    else if (errorString.includes('WebSocket connection closed') || 
+             errorString.includes('Connection lost') ||
+             errorString.includes('socket hang up') ||
+             err.code === 'ECONNRESET' ||
+             err.code === 'EPIPE') {
+        
+        rustplus.log(client.intlGet(null, 'errorCap'),
+            `Connection lost to server ${rustplus.serverId}: ${errorString}`, 'error');
+        
+        // These errors often indicate server restart, attempt immediate reconnection
+        triggerReconnection(rustplus, client, 'connection_lost');
+    }
+    else {
+        rustplus.log(client.intlGet(null, 'errorCap'),
+            `Unhandled error for server ${rustplus.serverId}: ${errorString}`, 'error');
+        
+        // For any other error, still attempt reconnection
+        triggerReconnection(rustplus, client, 'unknown_error');
     }
 }
 

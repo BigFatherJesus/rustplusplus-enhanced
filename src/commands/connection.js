@@ -37,7 +37,10 @@ module.exports = {
 				.setDescription(client.intlGet(guildId, 'commandsConnectionRetryDesc')))
 			.addSubcommand(subcommand => subcommand
 				.setName('health')
-				.setDescription(client.intlGet(guildId, 'commandsConnectionHealthDesc')));
+				.setDescription(client.intlGet(guildId, 'commandsConnectionHealthDesc')))
+			.addSubcommand(subcommand => subcommand
+				.setName('autoreconnect')
+				.setDescription('Check auto-reconnection status and force reconnect'));
 	},
 
 	async execute(client, interaction) {
@@ -59,6 +62,9 @@ module.exports = {
 				break;
 			case 'health':
 				await this.handleHealthCommand(client, interaction, guildId);
+				break;
+			case 'autoreconnect':
+				await this.handleAutoReconnectCommand(client, interaction, guildId);
 				break;
 		}
 	},
@@ -125,12 +131,12 @@ module.exports = {
 		client.reconnectionManager.resetState(guildId);
 		client.rustplusReconnecting[guildId] = false;
 
-		const server = instance.activeServer;
+		const serverInfo = instance.serverList[instance.activeServer];
 		client.reconnectionManager.attemptReconnection(guildId, 'manual_retry', {
-			server: server.serverIp,
-			port: server.appPort,
-			playerId: server.playerId,
-			playerToken: server.playerToken
+			server: serverInfo.serverIp,
+			port: serverInfo.appPort,
+			playerId: serverInfo.steamId,
+			playerToken: serverInfo.playerToken
 		});
 
 		const embed = DiscordEmbeds.getActionInfoEmbed(0, client.intlGet(guildId, 'reconnectionAttemptStarted'));
@@ -161,6 +167,48 @@ module.exports = {
 			title: client.intlGet(guildId, 'connectionHealthStatus'),
 			description: description,
 			color: consecutiveFailures > 0 ? 0xffff00 : 0x00ff00,
+			timestamp: true
+		});
+
+		await client.interactionEditReply(interaction, { embeds: [embed] });
+	},
+
+	async handleAutoReconnectCommand(client, interaction, guildId) {
+		const instance = client.getInstance(guildId);
+		const autoReconnectStats = client.autoReconnectManager.getStats();
+		
+		let description = '';
+		description += `🔄 **Auto-Reconnection Status:** ${autoReconnectStats.isRunning ? 'Active' : 'Inactive'}\n`;
+		description += `⏱️ **Check Interval:** ${Math.floor(autoReconnectStats.checkInterval / 1000)}s\n`;
+		
+		if (autoReconnectStats.nextCheck) {
+			const timeUntilNextCheck = autoReconnectStats.nextCheck - Date.now();
+			description += `⏰ **Next Check In:** ${Math.floor(timeUntilNextCheck / 1000)}s\n`;
+		}
+		
+		if (instance.activeServer) {
+			description += `🎯 **Target Server:** ${instance.activeServer}\n`;
+			
+			const isCurrentlyConnected = client.activeRustplusInstances[guildId] && 
+										client.rustplusInstances[guildId] &&
+										client.rustplusInstances[guildId].isOperational;
+			
+			description += `📡 **Current Status:** ${isCurrentlyConnected ? 'Connected' : 'Disconnected'}\n`;
+			
+			if (!isCurrentlyConnected) {
+				description += `\n🚀 **Forcing reconnection attempt...**\n`;
+				
+				// Force reconnection
+				await client.autoReconnectManager.forceReconnectGuild(guildId);
+			}
+		} else {
+			description += `❌ **No active server configured**\n`;
+		}
+
+		const embed = DiscordEmbeds.getEmbed({
+			title: 'Auto-Reconnection Status',
+			description: description,
+			color: autoReconnectStats.isRunning ? 0x00ff00 : 0xff0000,
 			timestamp: true
 		});
 

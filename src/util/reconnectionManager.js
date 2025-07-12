@@ -141,8 +141,16 @@ class ReconnectionManager {
         state.reconnectionReason = reason;
         
         // Calculate delay with exponential backoff and jitter
-        const baseDelay = this.calculateDelay(state.retryCount - 1);
-        const delayWithJitter = this.addJitter(baseDelay);
+        let baseDelay = this.calculateDelay(state.retryCount - 1);
+        let delayWithJitter = this.addJitter(baseDelay);
+        
+        // For server restart detection, reconnect immediately (no delay)
+        if (reason === 'server_restart_detected') {
+            delayWithJitter = 0;
+            this.client.log(this.client.intlGet(null, 'infoCap'), 
+                `Server restart detected for guild ${guildId}, attempting immediate reconnection`);
+        }
+        
         state.currentDelay = delayWithJitter;
 
         this.client.log(this.client.intlGet(null, 'infoCap'), 
@@ -154,7 +162,7 @@ class ReconnectionManager {
             clearTimeout(state.timer);
         }
 
-        // Set new reconnection timer
+        // Set new reconnection timer (immediate if server restart detected)
         state.timer = setTimeout(async () => {
             try {
                 await this.performReconnection(guildId, connectionParams);

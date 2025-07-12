@@ -9,11 +9,12 @@ class ConnectionHealthMonitor {
     constructor(client) {
         this.client = client;
         this.intervalId = null;
-        this.checkInterval = Config.general.connectionHealthCheckInterval || 60000; // 1 minute default
+        this.checkInterval = Config.general.connectionHealthCheckInterval || 30000; // 30 seconds for faster detection
         this.lastHealthCheck = new Map();
         this.consecutiveFailures = new Map();
-        this.maxConsecutiveFailures = 3;
-        this.healthCheckTimeout = 10000; // 10 seconds timeout for health checks
+        this.maxConsecutiveFailures = 2; // Reduced from 3 to 2 for faster response
+        this.healthCheckTimeout = 8000; // Reduced from 10 to 8 seconds for faster detection
+        this.lastSuccessfulCheck = new Map(); // Track last successful check time
     }
 
     /**
@@ -86,6 +87,7 @@ class ConnectionHealthMonitor {
 
             // Health check successful
             this.consecutiveFailures.set(guildId, 0);
+            this.lastSuccessfulCheck.set(guildId, Date.now());
             
             const duration = Date.now() - startTime;
             this.client.log(this.client.intlGet(null, 'infoCap'), 
@@ -107,6 +109,37 @@ class ConnectionHealthMonitor {
         
         if (!await rustplus.isResponseValid(info)) {
             throw new Error('Invalid health check response');
+        }
+
+        // Additional check: verify server is still the same by checking server details
+        if (info.info && info.info.name && info.info.seed) {
+            const currentServerInfo = {
+                name: info.info.name,
+                seed: info.info.seed,
+                size: info.info.size,
+                wipeTime: info.info.wipeTime
+            };
+            
+            // Store server info for future comparisons
+            if (!rustplus.lastServerInfo) {
+                rustplus.lastServerInfo = currentServerInfo;
+            } else {
+                // Check if server has restarted/wiped (seed, size, or wipeTime changed)
+                const serverChanged = 
+                    currentServerInfo.seed !== rustplus.lastServerInfo.seed ||
+                    currentServerInfo.size !== rustplus.lastServerInfo.size ||
+                    currentServerInfo.wipeTime !== rustplus.lastServerInfo.wipeTime;
+                
+                if (serverChanged) {
+                    rustplus.lastServerInfo = currentServerInfo;
+                    this.client.log(this.client.intlGet(null, 'infoCap'), 
+                        `Server restart/wipe detected for guild ${rustplus.guildId}, triggering reconnection`);
+                    
+                    // Trigger immediate reconnection due to server restart
+                    this.triggerServerRestartReconnection(rustplus.guildId, rustplus);
+                    throw new Error('Server restart detected');
+                }
+            }
         }
 
         return info;
@@ -157,6 +190,27 @@ class ConnectionHealthMonitor {
     }
 
     /**
+     * Trigger reconnection due to server restart detection
+     * @param {string} guildId - Guild ID
+     * @param {Object} rustplus - RustPlus instance
+     */
+    triggerServerRestartReconnection(guildId, rustplus) {
+        // Mark as not operational to prevent further health checks
+        rustplus.isOperational = false;
+        
+        // Force disconnect the current connection
+        rustplus.disconnect();
+        
+        // Use the reconnection manager to handle the reconnection with immediate retry
+        this.client.reconnectionManager.attemptReconnection(guildId, 'server_restart_detected', {
+            server: rustplus.server,
+            port: rustplus.port,
+            playerId: rustplus.playerId,
+            playerToken: rustplus.playerToken
+        });
+    }
+
+    /**
      * Get health check statistics
      * @returns {Object} - Health check statistics
      */
@@ -180,6 +234,7 @@ class ConnectionHealthMonitor {
     resetHealthCheckData(guildId) {
         this.lastHealthCheck.delete(guildId);
         this.consecutiveFailures.delete(guildId);
+        this.lastSuccessfulCheck.delete(guildId);
     }
 
     /**
