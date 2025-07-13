@@ -44,6 +44,7 @@ This NodeJS Discord Bot uses the [rustplus.js](https://github.com/liamcottle/rus
 * **Optimization Tools** - Performance enhancements and resource optimization
 * **TypeScript Support** - Full TypeScript implementation for better code quality
 * **Enhanced Error Handling** - Improved error management and logging systems
+* **🆕 Automated Item Database Updates** - Weekly automated scraping of latest Rust item data with manual controls
 
 ## **Quick Start**
 
@@ -124,7 +125,7 @@ update.bat
 ## **Running via Docker**
 
 ```bash
-docker run --rm -it -v ${pwd}/credentials:/app/credentials -v ${pwd}/instances:/app/instances -v ${pwd}/logs:/app/logs -e RPP_DISCORD_CLIENT_ID=111....1111 -e RPP_DISCORD_TOKEN=token --name rpp ghcr.io/alexemanuelol/rustplusplus
+docker run --rm -it -v ${pwd}/credentials:/app/credentials -v ${pwd}/instances:/app/instances -v ${pwd}/logs:/app/logs -e RPP_DISCORD_CLIENT_ID=111....1111 -e RPP_DISCORD_TOKEN=token -e RPP_FIRECRAWL_API_KEY=your_api_key --name rpp ghcr.io/alexemanuelol/rustplusplus
 ```
 
 or
@@ -134,6 +135,11 @@ docker-compose up -d
 ```
 
 Make sure you use the correct values for DISCORD_CLIENT_ID as well as DISCORD_TOKEN in the docker command/docker-compose.yml
+
+### **Environment Variables**
+- `RPP_DISCORD_CLIENT_ID` - Discord application client ID
+- `RPP_DISCORD_TOKEN` - Discord bot token
+- `RPP_FIRECRAWL_API_KEY` - (Optional) Firecrawl API key for automated item database updates
 
 ## **Project Structure**
 
@@ -164,6 +170,30 @@ rustplusplus-enhanced/
 - Smart devices must be paired in-game before Discord control
 - The bot maintains persistent connections to monitor real-time events
 - Multi-language support requires proper locale configuration
+
+## **New Features: Automated Item Database Updates**
+
+### **Firecrawl Integration**
+The bot now includes an automated system for keeping Rust item data up-to-date:
+
+- **Weekly Automation**: Every Thursday at 20:00 UTC, the bot automatically checks for new items
+- **Manual Control**: Use `/update-database` command for immediate updates
+- **Rate Limiting**: Built-in API rate limiting and credit management
+- **Resume Capability**: Automatically resumes after API credit restoration
+
+### **Commands**
+- `/update-database ALL` - Full database refresh (admin only)
+- `/update-database NEW` - Check for new items only
+- `/update-database ITEM <name>` - Update specific item
+
+### **Setup**
+1. Get a Firecrawl API key from [firecrawl.dev](https://firecrawl.dev)
+2. Set `RPP_FIRECRAWL_API_KEY` environment variable
+3. The bot will automatically start weekly updates on restart
+
+### **Data Output**
+- **Bot Format**: Updates existing static files (`items.json`, `rustlabsCraftData.json`, etc.)
+- **Human-Readable**: Organized JSON files in `src/humanReadableItems/` by category
 
 ## **Thanks to**
 
