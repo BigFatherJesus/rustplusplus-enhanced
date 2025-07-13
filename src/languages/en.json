@@ -819,5 +819,22 @@
     "wipeDetected": "Wipe detected!",
     "yield": "Yield",
     "youAreAlreadyLeader": "You are already leader.",
-    "youAreNotPairedWithServer": "Leader command does not work because you're not paired with the server."
+    "youAreNotPairedWithServer": "Leader command does not work because you're not paired with the server.",
+    "commandsUpdateDatabaseDesc": "Update the Rust item database with latest data",
+    "commandsUpdateDatabaseTargetDesc": "What to update: ALL (full refresh), NEW (new items only), or ITEM (specific item)",
+    "commandsUpdateDatabaseItemDesc": "Name of specific item to update (required when target is ITEM)",
+    "commandsUpdateDatabaseMissingItem": "You must specify an item name when updating a specific item.",
+    "commandsUpdateDatabaseNoApiKey": "Firecrawl API key not configured. Please set the RPP_FIRECRAWL_API_KEY environment variable.",
+    "commandsUpdateDatabaseRateLimited": "Database updates are currently rate limited. Please try again in {minutes} minutes.",
+    "commandsUpdateDatabaseStartingAll": "🔄 Starting full database update. This may take several minutes...",
+    "commandsUpdateDatabaseStartingNew": "🔄 Checking for new items in the database...",
+    "commandsUpdateDatabaseStartingItem": "🔄 Updating item \"{item}\"...",
+    "commandsUpdateDatabaseSuccessAll": "✅ Successfully updated the complete item database with {total} items.{errors, plural, =0 {} other { ({errors} errors)}}",
+    "commandsUpdateDatabaseSuccessNew": "✅ Found and added {count} new items to the database.",
+    "commandsUpdateDatabaseNoNewItems": "✅ No new items found. The database is up to date.",
+    "commandsUpdateDatabaseSuccessItem": "✅ Successfully updated item: **{item}** (ID: {id})",
+    "commandsUpdateDatabaseRateLimitedRetry": "⏳ The update was paused due to API rate limits. It will automatically resume in {minutes} minutes.",
+    "commandsUpdateDatabaseFailed": "❌ The update failed due to an error. Please check the bot logs for more details.",
+    "commandsUpdateDatabaseNotSuccessful": "❌ The database update was not successful. Please try again later.",
+    "commandsUpdateDatabaseError": "An unexpected error occurred during the database update."
 }
