@@ -92,6 +92,10 @@ module.exports = {
         client.log(client.intlGet(null, 'infoCap'), 'Starting scheduled scraper...');
         client.scheduledScraper.start();
         
+        // Start firecrawl scraper weekly scheduler (Thursday 20:00 UTC for new items)
+        client.log(client.intlGet(null, 'infoCap'), 'Starting firecrawl scraper weekly scheduler...');
+        client.firecrawlScraper.startWeeklyScheduler();
+        
         client.log(client.intlGet(null, 'infoCap'), 'Bot initialization completed successfully');
     },
 };
