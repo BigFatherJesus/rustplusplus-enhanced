@@ -9,5 +9,6 @@ services:
         environment:
             - RPP_DISCORD_CLIENT_ID=111....1111
             - RPP_DISCORD_TOKEN=token
+            - RPP_FIRECRAWL_API_KEY=your_api_key_here
         container_name: rpp
-        image: ghcr.io/alexemanuelol/rustplusplus
+        image: nuallan/rustplusplus-forked

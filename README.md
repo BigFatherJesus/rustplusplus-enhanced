@@ -125,7 +125,7 @@ update.bat
 ## **Running via Docker**
 
 ```bash
-docker run --rm -it -v ${pwd}/credentials:/app/credentials -v ${pwd}/instances:/app/instances -v ${pwd}/logs:/app/logs -e RPP_DISCORD_CLIENT_ID=111....1111 -e RPP_DISCORD_TOKEN=token -e RPP_FIRECRAWL_API_KEY=your_api_key --name rpp ghcr.io/alexemanuelol/rustplusplus
+docker run --rm -it -v ${pwd}/credentials:/app/credentials -v ${pwd}/instances:/app/instances -v ${pwd}/logs:/app/logs -e RPP_DISCORD_CLIENT_ID=111....1111 -e RPP_DISCORD_TOKEN=token -e RPP_FIRECRAWL_API_KEY=your_api_key --name rpp nuallan/rustplusplus-forked
 ```
 
 or
