@@ -64,7 +64,7 @@ class FirecrawlScraper {
         console.log(logMessage);
         
         try {
-            fs.appendFileSync(this.logFile, logMessage + '\\n');
+            fs.appendFileSync(this.logFile, logMessage + '\n');
         } catch (error) {
             // Ignore log file errors
         }
@@ -205,16 +205,16 @@ class FirecrawlScraper {
     }
     
     extractItemNameFromUrl(url) {
-        const match = url.match(/\\/item\\/([^\\/\\?]+)/);
+        const match = url.match(/\/item\/([^\/\?]+)/);
         if (match) {
-            return match[1].replace(/-/g, ' ').replace(/\\b\\w/g, l => l.toUpperCase());
+            return match[1].replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
         }
         return null;
     }
     
     extractItemsFromMarkdown(markdown) {
         const items = [];
-        const linkMatches = markdown.matchAll(/\\[([^\\]]+)\\]\\(([^)]+)\\)/g);
+        const linkMatches = markdown.matchAll(/\[([^\]]+)\]\(([^)]+)\)/g);
         
         for (const match of linkMatches) {
             const name = match[1].trim();
