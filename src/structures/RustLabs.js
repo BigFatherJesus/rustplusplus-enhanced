@@ -18,6 +18,7 @@
 
 */
 
+const Path = require('path');
 const Items = require('./Items');
 const RustlabsBuildingBlocks = require('../staticFiles/rustlabsBuildingBlocks.json');
 const RustlabsOther = require('../staticFiles/rustlabsOther.json');
@@ -824,6 +825,55 @@ class RustLabs {
         if (!this.hasUpkeepDetails(id)) return null;
 
         return ['items', id, this.items.items[id], this.upkeepData['items'][id]];
+    }
+
+    reload() {
+        try {
+            // Clear require cache for all static files
+            const staticPath = Path.join(__dirname, '..', 'staticFiles');
+            const filesToReload = [
+                'rustlabsCraftData.json',
+                'rustlabsRecycleData.json', 
+                'rustlabsResearchData.json',
+                'rustlabsDurabilityData.json',
+                'rustlabsSmeltingData.json',
+                'rustlabsDespawnData.json',
+                'rustlabsStackData.json',
+                'rustlabsDecayData.json',
+                'rustlabsUpkeepData.json',
+                'rustlabsBuildingBlocks.json',
+                'rustlabsOther.json'
+            ];
+
+            // Clear cache for each file
+            filesToReload.forEach(file => {
+                const filePath = Path.join(staticPath, file);
+                if (require.cache[require.resolve(filePath)]) {
+                    delete require.cache[require.resolve(filePath)];
+                }
+            });
+
+            // Reload all data
+            this._craftData = require('../staticFiles/rustlabsCraftData.json');
+            this._researchData = require('../staticFiles/rustlabsResearchData.json');
+            this._recycleData = require('../staticFiles/rustlabsRecycleData.json');
+            this._durabilityData = require('../staticFiles/rustlabsDurabilityData.json');
+            this._smeltingData = require('../staticFiles/rustlabsSmeltingData.json');
+            this._despawnData = require('../staticFiles/rustlabsDespawnData.json');
+            this._stackData = require('../staticFiles/rustlabsStackData.json');
+            this._decayData = require('../staticFiles/rustlabsDecayData.json');
+            this._upkeepData = require('../staticFiles/rustlabsUpkeepData.json');
+            this._rustlabsBuildingBlocks = require('../staticFiles/rustlabsBuildingBlocks.json');
+            this._rustlabsOther = require('../staticFiles/rustlabsOther.json');
+
+            // Reload items instance
+            this._items.reload();
+
+            return true;
+        } catch (error) {
+            console.error('Failed to reload RustLabs data:', error);
+            return false;
+        }
     }
 }
 

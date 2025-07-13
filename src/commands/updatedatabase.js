@@ -117,7 +117,16 @@ module.exports = {
 
             // Create result message
             if (result.success) {
-                const successMessage = this.getSuccessMessage(client, guildId, target, result);
+                // Reload item data to make new items available immediately
+                const reloadSuccess = client.reloadItemData();
+                
+                let successMessage = this.getSuccessMessage(client, guildId, target, result);
+                if (reloadSuccess) {
+                    successMessage += '\n\n🔄 Item data reloaded - new items are now available in commands!';
+                } else {
+                    successMessage += '\n\n⚠️ Database updated but data reload failed - restart the bot to use new items.';
+                }
+                
                 await client.interactionEditReply(interaction, DiscordEmbeds.getActionInfoEmbed(0, successMessage, null, guildId));
                 client.log(client.intlGet(guildId, 'infoCap'), successMessage);
             } else {

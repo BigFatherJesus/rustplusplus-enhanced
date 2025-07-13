@@ -49,6 +49,23 @@ class Items {
         return this.items[id].name;
     }
 
+    reload() {
+        try {
+            // Clear require cache for the JSON file to ensure fresh data
+            const itemsPath = Path.join(__dirname, '..', 'staticFiles', 'items.json');
+            delete require.cache[require.resolve(itemsPath)];
+            
+            // Reload items data
+            this._items = JSON.parse(Fs.readFileSync(itemsPath, 'utf8'));
+            this._itemNames = Object.values(this.items).map(item => item.name);
+            
+            return true;
+        } catch (error) {
+            console.error('Failed to reload items data:', error);
+            return false;
+        }
+    }
+
     getDescription(id) {
         if (!this.itemExist(id)) return undefined;
         return this.items[id].description;

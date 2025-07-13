@@ -581,6 +581,26 @@ class DiscordBot extends Discord.Client {
     isAdministrator(interaction) {
         return interaction.member.permissions.has(Discord.PermissionFlagsBits.Administrator);
     }
+
+    reloadItemData() {
+        try {
+            this.log(this.intlGet(null, 'infoCap'), 'Reloading item and crafting data...');
+            
+            const itemsReloaded = this.items.reload();
+            const rustlabsReloaded = this.rustlabs.reload();
+            
+            if (itemsReloaded && rustlabsReloaded) {
+                this.log(this.intlGet(null, 'infoCap'), 'Successfully reloaded item and crafting data');
+                return true;
+            } else {
+                this.log(this.intlGet(null, 'errorCap'), 'Failed to reload some item data');
+                return false;
+            }
+        } catch (error) {
+            this.log(this.intlGet(null, 'errorCap'), `Failed to reload item data: ${error.message}`);
+            return false;
+        }
+    }
 }
 
 module.exports = DiscordBot;

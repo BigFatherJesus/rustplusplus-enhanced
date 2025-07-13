@@ -836,5 +836,10 @@
     "commandsUpdateDatabaseRateLimitedRetry": "⏳ The update was paused due to API rate limits. It will automatically resume in {minutes} minutes.",
     "commandsUpdateDatabaseFailed": "❌ The update failed due to an error. Please check the bot logs for more details.",
     "commandsUpdateDatabaseNotSuccessful": "❌ The database update was not successful. Please try again later.",
-    "commandsUpdateDatabaseError": "An unexpected error occurred during the database update."
+    "commandsUpdateDatabaseError": "An unexpected error occurred during the database update.",
+    "commandsReloadDataDesc": "Reload item and crafting data from static files",
+    "commandsReloadDataStarting": "🔄 Reloading item and crafting data...",
+    "commandsReloadDataSuccess": "✅ Successfully reloaded item and crafting data. All commands now use the latest data!",
+    "commandsReloadDataFailed": "❌ Failed to reload item data. Please check the bot logs for more details.",
+    "commandsReloadDataError": "An unexpected error occurred during data reload."
 }

@@ -1118,8 +1118,8 @@ module.exports = {
         }
 
         const fields = [
-            { name: Client.client.intlGet(guildId, 'quantity'), value: items, inline: true },
-            { name: Client.client.intlGet(guildId, 'hoster'), value: quantities, inline: true }
+            { name: Client.client.intlGet(guildId, 'item'), value: items, inline: true },
+            { name: Client.client.intlGet(guildId, 'quantity'), value: quantities, inline: true }
         ];
 
         // Add craftable quantity if we have the required data
