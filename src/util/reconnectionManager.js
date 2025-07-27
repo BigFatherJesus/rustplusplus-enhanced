@@ -186,7 +186,7 @@ class ReconnectionManager {
     }
 
     /**
-     * Perform the actual reconnection
+     * Perform the actual reconnection using the same logic as manual reconnect button
      * @param {string} guildId - Guild ID
      * @param {Object} connectionParams - Connection parameters
      */
@@ -196,19 +196,63 @@ class ReconnectionManager {
         this.client.log(this.client.intlGet(null, 'infoCap'), 
             `Executing reconnection attempt ${state.retryCount} for guild ${guildId}`);
 
-        // Clean up existing instance
-        if (this.client.rustplusInstances[guildId]) {
-            delete this.client.rustplusInstances[guildId];
+        // Get guild instance
+        const instance = this.client.getInstance(guildId);
+        if (!instance || !instance.activeServer) {
+            this.client.log(this.client.intlGet(null, 'errorCap'), 
+                `No active server found for guild ${guildId} during reconnection`);
+            return;
         }
 
-        // Create new instance
-        await this.client.createRustplusInstance(
-            guildId,
-            connectionParams.server,
-            connectionParams.port,
-            connectionParams.playerId,
-            connectionParams.playerToken
-        );
+        const serverId = instance.activeServer;
+        const serverInfo = instance.serverList[serverId];
+
+        if (!serverInfo) {
+            this.client.log(this.client.intlGet(null, 'errorCap'), 
+                `No server info found for active server ${serverId} in guild ${guildId}`);
+            return;
+        }
+
+        try {
+            // Step 1: Reset rustplus variables (same as manual reconnect)
+            this.client.resetRustplusVariables(guildId);
+
+            // Step 2: Get current rustplus instance for cleanup
+            const rustplus = this.client.rustplusInstances[guildId];
+
+            // Step 3: Set active server (ensuring consistency)
+            instance.activeServer = serverId;
+            this.client.setInstance(guildId, instance);
+
+            // Step 4: Disconnect previous instance if any (same as manual reconnect)
+            if (rustplus) {
+                rustplus.isDeleted = true;
+                rustplus.disconnect();
+                delete this.client.rustplusInstances[guildId];
+            }
+
+            // Step 5: Create the rustplus instance (same as manual reconnect)
+            const newRustplus = this.client.createRustplusInstance(
+                guildId,
+                serverInfo.serverIp,
+                serverInfo.appPort,
+                serverInfo.steamId,
+                serverInfo.playerToken
+            );
+
+            // Step 6: Mark as new connection (same as manual reconnect)
+            if (newRustplus) {
+                newRustplus.isNewConnection = true;
+            }
+
+            this.client.log(this.client.intlGet(null, 'infoCap'), 
+                `Reconnection attempt ${state.retryCount} completed for guild ${guildId}`);
+            
+        } catch (error) {
+            this.client.log(this.client.intlGet(null, 'errorCap'), 
+                `Reconnection attempt ${state.retryCount} failed for guild ${guildId}: ${error.message}`);
+            throw error; // Re-throw to trigger retry logic
+        }
     }
 
     /**

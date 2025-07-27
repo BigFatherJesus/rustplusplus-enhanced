@@ -9,7 +9,7 @@ class AutoReconnectManager {
     constructor(client) {
         this.client = client;
         this.intervalId = null;
-        this.checkInterval = 45000; // Check every 45 seconds
+        this.checkInterval = 30000; // Check every 30 seconds (more responsive)
         this.isRunning = false;
     }
 
@@ -89,6 +89,15 @@ class AutoReconnectManager {
                                    this.client.rustplusInstances[guildId].isOperational;
 
         if (shouldBeConnected && !isCurrentlyConnected) {
+            // Check if this looks like a server restart (common time for Rust servers)
+            const now = new Date();
+            const isLikelyServerRestartTime = this.isLikelyServerRestartTime(now);
+            
+            if (isLikelyServerRestartTime) {
+                this.client.log(this.client.intlGet(null, 'infoCap'), 
+                    `Detected likely server restart time for guild ${guildId}, prioritizing reconnection`);
+            }
+
             this.client.log(this.client.intlGet(null, 'infoCap'), 
                 `Auto-reconnecting guild ${guildId} to server ${instance.activeServer}`);
             
@@ -97,40 +106,77 @@ class AutoReconnectManager {
     }
 
     /**
-     * Reconnect a guild to its active server
+     * Check if current time is likely a server restart time
+     * Most Rust servers restart daily around midnight or early morning hours
+     * @param {Date} now - Current time
+     * @returns {boolean} - Whether this is likely a server restart time
+     */
+    isLikelyServerRestartTime(now) {
+        const hour = now.getHours();
+        const minute = now.getMinutes();
+        
+        // Common server restart times:
+        // - Midnight (00:00-01:00)
+        // - Early morning (02:00-06:00) 
+        // - Or if it's exactly on the hour (many servers restart hourly)
+        return (hour >= 0 && hour <= 6) || (minute >= 0 && minute <= 5);
+    }
+
+    /**
+     * Reconnect a guild to its active server using the same logic as manual reconnect button
      * @param {string} guildId - Guild ID
      * @param {Object} instance - Guild instance configuration
      */
     async reconnectGuild(guildId, instance) {
-        const serverInfo = instance.serverList[instance.activeServer];
+        const serverId = instance.activeServer;
+        const serverInfo = instance.serverList[serverId];
         
         if (!serverInfo) {
             this.client.log(this.client.intlGet(null, 'errorCap'), 
-                `No server info found for active server ${instance.activeServer} in guild ${guildId}`);
+                `No server info found for active server ${serverId} in guild ${guildId}`);
             return;
         }
 
         try {
-            // Clean up any existing connection
-            if (this.client.rustplusInstances[guildId]) {
-                this.client.rustplusInstances[guildId].disconnect();
+            this.client.log(this.client.intlGet(null, 'infoCap'), 
+                `Starting auto-reconnection for guild ${guildId} to server ${serverId} (${serverInfo.serverIp}:${serverInfo.appPort})`);
+
+            // Step 1: Reset rustplus variables (same as manual reconnect)
+            this.client.resetRustplusVariables(guildId);
+
+            // Step 2: Get current rustplus instance for cleanup
+            const rustplus = this.client.rustplusInstances[guildId];
+
+            // Step 3: Set active server (already set, but ensuring consistency)
+            instance.activeServer = serverId;
+            this.client.setInstance(guildId, instance);
+
+            // Step 4: Disconnect previous instance if any (same as manual reconnect)
+            if (rustplus) {
+                rustplus.isDeleted = true;
+                rustplus.disconnect();
                 delete this.client.rustplusInstances[guildId];
             }
-            
-            // Mark as reconnecting to prevent multiple attempts
+
+            // Step 5: Mark as reconnecting to prevent multiple attempts
             this.client.rustplusReconnecting[guildId] = true;
-            
-            // Create new connection
-            await this.client.createRustplusInstance(
-                guildId,
-                serverInfo.serverIp,
-                serverInfo.appPort,
-                serverInfo.steamId,
+
+            // Step 6: Create the rustplus instance (same as manual reconnect)
+            const newRustplus = this.client.createRustplusInstance(
+                guildId, 
+                serverInfo.serverIp, 
+                serverInfo.appPort, 
+                serverInfo.steamId, 
                 serverInfo.playerToken
             );
-            
+
+            // Step 7: Mark as new connection (same as manual reconnect)
+            if (newRustplus) {
+                newRustplus.isNewConnection = true;
+            }
+
             this.client.log(this.client.intlGet(null, 'infoCap'), 
-                `Auto-reconnection initiated for guild ${guildId} to ${serverInfo.serverIp}:${serverInfo.appPort}`);
+                `Auto-reconnection initiated successfully for guild ${guildId}`);
             
         } catch (error) {
             this.client.log(this.client.intlGet(null, 'errorCap'), 

@@ -51,17 +51,22 @@ class Items {
 
     reload() {
         try {
-            // Clear require cache for the JSON file to ensure fresh data
             const itemsPath = Path.join(__dirname, '..', 'staticFiles', 'items.json');
-            delete require.cache[require.resolve(itemsPath)];
             
-            // Reload items data
-            this._items = JSON.parse(Fs.readFileSync(itemsPath, 'utf8'));
-            this._itemNames = Object.values(this.items).map(item => item.name);
-            
-            return true;
+            // Force reload by reading file directly (JSON files aren't cached by require)
+            if (Fs.existsSync(itemsPath)) {
+                const fileContent = Fs.readFileSync(itemsPath, 'utf8');
+                this._items = JSON.parse(fileContent);
+                this._itemNames = Object.values(this.items).map(item => item.name);
+                
+                console.log(`Successfully reloaded ${Object.keys(this._items).length} items from database`);
+                return true;
+            } else {
+                console.error('Items file does not exist:', itemsPath);
+                return false;
+            }
         } catch (error) {
-            console.error('Failed to reload items data:', error);
+            console.error('Failed to reload items data:', error.message);
             return false;
         }
     }

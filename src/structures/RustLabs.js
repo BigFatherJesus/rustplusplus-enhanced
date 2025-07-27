@@ -19,6 +19,7 @@
 */
 
 const Path = require('path');
+const Fs = require('fs');
 const Items = require('./Items');
 const RustlabsBuildingBlocks = require('../staticFiles/rustlabsBuildingBlocks.json');
 const RustlabsOther = require('../staticFiles/rustlabsOther.json');
@@ -829,46 +830,64 @@ class RustLabs {
 
     reload() {
         try {
-            // Clear require cache for all static files
             const staticPath = Path.join(__dirname, '..', 'staticFiles');
-            const filesToReload = [
-                'rustlabsCraftData.json',
-                'rustlabsRecycleData.json', 
-                'rustlabsResearchData.json',
-                'rustlabsDurabilityData.json',
-                'rustlabsSmeltingData.json',
-                'rustlabsDespawnData.json',
-                'rustlabsStackData.json',
-                'rustlabsDecayData.json',
-                'rustlabsUpkeepData.json',
-                'rustlabsBuildingBlocks.json',
-                'rustlabsOther.json'
-            ];
+            
+            // Force reload by reading files directly (avoiding require cache)
+            const craftDataPath = Path.join(staticPath, 'rustlabsCraftData.json');
+            const researchDataPath = Path.join(staticPath, 'rustlabsResearchData.json');
+            const recycleDataPath = Path.join(staticPath, 'rustlabsRecycleData.json');
+            const durabilityDataPath = Path.join(staticPath, 'rustlabsDurabilityData.json');
+            const smeltingDataPath = Path.join(staticPath, 'rustlabsSmeltingData.json');
+            const despawnDataPath = Path.join(staticPath, 'rustlabsDespawnData.json');
+            const stackDataPath = Path.join(staticPath, 'rustlabsStackData.json');
+            const decayDataPath = Path.join(staticPath, 'rustlabsDecayData.json');
+            const upkeepDataPath = Path.join(staticPath, 'rustlabsUpkeepData.json');
+            const buildingBlocksPath = Path.join(staticPath, 'rustlabsBuildingBlocks.json');
+            const otherPath = Path.join(staticPath, 'rustlabsOther.json');
 
-            // Clear cache for each file
-            filesToReload.forEach(file => {
-                const filePath = Path.join(staticPath, file);
-                if (require.cache[require.resolve(filePath)]) {
-                    delete require.cache[require.resolve(filePath)];
-                }
-            });
+            // Read and parse all files directly
+            if (Fs.existsSync(craftDataPath)) {
+                this._craftData = JSON.parse(Fs.readFileSync(craftDataPath, 'utf8'));
+            }
+            if (Fs.existsSync(researchDataPath)) {
+                this._researchData = JSON.parse(Fs.readFileSync(researchDataPath, 'utf8'));
+            }
+            if (Fs.existsSync(recycleDataPath)) {
+                this._recycleData = JSON.parse(Fs.readFileSync(recycleDataPath, 'utf8'));
+            }
+            if (Fs.existsSync(durabilityDataPath)) {
+                this._durabilityData = JSON.parse(Fs.readFileSync(durabilityDataPath, 'utf8'));
+            }
+            if (Fs.existsSync(smeltingDataPath)) {
+                this._smeltingData = JSON.parse(Fs.readFileSync(smeltingDataPath, 'utf8'));
+            }
+            if (Fs.existsSync(despawnDataPath)) {
+                this._despawnData = JSON.parse(Fs.readFileSync(despawnDataPath, 'utf8'));
+            }
+            if (Fs.existsSync(stackDataPath)) {
+                this._stackData = JSON.parse(Fs.readFileSync(stackDataPath, 'utf8'));
+            }
+            if (Fs.existsSync(decayDataPath)) {
+                this._decayData = JSON.parse(Fs.readFileSync(decayDataPath, 'utf8'));
+            }
+            if (Fs.existsSync(upkeepDataPath)) {
+                this._upkeepData = JSON.parse(Fs.readFileSync(upkeepDataPath, 'utf8'));
+            }
+            if (Fs.existsSync(buildingBlocksPath)) {
+                this._rustlabsBuildingBlocks = JSON.parse(Fs.readFileSync(buildingBlocksPath, 'utf8'));
+            }
+            if (Fs.existsSync(otherPath)) {
+                this._rustlabsOther = JSON.parse(Fs.readFileSync(otherPath, 'utf8'));
+            }
 
-            // Reload all data
-            this._craftData = require('../staticFiles/rustlabsCraftData.json');
-            this._researchData = require('../staticFiles/rustlabsResearchData.json');
-            this._recycleData = require('../staticFiles/rustlabsRecycleData.json');
-            this._durabilityData = require('../staticFiles/rustlabsDurabilityData.json');
-            this._smeltingData = require('../staticFiles/rustlabsSmeltingData.json');
-            this._despawnData = require('../staticFiles/rustlabsDespawnData.json');
-            this._stackData = require('../staticFiles/rustlabsStackData.json');
-            this._decayData = require('../staticFiles/rustlabsDecayData.json');
-            this._upkeepData = require('../staticFiles/rustlabsUpkeepData.json');
-            this._rustlabsBuildingBlocks = require('../staticFiles/rustlabsBuildingBlocks.json');
-            this._rustlabsOther = require('../staticFiles/rustlabsOther.json');
+            // Update cached building block and other names
+            this._buildingBlocks = Object.keys(this._rustlabsBuildingBlocks);
+            this._other = Object.keys(this._rustlabsOther);
 
             // Reload items instance
             this._items.reload();
 
+            console.log(`Successfully reloaded RustLabs data from static files`);
             return true;
         } catch (error) {
             console.error('Failed to reload RustLabs data:', error);
