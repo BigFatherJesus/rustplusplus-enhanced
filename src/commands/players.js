@@ -20,6 +20,7 @@
 
 const Builder = require('@discordjs/builders');
 
+const Config = require('../../config')
 const Constants = require('../util/constants.js');
 const DiscordEmbeds = require('../discordTools/discordEmbeds.js');
 const DiscordTools = require('../discordTools/discordTools.js');
@@ -68,6 +69,7 @@ module.exports = {
 		client.logInteraction(interaction, verifyId, 'slashCommand');
 
 		if (!await client.validatePermissions(interaction)) return;
+		if (Config.battlemetrics.token === '') return;
 		await interaction.deferReply({ ephemeral: true });
 
 		let battlemetricsId = interaction.options.getString('battlemetricsid');

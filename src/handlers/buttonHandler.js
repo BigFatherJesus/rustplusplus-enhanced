@@ -322,7 +322,7 @@ module.exports = async (client, interaction) => {
                 instance.generalSettings.itemAvailableInVendingMachineNotifyInGame)]
         });
     }
-    else if (interaction.customId === 'DisplayInformationBattlemetricsAllOnlinePlayers') {
+    else if (Config.battlemetrics.token !== '' && interaction.customId === 'DisplayInformationBattlemetricsAllOnlinePlayers') {
         instance.generalSettings.displayInformationBattlemetricsAllOnlinePlayers =
             !instance.generalSettings.displayInformationBattlemetricsAllOnlinePlayers;
         client.setInstance(guildId, instance);
@@ -340,7 +340,7 @@ module.exports = async (client, interaction) => {
                 instance.generalSettings.displayInformationBattlemetricsAllOnlinePlayers)]
         });
     }
-    else if (interaction.customId === 'BattlemetricsServerNameChanges') {
+    else if (Config.battlemetrics.token !== '' && interaction.customId === 'BattlemetricsServerNameChanges') {
         instance.generalSettings.battlemetricsServerNameChanges =
             !instance.generalSettings.battlemetricsServerNameChanges;
         client.setInstance(guildId, instance);
@@ -357,7 +357,7 @@ module.exports = async (client, interaction) => {
             components: DiscordButtons.getSubscribeToChangesBattlemetricsButtons(guildId)
         });
     }
-    else if (interaction.customId === 'BattlemetricsTrackerNameChanges') {
+    else if (Config.battlemetrics.token !== '' && interaction.customId === 'BattlemetricsTrackerNameChanges') {
         instance.generalSettings.battlemetricsTrackerNameChanges =
             !instance.generalSettings.battlemetricsTrackerNameChanges;
         client.setInstance(guildId, instance);
@@ -374,7 +374,7 @@ module.exports = async (client, interaction) => {
             components: DiscordButtons.getSubscribeToChangesBattlemetricsButtons(guildId)
         });
     }
-    else if (interaction.customId === 'BattlemetricsGlobalNameChanges') {
+    else if (Config.battlemetrics.token !== '' && interaction.customId === 'BattlemetricsGlobalNameChanges') {
         instance.generalSettings.battlemetricsGlobalNameChanges =
             !instance.generalSettings.battlemetricsGlobalNameChanges;
         client.setInstance(guildId, instance);
@@ -391,7 +391,7 @@ module.exports = async (client, interaction) => {
             components: DiscordButtons.getSubscribeToChangesBattlemetricsButtons(guildId)
         });
     }
-    else if (interaction.customId === 'BattlemetricsGlobalLogin') {
+    else if (Config.battlemetrics.token !== '' && interaction.customId === 'BattlemetricsGlobalLogin') {
         instance.generalSettings.battlemetricsGlobalLogin =
             !instance.generalSettings.battlemetricsGlobalLogin;
         client.setInstance(guildId, instance);
@@ -408,7 +408,7 @@ module.exports = async (client, interaction) => {
             components: DiscordButtons.getSubscribeToChangesBattlemetricsButtons(guildId)
         });
     }
-    else if (interaction.customId === 'BattlemetricsGlobalLogout') {
+    else if (Config.battlemetrics.token !== '' && interaction.customId === 'BattlemetricsGlobalLogout') {
         instance.generalSettings.battlemetricsGlobalLogout =
             !instance.generalSettings.battlemetricsGlobalLogout;
         client.setInstance(guildId, instance);
@@ -457,7 +457,7 @@ module.exports = async (client, interaction) => {
 
         newRustplus.isNewConnection = true;
     }
-    else if (interaction.customId.startsWith('ServerEdit')) {
+    else if (Config.battlemetrics.token !== '' && interaction.customId.startsWith('ServerEdit')) {
         const ids = JSON.parse(interaction.customId.replace('ServerEdit', ''));
         const server = instance.serverList[ids.serverId];
 
@@ -526,7 +526,7 @@ module.exports = async (client, interaction) => {
         const modal = DiscordModals.getCustomTimersEditModal(guildId, ids.serverId);
         await interaction.showModal(modal);
     }
-    else if (interaction.customId.startsWith('CreateTracker')) {
+    else if (Config.battlemetrics.token !== '' && interaction.customId.startsWith('CreateTracker')) {
         const ids = JSON.parse(interaction.customId.replace('CreateTracker', ''));
         const server = instance.serverList[ids.serverId];
 
@@ -1045,7 +1045,7 @@ module.exports = async (client, interaction) => {
         const modal = DiscordModals.getGroupRemoveSwitchModal(guildId, ids.serverId, ids.groupId);
         await interaction.showModal(modal);
     }
-    else if (interaction.customId.startsWith('TrackerEveryone')) {
+    else if (Config.battlemetrics.token !== '' && interaction.customId.startsWith('TrackerEveryone')) {
         const ids = JSON.parse(interaction.customId.replace('TrackerEveryone', ''));
         const tracker = instance.trackers[ids.trackerId];
 
@@ -1064,7 +1064,7 @@ module.exports = async (client, interaction) => {
 
         await DiscordMessages.sendTrackerMessage(guildId, ids.trackerId, interaction);
     }
-    else if (interaction.customId.startsWith('TrackerUpdate')) {
+    else if (Config.battlemetrics.token !== '' && interaction.customId.startsWith('TrackerUpdate')) {
         const ids = JSON.parse(interaction.customId.replace('TrackerUpdate', ''));
         const tracker = instance.trackers[ids.trackerId];
 
@@ -1077,7 +1077,7 @@ module.exports = async (client, interaction) => {
 
         await DiscordMessages.sendTrackerMessage(guildId, ids.trackerId, interaction);
     }
-    else if (interaction.customId.startsWith('TrackerEdit')) {
+    else if (Config.battlemetrics.token !== '' && interaction.customId.startsWith('TrackerEdit')) {
         const ids = JSON.parse(interaction.customId.replace('TrackerEdit', ''));
         const tracker = instance.trackers[ids.trackerId];
 
@@ -1089,7 +1089,7 @@ module.exports = async (client, interaction) => {
         const modal = DiscordModals.getTrackerEditModal(guildId, ids.trackerId);
         await interaction.showModal(modal);
     }
-    else if (interaction.customId.startsWith('TrackerDelete')) {
+    else if (Config.battlemetrics.token !== '' && interaction.customId.startsWith('TrackerDelete')) {
         const ids = JSON.parse(interaction.customId.replace('TrackerDelete', ''));
         const tracker = instance.trackers[ids.trackerId];
 
@@ -1109,7 +1109,7 @@ module.exports = async (client, interaction) => {
         delete instance.trackers[ids.trackerId];
         client.setInstance(guildId, instance);
     }
-    else if (interaction.customId.startsWith('TrackerAddPlayer')) {
+    else if (Config.battlemetrics.token !== '' && interaction.customId.startsWith('TrackerAddPlayer')) {
         const ids = JSON.parse(interaction.customId.replace('TrackerAddPlayer', ''));
         const tracker = instance.trackers[ids.trackerId];
 
@@ -1121,7 +1121,7 @@ module.exports = async (client, interaction) => {
         const modal = DiscordModals.getTrackerAddPlayerModal(guildId, ids.trackerId);
         await interaction.showModal(modal);
     }
-    else if (interaction.customId.startsWith('TrackerRemovePlayer')) {
+    else if (Config.battlemetrics.token !== '' && interaction.customId.startsWith('TrackerRemovePlayer')) {
         const ids = JSON.parse(interaction.customId.replace('TrackerRemovePlayer', ''));
         const tracker = instance.trackers[ids.trackerId];
 
@@ -1133,7 +1133,7 @@ module.exports = async (client, interaction) => {
         const modal = DiscordModals.getTrackerRemovePlayerModal(guildId, ids.trackerId);
         await interaction.showModal(modal);
     }
-    else if (interaction.customId.startsWith('TrackerInGame')) {
+    else if (Config.battlemetrics.token !== '' && interaction.customId.startsWith('TrackerInGame')) {
         const ids = JSON.parse(interaction.customId.replace('TrackerInGame', ''));
         const tracker = instance.trackers[ids.trackerId];
 

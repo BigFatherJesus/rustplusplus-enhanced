@@ -24,6 +24,7 @@ const PushReceiverClient = require('@liamcottle/push-receiver/src/client');
 
 const Battlemetrics = require('../structures/Battlemetrics');
 const Constants = require('../util/constants.js');
+const RustRelay = require('./rustRelay.js');
 const DiscordButtons = require('../discordTools/discordButtons.js');
 const DiscordEmbeds = require('../discordTools/discordEmbeds.js');
 const DiscordMessages = require('../discordTools/discordMessages.js');
@@ -31,6 +32,7 @@ const DiscordTools = require('../discordTools/discordTools.js');
 const InstanceUtils = require('../util/instanceUtils.js');
 const Map = require('../util/map.js');
 const Scrape = require('../util/scrape.js');
+const Config = require('../../config');
 
 module.exports = async (client, guild) => {
     const credentials = InstanceUtils.readCredentialsFile(guild.id);
@@ -110,6 +112,10 @@ module.exports = async (client, guild) => {
         catch (error) {
             client.log('FCM Host', `GuildID: ${guild.id}, SteamID: ${hoster}, malformed body JSON: ${error.message}`);
             return;
+        }
+        if (!body.ip || !body.port) {
+            client.log('FCM Host', `GuildID: ${guild.id}, SteamID: ${hoster}, ` +
+                `notification without ip/port (channel ${channelId}), keys: ${Object.keys(body).join(',')}`);
         }
 
         if (!body.type && channelId !== 'alarm') {
@@ -245,28 +251,35 @@ function isValidUrl(url) {
 
 async function pairingServer(client, guild, title, message, body) {
     const instance = client.getInstance(guild.id);
-    const serverId = `${body.ip}-${body.port}`;
+    const address = RustRelay.pairingAddress(client.getInstance(guild.id), body);
+    if (!address) return;
+    const serverId = address.serverId;
     const server = instance.serverList[serverId];
 
     let messageObj = undefined;
     if (server) messageObj = await DiscordTools.getMessageById(guild.id, instance.channelId.servers, server.messageId);
 
-    let battlemetricsId = null;
-    const bmInstance = new Battlemetrics(null, title);
-    await bmInstance.setup();
-    if (bmInstance.lastUpdateSuccessful) {
-        battlemetricsId = bmInstance.id;
-        if (!client.battlemetricsInstances.hasOwnProperty(bmInstance.id)) {
-            client.battlemetricsInstances[bmInstance.id] = bmInstance;
+    let battlemetricsId = server?.battlemetricsId ?? null;
+    let connect = server?.connect ?? null;
+    if (Config.battlemetrics.token !== '') {
+        const bmInstance = new Battlemetrics(null, title);
+        await bmInstance.setup();
+        if (bmInstance.lastUpdateSuccessful) {
+            battlemetricsId = bmInstance.id;
+            connect = `connect ${bmInstance.server_ip}:${bmInstance.server_port}`;
+            if (!client.battlemetricsInstances.hasOwnProperty(bmInstance.id)) {
+                client.battlemetricsInstances[bmInstance.id] = bmInstance;
+            }
         }
     }
 
     instance.serverList[serverId] = {
         title: title,
-        serverIp: body.ip,
-        appPort: body.port,
+        serverIp: address.serverIp,
+        appPort: address.appPort,
         steamId: body.playerId,
         playerToken: body.playerToken,
+        relayServerId: body.id ? body.id : (server ? (server.relayServerId || null) : null),
         description: body.desc.replace(/\\n/g, '\n').replace(/\\t/g, '\t'),
         img: isValidUrl(body.img) ? body.img.replace(/ /g, '%20') : Constants.DEFAULT_SERVER_IMG,
         url: isValidUrl(body.url) ? body.url.replace(/ /g, '%20') : Constants.DEFAULT_SERVER_URL,
@@ -278,8 +291,7 @@ async function pairingServer(client, guild, title, message, body) {
         switchGroups: server ? server.switchGroups : {},
         messageId: (messageObj !== undefined) ? messageObj.id : null,
         battlemetricsId: battlemetricsId,
-        connect: (!bmInstance.lastUpdateSuccessful) ? null :
-            `connect ${bmInstance.server_ip}:${bmInstance.server_port}`,
+        connect: connect,
         cargoShipEgressTimeMs: server ? server.cargoShipEgressTimeMs : Constants.DEFAULT_CARGO_SHIP_EGRESS_TIME_MS,
         oilRigLockedCrateUnlockTimeMs: server ? server.oilRigLockedCrateUnlockTimeMs :
             Constants.DEFAULT_OIL_RIG_LOCKED_CRATE_UNLOCK_TIME_MS,
@@ -290,10 +302,11 @@ async function pairingServer(client, guild, title, message, body) {
     if (!instance.serverListLite.hasOwnProperty(serverId)) instance.serverListLite[serverId] = new Object();
 
     instance.serverListLite[serverId][body.playerId] = {
-        serverIp: body.ip,
-        appPort: body.port,
+        serverIp: address.serverIp,
+        appPort: address.appPort,
         steamId: body.playerId,
         playerToken: body.playerToken,
+        relayServerId: body.id || null,
     };
     client.setInstance(guild.id, instance);
 
@@ -302,7 +315,9 @@ async function pairingServer(client, guild, title, message, body) {
 
 async function pairingEntitySwitch(client, guild, title, message, body) {
     const instance = client.getInstance(guild.id);
-    const serverId = `${body.ip}-${body.port}`;
+    const address = RustRelay.pairingAddress(client.getInstance(guild.id), body);
+    if (!address) return;
+    const serverId = address.serverId;
     if (!instance.serverList.hasOwnProperty(serverId)) return;
     const switches = instance.serverList[serverId].switches;
 
@@ -352,7 +367,9 @@ async function pairingEntitySwitch(client, guild, title, message, body) {
 
 async function pairingEntitySmartAlarm(client, guild, title, message, body) {
     const instance = client.getInstance(guild.id);
-    const serverId = `${body.ip}-${body.port}`;
+    const address = RustRelay.pairingAddress(client.getInstance(guild.id), body);
+    if (!address) return;
+    const serverId = address.serverId;
     if (!instance.serverList.hasOwnProperty(serverId)) return;
     const alarms = instance.serverList[serverId].alarms;
 
@@ -400,7 +417,9 @@ async function pairingEntitySmartAlarm(client, guild, title, message, body) {
 
 async function pairingEntityStorageMonitor(client, guild, title, message, body) {
     const instance = client.getInstance(guild.id);
-    const serverId = `${body.ip}-${body.port}`;
+    const address = RustRelay.pairingAddress(client.getInstance(guild.id), body);
+    if (!address) return;
+    const serverId = address.serverId;
     if (!instance.serverList.hasOwnProperty(serverId)) return;
     const storageMonitors = instance.serverList[serverId].storageMonitors;
 
@@ -479,7 +498,9 @@ async function alarmAlarm(client, guild, title, message, body) {
     setting fcmAlarmNotificationEnabled is enabled. Those notifications will be handled here. */
 
     const instance = client.getInstance(guild.id);
-    const serverId = `${body.ip}-${body.port}`;
+    const address = RustRelay.pairingAddress(client.getInstance(guild.id), body);
+    if (!address) return;
+    const serverId = address.serverId;
     const entityId = body.entityId;
     const server = instance.serverList[serverId];
     const rustplus = client.rustplusInstances[guild.id];
@@ -497,7 +518,9 @@ async function alarmAlarm(client, guild, title, message, body) {
 
 async function alarmRaidAlarm(client, guild, title, message, body) {
     const instance = client.getInstance(guild.id);
-    const serverId = `${body.ip}-${body.port}`;
+    const address = RustRelay.pairingAddress(client.getInstance(guild.id), body);
+    if (!address) return;
+    const serverId = address.serverId;
     const rustplus = client.rustplusInstances[guild.id];
 
     if (!instance.serverList.hasOwnProperty(serverId)) return;
@@ -546,7 +569,9 @@ async function teamLogin(client, guild, title, message, body) {
     }
 
     const rustplus = client.rustplusInstances[guild.id];
-    const serverId = `${body.ip}-${body.port}`;
+    const address = RustRelay.pairingAddress(client.getInstance(guild.id), body);
+    if (!address) return;
+    const serverId = address.serverId;
 
     if (!rustplus || (rustplus && (serverId !== rustplus.serverId))) {
         await DiscordMessages.sendMessage(guild.id, content, null, instance.channelId.activity);

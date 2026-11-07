@@ -73,9 +73,11 @@ module.exports = {
             await client.setupGuild(guild);
         }
 
-        await client.updateBattlemetricsInstances();
-        BattlemetricsHandler.handler(client, true);
-        client.battlemetricsIntervalId = setInterval(BattlemetricsHandler.handler, 60000, client, false);
+        if (Config.battlemetrics.token !== '') {
+            await client.updateBattlemetricsInstances();
+            BattlemetricsHandler.handler(client, true);
+            client.battlemetricsIntervalId = setInterval(BattlemetricsHandler.handler, 60000, client, false);
+        }
 
         client.log(client.intlGet(null, 'infoCap'), 'Creating RustPlus instances from configuration...');
         client.createRustplusInstancesFromConfig();

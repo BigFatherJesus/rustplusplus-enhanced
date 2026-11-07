@@ -4,6 +4,7 @@
 
 * [**Installation**](installation.md)
 * [**Discord Bot Setup**](discord_bot_setup.md)
+* [**Battlemetrics & Trackers**](battlemetrics_and_trackers.md)
 * [**Credentials**](credentials.md) OR [**Credentials(WebVersion)**](credentials_web_version.md)
 * [**Pair & Connect Server**](pair_and_connect_to_server.md)
 * [**Commands**](commands.md)

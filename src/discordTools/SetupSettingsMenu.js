@@ -21,6 +21,7 @@
 const Discord = require('discord.js');
 const Path = require('path');
 
+const Config = require('../../config');
 const Constants = require('../util/constants.js');
 const DiscordButtons = require('./discordButtons.js');
 const DiscordEmbeds = require('./discordEmbeds.js');
@@ -267,28 +268,30 @@ async function setupGeneralSettings(client, guildId, channel) {
             Path.join(__dirname, '..', 'resources/images/settings_logo.png'))]
     });
 
-    await client.messageSend(channel, {
-        embeds: [DiscordEmbeds.getEmbed({
-            color: Constants.COLOR_SETTINGS,
-            title: client.intlGet(guildId, 'displayInformationBattlemetricsAllOnlinePlayers'),
-            thumbnail: `attachment://settings_logo.png`
-        })],
-        components: [DiscordButtons.getDisplayInformationBattlemetricsAllOnlinePlayersButton(guildId,
-            instance.generalSettings.displayInformationBattlemetricsAllOnlinePlayers)],
-        files: [new Discord.AttachmentBuilder(
-            Path.join(__dirname, '..', 'resources/images/settings_logo.png'))]
-    });
+    if (Config.battlemetrics.token !== '') {
+        await client.messageSend(channel, {
+            embeds: [DiscordEmbeds.getEmbed({
+                color: Constants.COLOR_SETTINGS,
+                title: client.intlGet(guildId, 'displayInformationBattlemetricsAllOnlinePlayers'),
+                thumbnail: `attachment://settings_logo.png`
+            })],
+            components: [DiscordButtons.getDisplayInformationBattlemetricsAllOnlinePlayersButton(guildId,
+                instance.generalSettings.displayInformationBattlemetricsAllOnlinePlayers)],
+            files: [new Discord.AttachmentBuilder(
+                Path.join(__dirname, '..', 'resources/images/settings_logo.png'))]
+        });
 
-    await client.messageSend(channel, {
-        embeds: [DiscordEmbeds.getEmbed({
-            color: Constants.COLOR_SETTINGS,
-            title: client.intlGet(guildId, 'subscribeToChangesBattlemetrics'),
-            thumbnail: `attachment://settings_logo.png`
-        })],
-        components: DiscordButtons.getSubscribeToChangesBattlemetricsButtons(guildId),
-        files: [new Discord.AttachmentBuilder(
-            Path.join(__dirname, '..', 'resources/images/settings_logo.png'))]
-    });
+        await client.messageSend(channel, {
+            embeds: [DiscordEmbeds.getEmbed({
+                color: Constants.COLOR_SETTINGS,
+                title: client.intlGet(guildId, 'subscribeToChangesBattlemetrics'),
+                thumbnail: `attachment://settings_logo.png`
+            })],
+            components: DiscordButtons.getSubscribeToChangesBattlemetricsButtons(guildId),
+            files: [new Discord.AttachmentBuilder(
+                Path.join(__dirname, '..', 'resources/images/settings_logo.png'))]
+        });
+    }
 }
 
 async function setupNotificationSettings(client, guildId, channel) {

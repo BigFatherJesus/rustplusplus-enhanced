@@ -22,6 +22,7 @@ const Discord = require('discord.js');
 
 const Constants = require('../util/constants.js');
 const Client = require('../../index.ts');
+const Config = require('../../config');
 
 const SUCCESS = Discord.ButtonStyle.Success;
 const DANGER = Discord.ButtonStyle.Danger;
@@ -121,7 +122,7 @@ module.exports = {
             emoji: '🗑️'
         });
 
-        if (server.battlemetricsId !== null) {
+        if (Config.battlemetrics.token !== '' && server.battlemetricsId !== null) {
             return [
                 new Discord.ActionRowBuilder().addComponents(
                     connectionButton, linkButton, battlemetricsButton, editButton, deleteButton

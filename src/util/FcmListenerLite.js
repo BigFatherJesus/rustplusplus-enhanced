@@ -21,6 +21,7 @@
 const PushReceiverClient = require('@liamcottle/push-receiver/src/client');
 
 const Constants = require('../util/constants.js');
+const RustRelay = require('./rustRelay.js');
 const DiscordEmbeds = require('../discordTools/discordEmbeds.js');
 const DiscordMessages = require('../discordTools/discordMessages.js');
 const DiscordTools = require('../discordTools/discordTools.js');
@@ -93,6 +94,10 @@ module.exports = async (client, guild, steamId) => {
         catch (error) {
             client.log('FCM LITE', `GuildID: ${guild.id}, SteamID: ${steamId}, malformed body JSON: ${error.message}`);
             return;
+        }
+        if (!body.ip || !body.port) {
+            client.log('FCM LITE', `GuildID: ${guild.id}, SteamID: ${steamId}, ` +
+                `notification without ip/port (channel ${channelId}), keys: ${Object.keys(body).join(',')}`);
         }
 
         if (!body.type && channelId !== 'alarm') {
@@ -168,15 +173,18 @@ function isValidUrl(url) {
 
 async function pairingServer(client, guild, steamId, title, message, body) {
     const instance = client.getInstance(guild.id);
-    const serverId = `${body.ip}-${body.port}`;
+    const address = RustRelay.pairingAddress(client.getInstance(guild.id), body);
+    if (!address) return;
+    const serverId = address.serverId;
 
     if (!instance.serverListLite.hasOwnProperty(serverId)) instance.serverListLite[serverId] = new Object();
 
     instance.serverListLite[serverId][steamId] = {
-        serverIp: body.ip,
-        appPort: body.port,
+        serverIp: address.serverIp,
+        appPort: address.appPort,
         steamId: body.playerId,
         playerToken: body.playerToken,
+        relayServerId: body.id || null,
     };
     client.setInstance(guild.id, instance);
 
@@ -188,7 +196,9 @@ async function pairingServer(client, guild, steamId, title, message, body) {
 
 async function pairingEntitySwitch(client, guild, title, message, body) {
     const instance = client.getInstance(guild.id);
-    const serverId = `${body.ip}-${body.port}`;
+    const address = RustRelay.pairingAddress(client.getInstance(guild.id), body);
+    if (!address) return;
+    const serverId = address.serverId;
     if (!instance.serverList.hasOwnProperty(serverId)) return;
     const switches = instance.serverList[serverId].switches;
 
@@ -238,7 +248,9 @@ async function pairingEntitySwitch(client, guild, title, message, body) {
 
 async function pairingEntitySmartAlarm(client, guild, title, message, body) {
     const instance = client.getInstance(guild.id);
-    const serverId = `${body.ip}-${body.port}`;
+    const address = RustRelay.pairingAddress(client.getInstance(guild.id), body);
+    if (!address) return;
+    const serverId = address.serverId;
     if (!instance.serverList.hasOwnProperty(serverId)) return;
     const alarms = instance.serverList[serverId].alarms;
 
@@ -286,7 +298,9 @@ async function pairingEntitySmartAlarm(client, guild, title, message, body) {
 
 async function pairingEntityStorageMonitor(client, guild, title, message, body) {
     const instance = client.getInstance(guild.id);
-    const serverId = `${body.ip}-${body.port}`;
+    const address = RustRelay.pairingAddress(client.getInstance(guild.id), body);
+    if (!address) return;
+    const serverId = address.serverId;
     if (!instance.serverList.hasOwnProperty(serverId)) return;
     const storageMonitors = instance.serverList[serverId].storageMonitors;
 

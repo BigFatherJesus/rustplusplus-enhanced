@@ -25,6 +25,7 @@ const Constants = require('../util/constants.js');
 const DiscordTools = require('./discordTools.js');
 const InstanceUtils = require('../util/instanceUtils.js');
 const Timer = require('../util/timer');
+const Config = require('../../config');
 
 function isValidUrl(url) {
     if (url.startsWith('https') || url.startsWith('http')) return true;
@@ -80,7 +81,7 @@ module.exports = {
         }
 
         let description = '';
-        if (server.battlemetricsId !== null) {
+        if (Config.battlemetrics.token !== '' && server.battlemetricsId !== null) {
             const bmId = server.battlemetricsId;
             const bmIdLink = `[${bmId}](${Constants.BATTLEMETRICS_SERVER_URL}${bmId})`;
             description += `__**${Client.client.intlGet(guildId, 'battlemetricsId')}:**__ ${bmIdLink}\n`;

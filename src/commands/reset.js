@@ -113,7 +113,9 @@ module.exports = {
 					await require('../discordTools/SetupStorageMonitors')(client, rustplus);
 				}
 
-				await require('../discordTools/SetupTrackers')(client, guild);
+				if (Config.battlemetrics.token !== '') {
+					await require('../discordTools/SetupTrackers')(client, guild);
+				}
 
 				await PermissionHandler.resetPermissionsAllChannels(client, guild);
 
@@ -243,6 +245,10 @@ module.exports = {
 			} break;
 
 			case 'trackers': {
+				if (Config.battlemetrics.token === '') {
+					break;
+				}
+
 				const perms = PermissionHandler.getPermissionsRemoved(client, guild);
 				try {
 					const category = await DiscordTools.getCategoryById(guild.id, instance.channelId.category);

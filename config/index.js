@@ -75,5 +75,8 @@ module.exports = {
         /* Proactive AI commentary on notable events (raid alarms, etc.).
            Default off — frequent events would cost tokens / spam. */
         alertsEnabled: process.env.RPP_AI_ALERTS_ENABLED === 'true',
+    },
+    battlemetrics: {
+        token: process.env.RPP_BATTLEMETRICS_TOKEN || ''
     }
 };
