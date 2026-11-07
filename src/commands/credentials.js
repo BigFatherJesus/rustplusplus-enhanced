@@ -144,17 +144,18 @@ async function addCredentials(client, interaction, verifyId) {
         }
     }
 
-    /* Re-adding an already registered account refreshes it (new GCM creds and/or auth token). */
+    /* Re-adding an already registered account refreshes it (new GCM creds and/or auth token).
+       Only its owner or an administrator may do that, whatever needAdminPrivileges is, and the
+       previous owner's auth token and hoster status never carry over to a different user. */
     const existing = credentials[steamId];
-    if (existing && existing.discord_user_id !== interaction.member.user.id) {
-        if (Config.discord.needAdminPrivileges && !client.isAdministrator(interaction)) {
-            const str = client.intlGet(guildId, 'credentialsAlreadyRegistered', { steamId: steamId });
-            await client.interactionEditReply(interaction, DiscordEmbeds.getActionInfoEmbed(1, str));
-            client.log(client.intlGet(null, 'warningCap'), str);
-            return;
-        }
+    const sameOwner = !!existing && existing.discord_user_id === interaction.member.user.id;
+    if (existing && !sameOwner && !client.isAdministrator(interaction)) {
+        const str = client.intlGet(guildId, 'credentialsAlreadyRegistered', { steamId: steamId });
+        await client.interactionEditReply(interaction, DiscordEmbeds.getActionInfoEmbed(1, str));
+        client.log(client.intlGet(null, 'warningCap'), str);
+        return;
     }
-    const wasHoster = !!existing && credentials.hoster === steamId;
+    const wasHoster = sameOwner && credentials.hoster === steamId;
     const hoster = isHoster || wasHoster;
 
     credentials[steamId] = new Object();
@@ -164,7 +165,7 @@ async function addCredentials(client, interaction, verifyId) {
     credentials[steamId].issued_date = interaction.options.getString('issued_date');
     credentials[steamId].expire_date = interaction.options.getString('expire_date');
     credentials[steamId].discord_user_id = interaction.member.user.id;
-    const keptAuthToken = existing ? existing.rustplus_auth_token : null;
+    const keptAuthToken = sameOwner ? existing.rustplus_auth_token : null;
     if (authToken || keptAuthToken) {
         credentials[steamId].rustplus_auth_token = authToken || keptAuthToken;
     }
