@@ -26,7 +26,11 @@ const Utils = require('../util/utils.js');
 module.exports = {
     scrape: async function (url) {
         try {
-            return await Axios.get(url);
+            /* Steam answers axios's default headers with 429 Too Many Requests; browser-like ones pass. */
+            return await Axios.get(url, {
+                headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)', 'Accept': 'text/html' },
+                timeout: 15000
+            });
         }
         catch (e) {
             return {};
