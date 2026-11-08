@@ -280,10 +280,13 @@ module.exports = {
                 style: Discord.TextInputStyle.Short
             })),
             new Discord.ActionRowBuilder().addComponents(TextInput.getTextInput({
-                customId: 'TrackerBattlemetricsId',
-                label: Client.client.intlGet(guildId, 'battlemetricsId'),
-                value: tracker.battlemetricsId,
-                style: Discord.TextInputStyle.Short
+                customId: 'TrackerAddress',
+                label: Client.client.intlGet(guildId, 'trackerServerAddressInput'),
+                value: tracker.address ?? '',
+                placeholder: '123.45.67.89:28015',
+                style: Discord.TextInputStyle.Short,
+                required: false,
+                minLength: 0
             })),
             new Discord.ActionRowBuilder().addComponents(TextInput.getTextInput({
                 customId: 'TrackerClanTag',
@@ -312,8 +315,7 @@ module.exports = {
         modal.addComponents(
             new Discord.ActionRowBuilder().addComponents(TextInput.getTextInput({
                 customId: 'TrackerAddPlayerId',
-                label: `${Client.client.intlGet(guildId, 'steamId')} / ` +
-                    `${Client.client.intlGet(guildId, 'battlemetricsId')}`,
+                label: Client.client.intlGet(guildId, 'trackerSteamIdOrName'),
                 value: '',
                 style: Discord.TextInputStyle.Short
             }))
@@ -335,8 +337,7 @@ module.exports = {
         modal.addComponents(
             new Discord.ActionRowBuilder().addComponents(TextInput.getTextInput({
                 customId: 'TrackerRemovePlayerId',
-                label: `${Client.client.intlGet(guildId, 'steamId')} / ` +
-                    `${Client.client.intlGet(guildId, 'battlemetricsId')}`,
+                label: Client.client.intlGet(guildId, 'trackerSteamIdOrName'),
                 value: '',
                 style: Discord.TextInputStyle.Short
             }))

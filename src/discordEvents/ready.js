@@ -23,6 +23,7 @@ const Path = require('path');
 
 const BattlemetricsHandler = require('../handlers/battlemetricsHandler.js');
 const Config = require('../../config');
+const TrackerHandler = require('../handlers/trackerHandler.js');
 
 module.exports = {
     name: 'ready',
@@ -78,6 +79,9 @@ module.exports = {
             BattlemetricsHandler.handler(client, true);
             client.battlemetricsIntervalId = setInterval(BattlemetricsHandler.handler, 60000, client, false);
         }
+
+        TrackerHandler.handler(client);
+        client.trackerIntervalId = setInterval(TrackerHandler.handler, 60000, client);
 
         client.log(client.intlGet(null, 'infoCap'), 'Creating RustPlus instances from configuration...');
         client.createRustplusInstancesFromConfig();

@@ -141,7 +141,7 @@ module.exports = {
                     connectionButton, linkButton, editButton, deleteButton
                 ),
                 new Discord.ActionRowBuilder().addComponents(
-                    customTimersButton, groupButton
+                    customTimersButton, trackerButton, groupButton
                 ),
                 new Discord.ActionRowBuilder().addComponents(
                     deleteUnreachableDevicesButton

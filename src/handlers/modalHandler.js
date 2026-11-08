@@ -25,6 +25,7 @@ const Constants = require('../util/constants.js');
 const DiscordMessages = require('../discordTools/discordMessages.js');
 const Keywords = require('../util/keywords.js');
 const Scrape = require('../util/scrape.js');
+const ServerQuery = require('../util/serverQuery.js');
 
 module.exports = async (client, interaction) => {
     const instance = client.getInstance(interaction.guildId);
@@ -98,9 +99,6 @@ module.exports = async (client, interaction) => {
         }));
 
         await DiscordMessages.sendServerMessage(interaction.guildId, ids.serverId);
-
-        /* To force search of player name via scrape */
-        client.battlemetricsIntervalCounter = 0;
     }
     else if (interaction.customId.startsWith('SmartSwitchEdit')) {
         const ids = JSON.parse(interaction.customId.replace('SmartSwitchEdit', ''));
@@ -264,7 +262,7 @@ module.exports = async (client, interaction) => {
         const ids = JSON.parse(interaction.customId.replace('TrackerEdit', ''));
         const tracker = instance.trackers[ids.trackerId];
         const trackerName = interaction.fields.getTextInputValue('TrackerName');
-        const trackerBattlemetricsId = interaction.fields.getTextInputValue('TrackerBattlemetricsId');
+        const trackerAddress = interaction.fields.getTextInputValue('TrackerAddress').trim();
         const trackerClanTag = interaction.fields.getTextInputValue('TrackerClanTag');
 
         if (!tracker) {
@@ -272,29 +270,28 @@ module.exports = async (client, interaction) => {
             return;
         }
 
-        tracker.name = trackerName;
-        if (trackerClanTag !== tracker.clanTag) {
-            tracker.clanTag = trackerClanTag;
-            client.battlemetricsIntervalCounter = 0;
-        }
+        /* Looking up the address can take longer than Discord's 3 s reply window. */
+        await interaction.deferUpdate();
 
-        if (trackerBattlemetricsId !== tracker.battlemetricsId) {
-            if (client.battlemetricsInstances.hasOwnProperty(trackerBattlemetricsId)) {
-                const bmInstance = client.battlemetricsInstances[trackerBattlemetricsId];
-                tracker.battlemetricsId = trackerBattlemetricsId;
-                tracker.serverId = `${bmInstance.server_ip}-${bmInstance.server_port}`;
-                tracker.img = Constants.DEFAULT_SERVER_IMG;
-                tracker.title = bmInstance.server_name;
+        tracker.name = trackerName;
+        tracker.clanTag = trackerClanTag;
+
+        if (trackerAddress !== (tracker.address ?? '')) {
+            const server = trackerAddress === '' ? null : await ServerQuery.resolveAddress(trackerAddress);
+            if (trackerAddress !== '' && server === null) {
+                await interaction.followUp({
+                    content: client.intlGet(guildId, 'trackerAddressNotFound', { address: trackerAddress }),
+                    ephemeral: true
+                });
             }
             else {
-                const bmInstance = new Battlemetrics(trackerBattlemetricsId);
-                await bmInstance.setup();
-                if (bmInstance.lastUpdateSuccessful) {
-                    client.battlemetricsInstances[trackerBattlemetricsId] = bmInstance;
-                    tracker.battlemetricsId = trackerBattlemetricsId;
-                    tracker.serverId = `${bmInstance.server_ip}-${bmInstance.server_port}`;
-                    tracker.img = Constants.DEFAULT_SERVER_IMG;
-                    tracker.title = bmInstance.server_name;
+                tracker.address = server ? `${server.host}:${server.port}` : null;
+                if (server) tracker.title = server.name;
+                delete tracker.reachable;
+                for (const player of tracker.players) {
+                    delete player.online;
+                    delete player.onlineAs;
+                    delete player.since;
                 }
             }
         }
@@ -302,7 +299,7 @@ module.exports = async (client, interaction) => {
 
         client.log(client.intlGet(null, 'infoCap'), client.intlGet(null, 'modalValueChange', {
             id: `${verifyId}`,
-            value: `${trackerName}, ${tracker.battlemetricsId}, ${tracker.clanTag}`
+            value: `${trackerName}, ${tracker.address}, ${tracker.clanTag}`
         }));
 
         await DiscordMessages.sendTrackerMessage(interaction.guildId, ids.trackerId);
@@ -317,42 +314,27 @@ module.exports = async (client, interaction) => {
             return;
         }
 
-        const isSteamId64 = id.length === Constants.STEAMID64_LENGTH ? true : false;
-        const bmInstance = client.battlemetricsInstances[tracker.battlemetricsId];
+        const isSteamId64 = id.length === Constants.STEAMID64_LENGTH && /^\d+$/.test(id);
 
         if ((isSteamId64 && tracker.players.some(e => e.steamId === id)) ||
-            (!isSteamId64 && tracker.players.some(e => e.playerId === id && e.steamId === null))) {
+            (!isSteamId64 && tracker.players.some(e => e.name === id && e.steamId === null))) {
             interaction.deferUpdate();
             return;
         }
 
-        let name = null;
-        let steamId = null;
-        let playerId = null;
+        /* Fetching the Steam name can take longer than Discord's 3 s reply window. */
+        await interaction.deferUpdate();
 
+        /* Anything that isn't a Steam ID is the player's exact in-game name. */
+        let name = id;
         if (isSteamId64) {
-            steamId = id;
-            name = await Scrape.scrapeSteamProfileName(client, id);
-
-            if (name && bmInstance) {
-                playerId = Object.keys(bmInstance.players).find(e => bmInstance.players[e]['name'] === name);
-                if (!playerId) playerId = null;
-            }
-        }
-        else {
-            playerId = id;
-            if (bmInstance.players.hasOwnProperty(id)) {
-                name = bmInstance.players[id]['name'];
-            }
-            else {
-                name = '-';
-            }
+            const steamName = await Scrape.scrapeSteamProfileName(client, id);
+            name = steamName === null ? null : (tracker.clanTag !== '' ? `${tracker.clanTag} ` : '') + steamName;
         }
 
         tracker.players.push({
             name: name,
-            steamId: steamId,
-            playerId: playerId
+            steamId: isSteamId64 ? id : null
         });
         client.setInstance(interaction.guildId, instance);
 
@@ -368,19 +350,12 @@ module.exports = async (client, interaction) => {
         const tracker = instance.trackers[ids.trackerId];
         const id = interaction.fields.getTextInputValue('TrackerRemovePlayerId');
 
-        const isSteamId64 = id.length === Constants.STEAMID64_LENGTH ? true : false;
-
         if (!tracker) {
             interaction.deferUpdate();
             return;
         }
 
-        if (isSteamId64) {
-            tracker.players = tracker.players.filter(e => e.steamId !== id);
-        }
-        else {
-            tracker.players = tracker.players.filter(e => e.playerId !== id || e.steamId !== null);
-        }
+        tracker.players = tracker.players.filter(e => e.steamId !== id && e.name !== id);
         client.setInstance(interaction.guildId, instance);
 
         client.log(client.intlGet(null, 'infoCap'), client.intlGet(null, 'modalValueChange', {
@@ -395,5 +370,5 @@ module.exports = async (client, interaction) => {
         id: `${verifyId}`
     }));
 
-    interaction.deferUpdate();
+    if (!interaction.deferred) interaction.deferUpdate();
 }

@@ -77,7 +77,7 @@ class DiscordBot extends Discord.Client {
         this.battlemetricsInstances = new Object();
 
         this.battlemetricsIntervalId = null;
-        this.battlemetricsIntervalCounter = 0;
+        this.trackerIntervalId = null;
 
         this.voiceLeaveTimeouts = new Object();
 
@@ -459,22 +459,6 @@ class DiscordBot extends Discord.Client {
                             activeInstances.push(bmInstance.id);
                             this.battlemetricsInstances[bmInstance.id] = bmInstance;
                         }
-                    }
-                }
-            }
-
-            for (const [trackerId, content] of Object.entries(instance.trackers)) {
-                if (!activeInstances.includes(content.battlemetricsId)) {
-                    activeInstances.push(content.battlemetricsId);
-                    if (this.battlemetricsInstances.hasOwnProperty(content.battlemetricsId)) {
-                        /* Update */
-                        await this.battlemetricsInstances[content.battlemetricsId].evaluation();
-                    }
-                    else {
-                        /* Add */
-                        const bmInstance = new Battlemetrics(content.battlemetricsId);
-                        await bmInstance.setup();
-                        this.battlemetricsInstances[content.battlemetricsId] = bmInstance;
                     }
                 }
             }

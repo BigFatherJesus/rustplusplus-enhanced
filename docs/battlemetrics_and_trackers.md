@@ -4,7 +4,9 @@
 
 Since 19/07/2026, Battlemetrics has discontinued free usage of its service and now requires an active subscription to use the API ([source](https://discord.com/channels/202199157224636417/270701413972049921/1528494637675708417)).
 
-Because the tracker functionality relies heavily on the Battlemetrics API, you are required to [obtain an API key](https://www.battlemetrics.com/subscription). The Basic plan should be sufficient. It was never the intention for people to have to pay to use rustplusplus, so this is unfortunate. This will remain the solution until a more permanent one is in place.
+In this fork, trackers no longer use Battlemetrics: they ask the Rust server itself for its online player list with the free Steam server query (see [Trackers Channel](discord_text_channels.md#trackers-channel)). They work without a token.
+
+The token is still needed for the other Battlemetrics features: the online player list in the information channel, server-wide login/logout and name change notifications, `/players` and the in-game `player` command. To use them, [obtain an API key](https://www.battlemetrics.com/subscription). The Basic plan should be sufficient.
 
 Once you've obtained your Battlemetrics token, copy it into the config file located at `config/index.js`.
 
@@ -14,4 +16,4 @@ The config file should look something like this (NOTE: key below is invalid):
         token: process.env.RPP_BATTLEMETRICS_TOKEN || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6IjM5NzE4MDE2ZjZlYjY1NmMiLCJpYXQiOjE0NzgwMzc1MjQsIm5iZiI6MTQ3ODAzNzUyNCwiaXNzIjoiaHR0cHM6Ly93d3cuYmF0dGxlbWV0cmljcy5jb20iLCJzdWIiOiJ1cm46dXNlcjoxIn0.iwwHt2lvBxlBqcEm7HrX1b1Rb9MXcMghUY5xspluWgw'
     }
 
-If no token is obtained, tracker functionality will be disabled.
+If no token is obtained, those Battlemetrics features are disabled. Trackers keep working.

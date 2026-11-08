@@ -94,7 +94,8 @@ update.bat
 - `src/handlers/inGameCommandHandler.js` - Processes commands from in-game chat
 - `src/handlers/smartSwitchHandler.js` - Manages smart switch device control
 - `src/handlers/storageMonitorHandler.js` - Monitors storage containers
-- `src/handlers/battlemetricsHandler.js` - Player tracking integration
+- `src/handlers/battlemetricsHandler.js` - Battlemetrics server/player notifications (needs `RPP_BATTLEMETRICS_TOKEN`)
+- `src/handlers/trackerHandler.js` - Trackers: polls each tracked server's player list every minute via the free Steam server query (`src/util/serverQuery.js`), matches by name, refreshes Steam names every 5 minutes
 
 ### Environment Variables
 - `RPP_DISCORD_CLIENT_ID` - Discord application client ID (required)

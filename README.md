@@ -33,7 +33,7 @@ This NodeJS Discord Bot uses the [rustplus.js](https://github.com/liamcottle/rus
 * Use [Storage Monitors](docs/smart_devices.md#storage-monitors) to keep track of Tool Cupboard Upkeep or Large Wooden Box/Vending Machine content
 * Head over to the [Information Text Channel](docs/images/information_channel.png) to see all sorts of information about the server, ongoing events and team member status
 * Communicate with teammates from [Discord to In-Game](docs/discord_text_channels.md#teamchat-channel) and vice versa
-* Keep track of other teams on the server with the [Battlemetrics Player Tracker](docs/discord_text_channels.md#trackers-channel)
+* Keep track of other teams on the server with the [Player Tracker](docs/discord_text_channels.md#trackers-channel)
 * Extensive [QoL Commands](docs/commands.md) that can be used In-Game or from Discord
 
 ### **Enhanced Features**

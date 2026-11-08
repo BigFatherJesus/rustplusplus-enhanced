@@ -131,10 +131,14 @@ There are a few buttons for each server. The `CONNECT` button lets you start a c
 
 > The Trackers Channel is used to keep track of players or groups on a specific server (Online/Offline/playtime/offlinetime). To create a tracker, just click on the `CREATE TRACKER` button located in the `servers` channel. The new tracker will appear in the trackers channel.
 
-The Tracker embed displays a few things. The Title of the embed is the name of the Tracker. The Tracker embed also displays the Battlemetrics Id of the tracker, the Server ID, Server status, streamer mode on/off and potential Clan Tag setting. Under that, all players in the tracker are displayed. The `Names`, `Steam ID / Battlemetrics ID` and `Status` of every player.
+Trackers don't need Battlemetrics. Every minute the bot asks the Rust server itself for its online player list (the free Steam server query that server browsers use) and compares it with the previous minute. Players are matched by name, so the bot re-reads the current Steam name of every tracked Steam ID every 5 minutes.
+
+The Tracker embed displays a few things. The Title of the embed is the name of the Tracker. The Tracker embed also displays the server address, whether the server answered the last query and the potential Clan Tag setting. Under that, all players in the tracker are displayed. The `Name`, `SteamID` and `Status` (online/offline and for how long) of every player.
 <br>
 
-By clicking the `ADD PLAYER` button, you can add a player to the tracker by providing the steamId or battlemetrics player id. By clicking the `REMOVE PLAYER` button, you can remove a player from the tracker by providing the steamId or battlemetrics player id. To make the tracker more accurate and make it easier to detect name changes, we recommend using steamID for the tracker. By clicking the `EDIT` button, you can change the `Name` of the tracker, the `Battlemetrics Id` of the tracker and the `Clan Tag` for all the players in the tracker. To remove the tracker, click the trashcan button. By clicking the `IN-GAME` button, you let the tracker notify in teamchat. By clicking the `@everyone` button, you decide if the @everyone tag should be used whenever a person connect/disconnect.
+A new tracker has no server address yet: click `EDIT` and enter the `ip:port` you connect to the server with (shown in the F1 console when you join, or in the server browser). Servers paired through the Rust+ relay don't give the bot their IP, so this step is always needed for them.
+
+By clicking the `ADD PLAYER` button, you can add a player to the tracker by providing the steamId or the exact in-game name. By clicking the `REMOVE PLAYER` button, you can remove a player from the tracker by providing the steamId or name. Use steamIDs where you can: the bot follows name changes for them. By clicking the `EDIT` button, you can change the `Name` of the tracker, its `Server address` and the `Clan Tag` for all the players in the tracker. To remove the tracker, click the trashcan button. By clicking the `IN-GAME` button, you let the tracker notify in teamchat. By clicking the `@everyone` button, you decide if the @everyone tag should be used whenever a person connect/disconnect.
 
 ![CREATE TRACKER](images/channels/tracker_create.png)
 ![Discord Text Channel Trackers](images/channels/trackers_channel.png)
