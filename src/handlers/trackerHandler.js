@@ -6,6 +6,7 @@
     of every tracked Steam ID is re-read every NAME_REFRESH_CYCLES cycles.
 */
 
+const Config = require('../../config');
 const Constants = require('../util/constants.js');
 const DiscordMessages = require('../discordTools/discordMessages.js');
 const Scrape = require('../util/scrape.js');
@@ -13,9 +14,11 @@ const ServerQuery = require('../util/serverQuery.js');
 const Utils = require('../util/utils.js');
 
 const NAME_REFRESH_CYCLES = 5;
+const ADDRESS_LOOKUP_INTERVAL_MS = 30 * 60 * 1000;
 
 let cycle = 0;
 let running = false;
+const lastAddressLookup = new Map();
 
 function normalise(name) {
     return Utils.removeInvisibleCharacters(name).trim();
@@ -28,6 +31,28 @@ async function queryOnlineNames(address) {
     }
     catch (e) {
         return null;
+    }
+}
+
+async function lookUpAddress(client, guildId, trackerId, tracker) {
+    const key = `${guildId}-${trackerId}`;
+    if (Date.now() - (lastAddressLookup.get(key) ?? 0) < ADDRESS_LOOKUP_INTERVAL_MS) return;
+    lastAddressLookup.set(key, Date.now());
+
+    try {
+        const server = await ServerQuery.findByName(tracker.title, Config.steam.apiKey);
+        if (server === null) {
+            client.log(client.intlGet(null, 'warningCap'),
+                `Tracker ${tracker.name}: Steam lists no server named "${tracker.title}"; set the address with EDIT.`);
+            return;
+        }
+        tracker.address = `${server.host}:${server.port}`;
+        client.log(client.intlGet(null, 'infoCap'), `Tracker ${tracker.name}: found "${tracker.title}" at ${tracker.address}.`);
+    }
+    catch (e) {
+        /* Only the message: the request config holds the API key. */
+        client.log(client.intlGet(null, 'errorCap'), `Tracker ${tracker.name}: Steam server lookup failed: ${e.message}`,
+            'error');
     }
 }
 
@@ -99,6 +124,9 @@ module.exports = {
 
                 for (const [trackerId, tracker] of Object.entries(instance.trackers)) {
                     if (refreshNames) await refreshSteamNames(client, guildId, tracker, steamNames);
+                    if (!tracker.address && Config.steam.apiKey !== '') {
+                        await lookUpAddress(client, guildId, trackerId, tracker);
+                    }
 
                     if (tracker.address) {
                         if (!onlineNamesByAddress.has(tracker.address)) {

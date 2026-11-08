@@ -117,12 +117,16 @@ module.exports = {
     getTrackerEmbed: function (guildId, trackerId) {
         const instance = Client.client.getInstance(guildId);
         const tracker = instance.trackers[trackerId];
-        const serverStatus = !tracker.address || tracker.reachable === undefined ? Constants.NOT_FOUND_EMOJI :
-            (tracker.reachable ? Constants.ONLINE_EMOJI : Constants.OFFLINE_EMOJI);
+        /* reachable is only set once the server has been queried. */
+        const checked = tracker.address && tracker.reachable !== undefined;
 
         let description = `__**${Client.client.intlGet(guildId, 'trackerServerAddress')}:**__ `;
         description += tracker.address ? tracker.address : Client.client.intlGet(guildId, 'trackerAddressNotSet');
-        description += `\n__**${Client.client.intlGet(guildId, 'serverStatus')}:**__ ${serverStatus}\n`;
+        if (checked) {
+            description += `\n__**${Client.client.intlGet(guildId, 'serverStatus')}:**__ ` +
+                (tracker.reachable ? Constants.ONLINE_EMOJI : Constants.OFFLINE_EMOJI);
+        }
+        description += '\n';
         description += `__**${Client.client.intlGet(guildId, 'clanTag')}:**__ `;
         description += tracker.clanTag !== '' ? `\`${tracker.clanTag}\`` : '';
 
@@ -142,7 +146,7 @@ module.exports = {
 
             let status = '';
             if (!tracker.reachable || player.online === undefined || player.online === null) {
-                status += `${Constants.NOT_FOUND_EMOJI}\n`;
+                status += '-\n';
             }
             else {
                 const minutes = Math.floor((Date.now() - new Date(player.since)) / 60000);

@@ -78,5 +78,10 @@ module.exports = {
     },
     battlemetrics: {
         token: process.env.RPP_BATTLEMETRICS_TOKEN || ''
+    },
+    steam: {
+        /* Free Steam Web API key (steamcommunity.com/dev/apikey). Optional: lets trackers find their
+           server's address by name; without it the address is entered with EDIT. */
+        apiKey: process.env.RPP_STEAM_API_KEY || ''
     }
 };

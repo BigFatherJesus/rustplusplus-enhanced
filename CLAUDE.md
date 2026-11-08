@@ -100,6 +100,7 @@ update.bat
 ### Environment Variables
 - `RPP_DISCORD_CLIENT_ID` - Discord application client ID (required)
 - `RPP_DISCORD_TOKEN` - Discord bot token (required)
+- `RPP_STEAM_API_KEY` - Free Steam Web API key (optional); trackers use it to find a relay-paired server's address by name
 - `RPP_SCRAPER_CRON` - Cron override for the scheduled rusthelp.com scraper (optional, default `0 5 * * 5`)
 - `RPP_AI_*` - AI assistant settings (optional). Authoritative list in the `ai` block of `config/index.js`: `RPP_AI_ENABLED`, `RPP_AI_BASE_URL`, `RPP_AI_API_KEY`, `RPP_AI_MODEL`, `RPP_AI_MAX_TOKENS`, `RPP_AI_TEMPERATURE`, `RPP_AI_TIMEOUT_MS`, `RPP_AI_TOOLS_ENABLED`, `RPP_AI_MAX_TOOL_ITERATIONS`, `RPP_AI_CONTROL_ENABLED`, `RPP_AI_KNOWLEDGE_DIR`, `RPP_AI_MEMORY_TURNS`, `RPP_AI_MEMORY_TTL_MS`, `RPP_AI_ALERTS_ENABLED`
 

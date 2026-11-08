@@ -99,6 +99,20 @@ module.exports = {
         return names;
     },
 
+    /* Query address of the Rust server with exactly this name, from Steam's server list, or null.
+       Relay-paired servers never tell the bot their IP, so this is the only automatic way to get it. */
+    findByName: async function (name, apiKey) {
+        const response = await Axios.get('https://api.steampowered.com/IGameServersService/GetServerList/v1/', {
+            params: { key: apiKey, filter: `\\appid\\${RUST_APP_ID}\\name_match\\${name}`, limit: 50 },
+            timeout: TIMEOUT_MS
+        });
+        const server = (response.data.response.servers ?? []).find(e => e.name === name);
+        if (!server) return null;
+
+        const [host, port] = server.addr.split(':');
+        return { host: host, port: parseInt(port), name: server.name };
+    },
+
     /* Turn "ip:port" or "host:port" (the game port players connect to, or the query port) into the
        server's query address, or null if nothing answers. Steam's public server list maps game ports
        to query ports. */
