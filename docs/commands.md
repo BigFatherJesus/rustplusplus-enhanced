@@ -84,12 +84,12 @@ Subcommand | Options | Description | Required
 
 Subcommand | Options | Description | Required
 ---------- | ------- | ----------- | --------
-`view` | `id` | Take a snapshot from a camera and list the players in view. | `True`
+`view` | `id` | Take a snapshot from a camera and list the players in view. Without an `id`: every watched camera. | `False`
 `watch` | `id` | Report players this camera sees while the whole team is offline. | `True`
 `unwatch` | `id` | Stop watching a camera. | `True`
 `list` | &nbsp; | Show the watched cameras. | &nbsp;
 
-The `id` is the identifier set on a CCTV camera, PTZ camera, auto turret or drone in game. Rust+ only allows cameras while the paired player is out of the game, and only cameras the paired player has access to: monument cameras answer "no access" since 2026. A watched camera is checked once a minute while the whole team is offline; a player who isn't on the team is posted in the `activity` channel with a snapshot and `@everyone`, at most once every 10 minutes per player and camera.
+The `id` is the identifier set on a CCTV camera, PTZ camera, auto turret or drone in game. Rust+ only allows cameras while the paired player is out of the game, and only cameras the paired player has access to: monument cameras answer "no access" since 2026. `/camera view` without an `id` shows every watched camera at once (about 6 seconds per camera). A watched camera is checked once a minute while the whole team is offline; a player who isn't on the team is posted in the `activity` channel with a snapshot and `@everyone`, at most once every 10 minutes per player and camera.
 
 
 ## **/cctv**

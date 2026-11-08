@@ -49,7 +49,10 @@ module.exports = {
             .addSubcommand(subcommand => subcommand
                 .setName('view')
                 .setDescription(client.intlGet(guildId, 'commandsCameraViewDesc'))
-                .addStringOption(idOption))
+                .addStringOption(option => option
+                    .setName('id')
+                    .setDescription(client.intlGet(guildId, 'commandsCameraViewIdDesc'))
+                    .setRequired(false)))
             .addSubcommand(subcommand => subcommand
                 .setName('watch')
                 .setDescription(client.intlGet(guildId, 'commandsCameraWatchDesc'))
@@ -95,31 +98,66 @@ module.exports = {
 
         switch (subcommand) {
             case 'view': {
-                const look = await CameraHandler.look(rustplus, cameraId);
-                if (look.error) {
-                    await reply(true, client.intlGet(interaction.guildId, CAMERA_ERRORS[look.error] || 'cameraError', {
-                        camera: cameraId,
-                        error: look.error
-                    }));
+                const cameraIds = cameraId !== '' ? [cameraId] : server.cameraWatch;
+                if (cameraIds.length === 0) {
+                    await reply(true, client.intlGet(interaction.guildId, 'cameraViewNoCameras'));
                     return;
                 }
 
-                const frame = await CameraHandler.render(look);
-                const players = CameraHandler.playersInView(look)
-                    .map(e => `\`${e === null ? client.intlGet(interaction.guildId, 'unknown') : e}\``);
-                await client.interactionEditReply(interaction, {
-                    embeds: [DiscordEmbeds.getEmbed({
-                        title: cameraId,
-                        color: Constants.COLOR_DEFAULT,
-                        description: players.length > 0 ? client.intlGet(interaction.guildId, 'cameraPlayersInView', {
-                            players: players.join(', ')
-                        }) : client.intlGet(interaction.guildId, 'cameraNoPlayersInView'),
-                        ...(frame !== null ? { image: 'attachment://camera.png' } : {}),
-                        footer: { text: server.title }
-                    })],
-                    files: frame !== null ? [new Discord.AttachmentBuilder(frame, { name: 'camera.png' })] : [],
-                    ephemeral: true
-                });
+                const views = [];
+                for (const id of cameraIds) {
+                    const look = await CameraHandler.look(rustplus, id);
+                    if (look.error) {
+                        const str = client.intlGet(interaction.guildId, CAMERA_ERRORS[look.error] || 'cameraError', {
+                            camera: id,
+                            error: look.error
+                        });
+                        /* These are about the paired player, not the camera: every other camera answers the same. */
+                        if (cameraIds.length === 1 || ['player_online', 'no_player'].includes(look.error)) {
+                            await reply(true, str);
+                            return;
+                        }
+                        views.push({
+                            embed: DiscordEmbeds.getEmbed({
+                                title: id,
+                                color: Constants.COLOR_INACTIVE,
+                                description: str,
+                                footer: { text: server.title }
+                            }),
+                            file: null
+                        });
+                        continue;
+                    }
+
+                    const frame = await CameraHandler.render(look);
+                    const fileName = `camera${views.length}.png`;
+                    const players = CameraHandler.playersInView(look)
+                        .map(e => `\`${e === null ? client.intlGet(interaction.guildId, 'unknown') : e}\``);
+                    views.push({
+                        embed: DiscordEmbeds.getEmbed({
+                            title: id,
+                            color: Constants.COLOR_DEFAULT,
+                            description: players.length > 0 ? client.intlGet(interaction.guildId, 'cameraPlayersInView', {
+                                players: players.join(', ')
+                            }) : client.intlGet(interaction.guildId, 'cameraNoPlayersInView'),
+                            ...(frame !== null ? { image: `attachment://${fileName}` } : {}),
+                            footer: { text: server.title }
+                        }),
+                        file: frame !== null ? new Discord.AttachmentBuilder(frame, { name: fileName }) : null
+                    });
+                }
+
+                /* Discord allows 10 embeds per message. */
+                for (let i = 0; i < views.length; i += 10) {
+                    const chunk = views.slice(i, i + 10);
+                    const content = {
+                        embeds: chunk.map(e => e.embed),
+                        files: chunk.filter(e => e.file !== null).map(e => e.file),
+                        ephemeral: true
+                    };
+                    if (i === 0) await client.interactionEditReply(interaction, content);
+                    else await interaction.followUp(content);
+                }
             } break;
 
             case 'watch': {
