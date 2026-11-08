@@ -112,21 +112,6 @@ module.exports = async (client, interaction) => {
             components: [DiscordSelectMenus.getCommandDelaySelectMenu(guildId, interaction.values[0])]
         });
     }
-    else if (interaction.customId === 'VoiceGender') {
-        instance.generalSettings.voiceGender = interaction.values[0];
-        client.setInstance(guildId, instance);
-
-        if (rustplus) rustplus.generalSettings.voiceGender = interaction.values[0];
-
-        client.log(client.intlGet(null, 'infoCap'), client.intlGet(null, 'selectMenuValueChange', {
-            id: `${verifyId}`,
-            value: `${instance.generalSettings.voiceGender}`
-        }));
-
-        await client.interactionUpdate(interaction, {
-            components: [DiscordSelectMenus.getVoiceGenderSelectMenu(guildId, interaction.values[0])]
-        });
-    }
     else if (interaction.customId.startsWith('AutoDayNightOnOff')) {
         const ids = JSON.parse(interaction.customId.replace('AutoDayNightOnOff', ''));
         const server = instance.serverList[ids.serverId];

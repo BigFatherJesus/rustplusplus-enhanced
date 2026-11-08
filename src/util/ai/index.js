@@ -28,9 +28,8 @@ const RULES =
     'outside — DEFAULT to this), quantitySoftSide = the weak smooth side. Always say ' +
     'which side your number is for. If a method is not listed, say the data does not ' +
     'include it — do NOT claim the method cannot destroy the target. ' +
-    'To answer what is for sale, who sells an item, or where to buy something, call ' +
-    'get_map_markers with type "vending" and read the "sells" lists — that is live ' +
-    'vending machine data, not "player sales you cannot see". ' +
+    'Rust+ no longer reports vending machines or world events (cargo, heli, oil rig), ' +
+    'so say you cannot see shops or events instead of guessing. ' +
     'Players use slang and abbreviations (e.g. "AK" = Assault Rifle, "bolty" = Bolt ' +
     'Action Rifle, "full metal kit" = a gear loadout). If get_item does not find a ' +
     'name, DO NOT give up: search_knowledge for "slang" or "kits" to translate the ' +

@@ -20,8 +20,6 @@ Slash Command | Description
 [**/item**](commands.md#item) | Get the details of an item.
 [**/leader**](commands.md#leader) | Give or take the leadership from/to a team member.
 [**/map**](commands.md#map) | Get the currently connected server map image.
-[**/market**](commands.md#market) | Operations for In-Game Vending Machines.
-[**/players**](commands.md#players) | Get player/players information based on battlemetrics.
 [**/recycle**](commands.md#recycle) | Display the output of recycling an item.
 [**/research**](commands.md#research) | Display the cost to research an item.
 [**/reset**](commands.md#reset) | Reset Discord channels.
@@ -30,7 +28,6 @@ Slash Command | Description
 [**/switch**](commands.md#switch) | Operations on Smart Switches.
 [**/upkeep**](commands.md#upkeep) | Get the upkeep cost of an item.
 [**/uptime**](commands.md#uptime) | Display uptime of the bot and server.
-[**/voice**](commands.md#voice) | Operations on Voice Feature.
 
 
 ## **/alarm**
@@ -182,48 +179,6 @@ Subcommand | Options | Description | Required
 ![Discord Slash Command map Image](images/slash_commands/map.png)
 
 
-## **/market**
-
-> **Operations for In-Game Vending Machines.**.
-
-Subcommand | Options | Description | Required
----------- | ------- | ----------- | --------
-`search` | &nbsp; | Search for an item in Vending Machines. | &nbsp;
-&nbsp; | `order` | The order type to search for (all, buy, sell). | `True`
-&nbsp; | `name` | The name of the item to search for. | `False`
-&nbsp; | `id` | The ID of the item to search for. | `False`
-`subscribe` | &nbsp; | Subscribe to an item in Vending Machines. | &nbsp;
-&nbsp; | `order` | The order type (all, buy, sell). | `True`
-&nbsp; | `name` | The name of the item to subscribe to. | `False`
-&nbsp; | `id` | The ID of the item to subscribe to. | `False`
-`unsubscribe` | &nbsp; | Unsubscribe to an item in Vending Machines. | &nbsp;
-&nbsp; | `order` | The order type (all, buy, sell). | `True`
-&nbsp; | `name` | The name of the item to unsubscribe to. | `False`
-&nbsp; | `id` | The ID of the item to unsubscribe to. | `False`
-`list` | &nbsp; | Display the subscription list. | &nbsp;
-
-![Discord Slash Command market Image](images/slash_commands/market.png)
-
-
-## **/players**
-
-> **Get player/players information based on Battlemetrics.** Calling the subcommand name without the name option will display all players depending on status option. By calling the subcommand playerid, you will get more specific information about a single player.
-
-Subcommand | Options | Description | Required
----------- | ------- | ----------- | --------
-`name` | &nbsp; | Search for a player on Battlemetrics based on player name. | &nbsp;
-&nbsp; | `status` | Search for players that are online/offline/any. | `True`
-&nbsp; | `name` | The name of the player. | `False`
-&nbsp; | `battlemetricsid` | The Battlemetrics ID of the server (default: The connected server). | `False`
-`playerid` | &nbsp; | Search for a player on Battlemetrics based on player id. | &nbsp;
-&nbsp; | `playerid` | The player id of the player. | `True`
-&nbsp; | `battlemetricsid` | The Battlemetrics ID of the server (default: The connected server). | `False`
-
-![Discord Slash Command players Image](images/slash_commands/players.png)
-![Discord Slash Command players all players Image](images/slash_commands/players_all_players.png)
-![Discord Slash Command players specific user Image](images/slash_commands/players_specific_user.png)
-
-
 ## **/recycle**
 
 > **Display the output of recycling an item.**
@@ -329,47 +284,27 @@ Subcommand | Options | Description | Required
 
 ![Discord Slash Command uptime Image](images/slash_commands/uptime.png)
 
-## **/voice**
-
-> **Operations on Voice Feature.**
-
-Subcommand | Options | Description | Required
----------- | ------- | ----------- | --------
-`join` | &nbsp; | Bot Joins a Voicechannel. | &nbsp;
-`leave` | &nbsp; | Bot Leaves a Voicechannel. | &nbsp;
-
-![Discord Slash Command uptime Image](images/slash_commands/voice.png)
-
-
 # In-Game Commands
 
 In-Game Command | Description
 --------------- | -----------
 [**afk**](commands.md#afk) | Get the currently afk players in your team.
 [**alive**](commands.md#alive) | Get the player with the longest time alive.
-[**cargo**](commands.md#cargo) | Get information about CargoShip (Location, time till enters egress stage, time since last on map).
-[**chinook**](commands.md#chinook) | Get information about Chinook 47 (Location, time since last on map).
 [**connection/connections**](commands.md#connectionconnections) | Get recent connection events.
 [**craft**](commands.md#craft-ingame) | Display the cost to craft an item.
 [**death/deaths**](commands.md#deathdeaths) | Get recent death events.
 [**decay**](commands.md#decay-ingame) | Display the decay time of an item.
-[**events**](commands.md#events) | Get recent events.
-[**heli**](commands.md#heli) | Get information about Patrol Helicopter (Location, time since last downed, time since last on map).
-[**large**](commands.md#large) | Get information about Large Oil Rig (Time till crate unlocks, time since last trigger).
 [**leader**](commands.md#leader-1) | Give/Take the Team Leadership.
 [**marker**](commands.md#marker) | Set custom markers anywhere on the map.
-[**market**](commands.md#market-ingame) | Search for items in vending machines or subscribe/unsubscribe to items.
 [**mute**](commands.md#mute) | Mute the bot from the In-Game Team Chat.
 [**note/notes**](commands.md#notenotes) | Create notes about meaningful things.
 [**offline**](commands.md#offline) | Get the currently offline players in your team.
 [**online**](commands.md#online) | Get the currently online players in your team.
-[**player/players**](commands.md#playerplayers) | Get the names and playtime of the currently online players on the server (Based on Battlemetrics).
 [**pop**](commands.md#pop) | Get the current population of the server including queue size and max population.
 [**prox**](commands.md#prox) | Get the distance to the three closest teammates.
 [**recycle**](commands.md#recycle-ingame) | Display the output of recycling an item.
 [**research**](commands.md#research-ingame) | Display the cost to research an item.
 [**send**](commands.md#send) | Send a message to a discord user.
-[**small**](commands.md#small) | Get information about Small Oil Rig (Time till crate unlocks, time since last trigger).
 [**steamid**](commands.md#steamid) | Get the steamid of a teammate.
 [**team**](commands.md#team) | Get the names of all members in the team.
 [**time**](commands.md#time) | Get the current time In-Game and time till day/night.
@@ -380,7 +315,6 @@ In-Game Command | Description
 [**unmute**](commands.md#unmute) | Unmute the bot from the In-Game Team Chat.
 [**upkeep**](commands.md#upkeep) | Get the upkeep time of all connected tool cupboard monitors.
 [**uptime**](commands.md#uptime-ingame) | Display uptime of the bot and server.
-[**vendor**](commands.md#vendor) | Get information about the Traveling Vendor (Current Location, Time since last vendor)
 [**wipe**](commands.md#wipe) | Get the time since it was wiped.
 
 
@@ -400,22 +334,6 @@ In-Game Command | Description
 <br>Command: `!alive Alle`
 
 ![In-Game Command alive Image](images/ingame_commands/alive_ingame.png)
-
-
-## **cargo**
-
-> **Get information about CargoShip (Location, time till enters egress stage, time since last on map).**
-<br>Command: `!cargo`
-
-![In-Game Command cargo Image](images/ingame_commands/cargo_ingame.png)
-
-
-## **chinook**
-
-> **Get information about Chinook 47 (Location, time since last on map).**
-<br>Command: `!chinook`
-
-![In-Game Command chinook Image](images/ingame_commands/chinook_ingame.png)
 
 
 ## **connection/connections**
@@ -457,33 +375,6 @@ In-Game Command | Description
 ![In-Game Command decay Image](images/ingame_commands/decay_ingame.png)
 
 
-## **events**
-
-> **Get recent In-Game events.** Available events are cargo, heli, small, large, chinook
-<br>Command: `!events` - Get last 5 events
-<br>Command: `!events 3` - Get last 3 events
-<br>Command: `!events cargo` - Get last 5 events from cargo
-<br>Command: `!events cargo 2` - Get last 2 events from cargo
-
-![In-Game Command events Image](images/ingame_commands/events_ingame.png)
-
-
-## **heli**
-
-> **Get information about Patrol Helicopter (Location, time since last downed, time since last on map).**
-<br>Command: `!heli`
-
-![In-Game Command heli Image](images/ingame_commands/heli_ingame.png)
-
-
-## **large**
-
-> **Get information about Large Oil Rig (Time till crate unlocks, time since last trigger).**
-<br>Command: `!large`
-
-![In-Game Command large Image](images/ingame_commands/large_ingame.png)
-
-
 ## **leader**
 
 > **Give/Take the Team Leadership.** Calling the leader command alone will give the caller leadership. You can also give the leadership to a team member by writing the name or part of the name after the command.
@@ -507,25 +398,6 @@ Subcommand | Description | Required
 `<marker_name>` | Calling with the name of the marker will let you navigate to that marker (`!marker <name>`). | `False`
 
 ![In-Game Command marker Image](images/ingame_commands/marker_ingame.png)
-
-
-## **market ingame**
-
-> **Search for items in vending machines or subscribe/unsubscribe to items.**
-<br>Command: `!market search sell Thompson`
-<br>Command: `!market sub sell m249`
-<br>Command: `!market sub all Scrap`
-<br>Command: `!market unsub sell m249`
-<br>Command: `!market list`
-
-Subcommand | Description | Required
----------- | ----------- | --------
-`search` | Search for an item in Vending Machines (`!market search sell thompson`). | `False`
-`sub` | Subscribe to an item in Vending Machines (`!market sub all thompson`). | `False`
-`unsub` | Unsubscribe to an item in Vending Machines (`!market unsub sell thompson`). | `False`
-`list` | Display the subscription list (`!market list`). | `False`
-
-![In-Game Command market Image](images/ingame_commands/market_ingame.png)
 
 
 ## **mute**
@@ -562,14 +434,6 @@ Subcommand | Description | Required
 <br>Command: `!online`
 
 ![In-Game Command online Image](images/ingame_commands/online_ingame.png)
-
-
-## **player/players**
-
-> **Get the names and playtime of the currently online players on the server (Based on Battlemetrics).** To get all the currently online players on the server run `!players`. To get the information from a certain player run `!player <name or part of name>`.
-
-![In-Game Command players Image](images/ingame_commands/players_ingame.png)
-![In-Game Command player Image](images/ingame_commands/player_ingame.png)
 
 
 ## **pop**
@@ -613,14 +477,6 @@ Subcommand | Description | Required
 <br>Command: `!send Alle Hello my friend!`
 
 ![In-Game Command send Image](images/ingame_commands/send_ingame.png)
-
-
-## **small**
-
-> **Get information about Small Oil Rig (Time till crate unlocks, time since last trigger).**
-<br>Command: `!small`
-
-![In-Game Command small Image](images/ingame_commands/small_ingame.png)
 
 
 ## **steamid**
@@ -714,14 +570,6 @@ Subcommand | Description | Required
 <br>Command: `!uptime`
 
 ![In-Game Command uptime Image](images/ingame_commands/uptime_ingame.png)
-
-
-## **vendor**
-
-> **Get information about the Traveling Vendor (Current Location, Time since last Traveling Vendor).**
-<br>Command: `!vendor`
-
-![In-Game Command vendor Image](images/ingame_commands/vendor_ingame.png)
 
 
 ## **wipe**

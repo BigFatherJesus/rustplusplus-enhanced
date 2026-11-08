@@ -120,7 +120,7 @@ async function addCredentials(client, interaction, verifyId) {
     const steamId = interaction.options.getString('steam_id');
     const isHoster = interaction.options.getBoolean('host') || Object.keys(credentials).length === 1;
 
-    if (Object.keys(credentials) !== 1 && isHoster) {
+    if (Object.keys(credentials).length !== 1 && isHoster) {
         if (Config.discord.needAdminPrivileges && !client.isAdministrator(interaction)) {
             const str = client.intlGet(interaction.guildId, 'missingPermission');
             client.interactionEditReply(interaction, DiscordEmbeds.getActionInfoEmbed(1, str));
@@ -197,11 +197,19 @@ async function addCredentials(client, interaction, verifyId) {
             `${credentials[steamId].discord_user_id}, ` +
             `${hoster}, ` +
             `${credentials[steamId].gcm.android_id}, ` +
-            `${credentials[steamId].gcm.security_token}, ` +
             `${credentials[steamId].issued_date}, ` +
             `${credentials[steamId].expire_date}, ` +
             `authToken=${authToken ? 'new' : (keptAuthToken ? 'kept' : 'none')}`
     }));
+
+    /* A renewed Rust+ login for the connected account applies now instead of after the retry cooldown. */
+    client.connectionManager.loginWarnings.delete(`${guildId}:${steamId}`);
+    const instance = client.getInstance(guildId);
+    const rustplus = client.rustplusInstances[guildId];
+    if (instance.activeServer !== null && instance.serverList[instance.activeServer].steamId === steamId &&
+        !(rustplus && rustplus.isOperational)) {
+        client.connectionManager.forceReconnect(guildId);
+    }
 
     const str = client.intlGet(interaction.guildId, 'credentialsAddedSuccessfully', { steamId: steamId });
     await client.interactionEditReply(interaction, DiscordEmbeds.getActionInfoEmbed(0, str));

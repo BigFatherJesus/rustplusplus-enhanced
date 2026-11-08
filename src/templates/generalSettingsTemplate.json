@@ -1,12 +1,10 @@
 {
     "language": "en",
-    "voiceGender": "male",
     "prefix": "!",
     "muteInGameBotMessages": false,
     "trademark": "rustplusplus",
     "inGameCommandsEnabled": true,
     "fcmAlarmNotificationEnabled": false,
-    "fcmAlarmNotificationEveryone": false,
     "smartAlarmNotifyInGame": true,
     "smartSwitchNotifyInGameWhenChangedFromDiscord": true,
     "leaderCommandEnabled": true,
@@ -15,12 +13,5 @@
     "connectionNotify": false,
     "afkNotify": false,
     "deathNotify": false,
-    "mapWipeNotifyEveryone": false,
-    "itemAvailableInVendingMachineNotifyInGame": true,
-    "displayInformationBattlemetricsAllOnlinePlayers": false,
-    "battlemetricsServerNameChanges": true,
-    "battlemetricsTrackerNameChanges": true,
-    "battlemetricsGlobalNameChanges": false,
-    "battlemetricsGlobalLogin": false,
-    "battlemetricsGlobalLogout": false
+    "mapWipeNotifyEveryone": false
 }

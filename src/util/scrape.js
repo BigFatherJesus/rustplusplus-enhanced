@@ -21,56 +21,47 @@
 const Axios = require('axios');
 
 const Constants = require('../util/constants.js');
-const Utils = require('../util/utils.js');
 
 module.exports = {
-    scrape: async function (url) {
+    /* Steam's XML profile (?xml=1) carries the name and avatar in fixed tags, unlike the HTML page,
+       whose layout changes. Returns the XML text, or null with an error logged. */
+    scrapeSteamProfileXml: async function (client, steamId) {
+        const url = `${Constants.STEAM_PROFILES_URL}${steamId}?xml=1`;
         try {
             /* Steam answers axios's default headers with 429 Too Many Requests; browser-like ones pass. */
-            return await Axios.get(url, {
-                headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)', 'Accept': 'text/html' },
+            const response = await Axios.get(url, {
+                headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)', 'Accept': 'text/xml' },
                 timeout: 15000
             });
+            return typeof response.data === 'string' ? response.data : null;
         }
         catch (e) {
-            return {};
+            client.log(client.intlGet(null, 'errorCap'), `Steam profile request failed: ${url} (${e.message})`, 'error');
+            return null;
         }
     },
 
     scrapeSteamProfilePicture: async function (client, steamId) {
-        const response = await module.exports.scrape(`${Constants.STEAM_PROFILES_URL}${steamId}`);
-
-        if (response.status !== 200) {
+        const xml = await module.exports.scrapeSteamProfileXml(client, steamId);
+        const match = xml ? xml.match(/<avatarFull><!\[CDATA\[(.*?)\]\]><\/avatarFull>/) : null;
+        if (!match) {
             client.log(client.intlGet(null, 'errorCap'), client.intlGet(null, 'failedToScrapeProfilePicture', {
                 link: `${Constants.STEAM_PROFILES_URL}${steamId}`
             }), 'error');
             return null;
         }
-
-        let png = response.data.match(/<img src="(.*_full.jpg)(.*?(?="))/);
-        if (png) {
-            return png[1];
-        }
-
-        return null;
+        return match[1];
     },
 
     scrapeSteamProfileName: async function (client, steamId) {
-        const response = await module.exports.scrape(`${Constants.STEAM_PROFILES_URL}${steamId}`);
-
-        if (response.status !== 200) {
+        const xml = await module.exports.scrapeSteamProfileXml(client, steamId);
+        const match = xml ? xml.match(/<steamID><!\[CDATA\[(.*?)\]\]><\/steamID>/s) : null;
+        if (!match) {
             client.log(client.intlGet(null, 'errorCap'), client.intlGet(null, 'failedToScrapeProfileName', {
                 link: `${Constants.STEAM_PROFILES_URL}${steamId}`
             }), 'error');
             return null;
         }
-
-        let regex = new RegExp(`class="actual_persona_name">(.+?)</span>`, 'gm');
-        let data = regex.exec(response.data);
-        if (data) {
-            return Utils.decodeHtml(data[1]);
-        }
-
-        return null;
+        return match[1];
     },
 }

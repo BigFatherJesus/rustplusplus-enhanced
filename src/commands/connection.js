@@ -79,7 +79,7 @@ module.exports = {
 
 		if (client.activeRustplusInstances[guildId] && rustplus && rustplus.isOperational) {
 			description += `✅ **${client.intlGet(guildId, 'connectionStatusConnected')}**\n`;
-			description += `🏠 **${client.intlGet(guildId, 'server')}:** ${rustplus.server}:${rustplus.port}\n`;
+			description += `🏠 **${client.intlGet(guildId, 'server')}:** ${instance.serverList[rustplus.serverId].title}\n`;
 			description += `⏰ **${client.intlGet(guildId, 'uptime')}:** ${this.formatUptime(rustplus.uptimeServer)}\n`;
 			
 			if (reconnectionStatus.retryCount > 0) {

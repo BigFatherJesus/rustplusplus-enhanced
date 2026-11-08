@@ -64,12 +64,12 @@ function parseAuthToken(token) {
     }
 }
 
-/* Relay details for a server/player, or null when the server has no relay id or the player has
-   no auth token (caller then falls back to a direct connection). */
+/* Relay details for a server/player, or { problem: <language key> } saying why it can't connect:
+   game servers refuse direct Rust+ connections since 2026-11-05, so there is no fallback. */
 function resolve(guildId, serverIp, appPort, steamId) {
     const Client = require('../../index.ts');
     const instance = Client.client.getInstance(guildId);
-    if (!instance) return null;
+    if (!instance) return { problem: 'rustplusLoginNotRelayPaired' };
 
     const serverKey = `${serverIp}-${appPort}`;
     let relayServerId = null;
@@ -85,12 +85,13 @@ function resolve(guildId, serverIp, appPort, steamId) {
             }
         }
     }
-    if (!relayServerId) return null;
+    if (!relayServerId) return { problem: 'rustplusLoginNotRelayPaired' };
 
     const credentials = InstanceUtils.readCredentialsFile(guildId);
     const credential = credentials ? credentials[`${steamId}`] : null;
-    const authToken = credential ? normaliseAuthToken(credential.rustplus_auth_token) : null;
-    if (!authToken) return null;
+    if (!credential) return { problem: 'rustplusLoginNoCredentials' };
+    const authToken = normaliseAuthToken(credential.rustplus_auth_token);
+    if (!authToken) return { problem: 'rustplusLoginNoToken' };
 
     const parsed = parseAuthToken(authToken);
     return {
@@ -112,7 +113,16 @@ function connect(rustplus, relay) {
 
         const address = `wss://${RELAY_HOST}/socket/${relay.relayServerId}?v=${Date.now()}`;
         rustplus.websocket = new WebSocket(address, [RELAY_SUBPROTOCOL, b64url(relay.authToken)], {
-            origin: RELAY_ORIGIN
+            origin: RELAY_ORIGIN,
+            handshakeTimeout: 20000
+        });
+
+        /* The relay answers a missing, expired or invalid login with HTTP 403 at the handshake. */
+        rustplus.websocket.on('unexpected-response', (request, response) => {
+            rustplus.websocket.terminate();
+            const error = new Error(`Rust+ relay answered HTTP ${response.statusCode}`);
+            error.code = [401, 403].includes(response.statusCode) ? 'RELAY_AUTH_REJECTED' : 'RELAY_HTTP_ERROR';
+            rustplus.emit('error', error);
         });
 
         rustplus.websocket.on('open', () => {

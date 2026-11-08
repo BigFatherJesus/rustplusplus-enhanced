@@ -332,18 +332,6 @@ module.exports = {
         }
     },
 
-    sendDiscordEventMessage: async function (guildId, serverId, text, image, color) {
-        const instance = Client.client.getInstance(guildId);
-
-        const content = {
-            embeds: [DiscordEmbeds.getEventEmbed(guildId, serverId, text, image, color)],
-            files: [new Discord.AttachmentBuilder(
-                Path.join(__dirname, '..', `resources/images/events/${image}`))]
-        }
-
-        await module.exports.sendMessage(guildId, content, null, instance.channelId.events);
-    },
-
     sendActivityNotificationMessage: async function (guildId, serverId, color, text, steamId, title = null, everyone = false) {
         const instance = Client.client.getInstance(guildId);
 
@@ -431,25 +419,6 @@ module.exports = {
         }
     },
 
-    sendUpdateEventInformationMessage: async function (rustplus) {
-        const instance = Client.client.getInstance(rustplus.guildId);
-
-        const content = {
-            embeds: [DiscordEmbeds.getUpdateEventInformationEmbed(rustplus)],
-            files: [new Discord.AttachmentBuilder(
-                Path.join(__dirname, '..', 'resources/images/event_info_logo.png')
-            )]
-        }
-
-        const message = await module.exports.sendMessage(rustplus.guildId, content,
-            instance.informationMessageId.event, instance.channelId.information);
-
-        if (message.id !== instance.informationMessageId.event) {
-            instance.informationMessageId.event = message.id;
-            Client.client.setInstance(rustplus.guildId, instance);
-        }
-    },
-
     sendUpdateTeamInformationMessage: async function (rustplus) {
         const instance = Client.client.getInstance(rustplus.guildId);
 
@@ -469,22 +438,6 @@ module.exports = {
         }
     },
 
-    sendUpdateBattlemetricsOnlinePlayersInformationMessage: async function (rustplus, battlemetricsId) {
-        const instance = Client.client.getInstance(rustplus.guildId);
-
-        const content = {
-            embeds: [DiscordEmbeds.getUpdateBattlemetricsOnlinePlayersInformationEmbed(rustplus, battlemetricsId)]
-        }
-
-        const message = await module.exports.sendMessage(rustplus.guildId, content,
-            instance.informationMessageId.battlemetricsPlayers, instance.channelId.information);
-
-        if (message.id !== instance.informationMessageId.battlemetricsPlayers) {
-            instance.informationMessageId.battlemetricsPlayers = message.id;
-            Client.client.setInstance(rustplus.guildId, instance);
-        }
-    },
-
     sendDiscordCommandResponseMessage: async function (rustplus, client, message, response) {
         const content = {
             embeds: [DiscordEmbeds.getDiscordCommandResponseEmbed(rustplus, response)]
@@ -500,18 +453,6 @@ module.exports = {
         }
 
         await Client.client.interactionEditReply(interaction, content);
-    },
-
-    sendItemAvailableInVendingMachineMessage: async function (rustplus, str) {
-        const instance = Client.client.getInstance(rustplus.guildId);
-
-        const content = {
-            embeds: [DiscordEmbeds.getItemAvailableVendingMachineEmbed(
-                rustplus.guildId, rustplus.serverId, str
-            )]
-        }
-
-        await module.exports.sendMessage(rustplus.guildId, content, null, instance.channelId.activity);
     },
 
     sendHelpMessage: async function (interaction) {
@@ -587,20 +528,6 @@ module.exports = {
         await Client.client.interactionEditReply(interaction, content);
     },
 
-    sendBattlemetricsEventMessage: async function (guildId, battlemetricsId, title, description, fields = null, everyone = false) {
-        const instance = Client.client.getInstance(guildId);
-
-        const content = {
-            embeds: [DiscordEmbeds.getBattlemetricsEventEmbed(guildId, battlemetricsId, title, description, fields)]
-        }
-
-        if (everyone) {
-            content.content = '@everyone';
-        }
-
-        await module.exports.sendMessage(guildId, content, null, instance.channelId.activity);
-    },
-
     sendItemMessage: async function (interaction, itemName, itemId, type) {
         const content = {
             embeds: [DiscordEmbeds.getItemEmbed(interaction.guildId, itemName, itemId, type)],
@@ -622,7 +549,7 @@ module.exports = {
         
         const content = {
             embeds: [DiscordEmbeds.getRecyclerEmbed(guildId, serverId, recyclerId)],
-            components: DiscordButtons.getRecyclerButtons(guildId, serverId, recyclerId)
+            components: []
         }
 
         const message = await module.exports.sendMessage(guildId, content, recycler.messageId,

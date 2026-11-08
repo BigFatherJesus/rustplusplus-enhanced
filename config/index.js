@@ -52,8 +52,8 @@ module.exports = {
         temperature: parseFloat(process.env.RPP_AI_TEMPERATURE || '0.3'),
         requestTimeoutMs: parseInt(process.env.RPP_AI_TIMEOUT_MS || '120000', 10),
 
-        /* Tool calling: lets the model query live server data (team, vending,
-           markers, devices) and search the AI/ knowledge folder. Requires a
+        /* Tool calling: lets the model query live server data (team, server info,
+           time, devices) and search the AI/ knowledge folder. Requires a
            model that supports OpenAI tool calling (llama3.1, qwen2.5, ...). */
         toolsEnabled: process.env.RPP_AI_TOOLS_ENABLED !== 'false',
         maxToolIterations: parseInt(process.env.RPP_AI_MAX_TOOL_ITERATIONS || '8', 10),
@@ -75,9 +75,6 @@ module.exports = {
         /* Proactive AI commentary on notable events (raid alarms, etc.).
            Default off — frequent events would cost tokens / spam. */
         alertsEnabled: process.env.RPP_AI_ALERTS_ENABLED === 'true',
-    },
-    battlemetrics: {
-        token: process.env.RPP_BATTLEMETRICS_TOKEN || ''
     },
     steam: {
         /* Free Steam Web API key (steamcommunity.com/dev/apikey). Optional: lets trackers find their

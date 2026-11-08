@@ -30,7 +30,6 @@ module.exports = (client, guild) => {
             firstTime: true,
             role: null,
             generalSettings: client.readGeneralSettingsTemplate(),
-            notificationSettings: client.readNotificationSettingsTemplate(),
             channelId: {
                 category: null,
                 information: null,
@@ -38,7 +37,6 @@ module.exports = (client, guild) => {
                 settings: null,
                 commands: null,
                 commandsGuide: null,
-                events: null,
                 teamchat: null,
                 switches: null,
                 switchGroups: null,
@@ -51,19 +49,12 @@ module.exports = (client, guild) => {
             informationMessageId: {
                 map: null,
                 server: null,
-                event: null,
-                team: null,
-                battlemetricsPlayers: null
+                team: null
             },
             activeServer: null,
             serverList: {},
             serverListLite: {},
             trackers: {},
-            marketSubscriptionList: {
-                all: [],
-                buy: [],
-                sell: []
-            },
             teamChatColors: {},
             blacklist: {
                 discordIds: [],
@@ -96,26 +87,6 @@ module.exports = (client, guild) => {
             }
         }
 
-        if (!instance.hasOwnProperty('notificationSettings')) {
-            instance.notificationSettings = client.readNotificationSettingsTemplate();
-        }
-        else {
-            const notificationSettings = client.readNotificationSettingsTemplate();
-
-            for (const [key, value] of Object.entries(notificationSettings)) {
-                if (!instance.notificationSettings.hasOwnProperty(key)) {
-                    instance.notificationSettings[key] = value;
-                }
-                else {
-                    for (const [setting, settingValue] of Object.entries(value)) {
-                        if (!instance.notificationSettings[key].hasOwnProperty(setting)) {
-                            instance.notificationSettings[key][setting] = settingValue;
-                        }
-                    }
-                }
-            }
-        }
-
         if (!instance.hasOwnProperty('channelId')) {
             instance.channelId = {
                 category: null,
@@ -124,7 +95,6 @@ module.exports = (client, guild) => {
                 settings: null,
                 commands: null,
                 commandsGuide: null,
-                events: null,
                 teamchat: null,
                 switches: null,
                 switchGroups: null,
@@ -142,7 +112,6 @@ module.exports = (client, guild) => {
             if (!instance.channelId.hasOwnProperty('settings')) instance.channelId.settings = null;
             if (!instance.channelId.hasOwnProperty('commands')) instance.channelId.commands = null;
             if (!instance.channelId.hasOwnProperty('commandsGuide')) instance.channelId.commandsGuide = null;
-            if (!instance.channelId.hasOwnProperty('events')) instance.channelId.events = null;
             if (!instance.channelId.hasOwnProperty('teamchat')) instance.channelId.teamchat = null;
             if (!instance.channelId.hasOwnProperty('switches')) instance.channelId.switches = null;
             if (!instance.channelId.hasOwnProperty('switchGroups')) instance.channelId.switchGroups = null;
@@ -157,32 +126,19 @@ module.exports = (client, guild) => {
             instance.informationMessageId = {
                 map: null,
                 server: null,
-                event: null,
-                team: null,
-                battlemetricsPlayers: null
+                team: null
             }
         }
         else {
             if (!instance.informationMessageId.hasOwnProperty('map')) instance.informationMessageId.map = null;
             if (!instance.informationMessageId.hasOwnProperty('server')) instance.informationMessageId.server = null;
-            if (!instance.informationMessageId.hasOwnProperty('event')) instance.informationMessageId.event = null;
             if (!instance.informationMessageId.hasOwnProperty('team')) instance.informationMessageId.team = null;
-            if (!instance.informationMessageId.hasOwnProperty('team'))
-                instance.informationMessageId.battlemetricsPlayers = null;
         }
 
         if (!instance.hasOwnProperty('activeServer')) instance.activeServer = null;
         if (!instance.hasOwnProperty('serverList')) instance.serverList = {};
         if (!instance.hasOwnProperty('serverListLite')) instance.serverListLite = {};
         if (!instance.hasOwnProperty('trackers')) instance.trackers = {};
-        if (!instance.hasOwnProperty('marketSubscriptionList')) instance.marketSubscriptionList = {
-            all: [],
-            buy: [],
-            sell: []
-        }
-        if (!instance.marketSubscriptionList.hasOwnProperty('all')) instance.marketSubscriptionList['all'] = [];
-        if (!instance.marketSubscriptionList.hasOwnProperty('buy')) instance.marketSubscriptionList['buy'] = [];
-        if (!instance.marketSubscriptionList.hasOwnProperty('sell')) instance.marketSubscriptionList['sell'] = [];
         if (!instance.hasOwnProperty('teamChatColors')) instance.teamChatColors = {};
         if (!instance.hasOwnProperty('blacklist')) instance.blacklist = {
             discordIds: [],
@@ -201,7 +157,8 @@ module.exports = (client, guild) => {
                 serverIp: instance.serverList[serverId].serverIp,
                 appPort: instance.serverList[serverId].appPort,
                 steamId: instance.serverList[serverId].steamId,
-                playerToken: instance.serverList[serverId].playerToken
+                playerToken: instance.serverList[serverId].playerToken,
+                relayServerId: instance.serverList[serverId].relayServerId || null
             };
         }
     }

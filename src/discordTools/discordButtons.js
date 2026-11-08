@@ -20,9 +20,7 @@
 
 const Discord = require('discord.js');
 
-const Constants = require('../util/constants.js');
 const Client = require('../../index.ts');
-const Config = require('../../config');
 
 const SUCCESS = Discord.ButtonStyle.Success;
 const DANGER = Discord.ButtonStyle.Danger;
@@ -86,11 +84,6 @@ module.exports = {
             label: Client.client.intlGet(guildId, 'deleteUnreachableDevicesCap'),
             style: PRIMARY
         });
-        const customTimersButton = module.exports.getButton({
-            customId: `CustomTimersEdit${identifier}`,
-            label: Client.client.intlGet(guildId, 'customTimersCap'),
-            style: PRIMARY
-        });
         const trackerButton = module.exports.getButton({
             customId: `CreateTracker${identifier}`,
             label: Client.client.intlGet(guildId, 'createTrackerCap'),
@@ -106,48 +99,23 @@ module.exports = {
             style: LINK,
             url: server.url
         });
-        let battlemetricsButton = module.exports.getButton({
-            label: Client.client.intlGet(guildId, 'battlemetricsCap'),
-            style: LINK,
-            url: `${Constants.BATTLEMETRICS_SERVER_URL}${server.battlemetricsId}`
-        });
-        let editButton = module.exports.getButton({
-            customId: `ServerEdit${identifier}`,
-            label: Client.client.intlGet(guildId, 'editCap'),
-            style: PRIMARY
-        });
         let deleteButton = module.exports.getButton({
             customId: `ServerDelete${identifier}`,
             style: SECONDARY,
             emoji: '🗑️'
         });
 
-        if (Config.battlemetrics.token !== '' && server.battlemetricsId !== null) {
-            return [
-                new Discord.ActionRowBuilder().addComponents(
-                    connectionButton, linkButton, battlemetricsButton, editButton, deleteButton
-                ),
-                new Discord.ActionRowBuilder().addComponents(
-                    customTimersButton, trackerButton, groupButton
-                ),
-                new Discord.ActionRowBuilder().addComponents(
-                    deleteUnreachableDevicesButton
-                )
-            ];
-        }
-        else {
-            return [
-                new Discord.ActionRowBuilder().addComponents(
-                    connectionButton, linkButton, editButton, deleteButton
-                ),
-                new Discord.ActionRowBuilder().addComponents(
-                    customTimersButton, trackerButton, groupButton
-                ),
-                new Discord.ActionRowBuilder().addComponents(
-                    deleteUnreachableDevicesButton
-                )
-            ];
-        }
+        return [
+            new Discord.ActionRowBuilder().addComponents(
+                connectionButton, linkButton, deleteButton
+            ),
+            new Discord.ActionRowBuilder().addComponents(
+                trackerButton, groupButton
+            ),
+            new Discord.ActionRowBuilder().addComponents(
+                deleteUnreachableDevicesButton
+            )
+        ];
     },
 
     getSmartSwitchButtons: function (guildId, serverId, entityId) {
@@ -295,27 +263,6 @@ module.exports = {
             }));
     },
 
-    getNotificationButtons: function (guildId, setting, discordActive, inGameActive, voiceActive) {
-        const identifier = JSON.stringify({ "setting": setting });
-
-        return new Discord.ActionRowBuilder().addComponents(
-            module.exports.getButton({
-                customId: `DiscordNotification${identifier}`,
-                label: Client.client.intlGet(guildId, 'discordCap'),
-                style: discordActive ? SUCCESS : DANGER
-            }),
-            module.exports.getButton({
-                customId: `InGameNotification${identifier}`,
-                label: Client.client.intlGet(guildId, 'inGameCap'),
-                style: inGameActive ? SUCCESS : DANGER
-            }),
-            module.exports.getButton({
-                customId: `VoiceNotification${identifier}`,
-                label: Client.client.intlGet(guildId, 'voiceCap'),
-                style: voiceActive ? SUCCESS : DANGER
-            }));
-    },
-
     getInGameCommandsEnabledButton: function (guildId, enabled) {
         return new Discord.ActionRowBuilder().addComponents(
             module.exports.getButton({
@@ -348,7 +295,7 @@ module.exports = {
             }));
     },
 
-    getFcmAlarmNotificationButtons: function (guildId, enabled, everyone) {
+    getFcmAlarmNotificationButtons: function (guildId, enabled) {
         return new Discord.ActionRowBuilder().addComponents(
             module.exports.getButton({
                 customId: 'FcmAlarmNotification',
@@ -356,11 +303,6 @@ module.exports = {
                     Client.client.intlGet(guildId, 'enabledCap') :
                     Client.client.intlGet(guildId, 'disabledCap'),
                 style: enabled ? SUCCESS : DANGER
-            }),
-            module.exports.getButton({
-                customId: 'FcmAlarmNotificationEveryone',
-                label: '@everyone',
-                style: everyone ? SUCCESS : DANGER
             }));
     },
 
@@ -454,15 +396,6 @@ module.exports = {
         ];
     },
 
-    getNewsButton: function (guildId, body, validURL) {
-        return new Discord.ActionRowBuilder().addComponents(
-            module.exports.getButton({
-                style: LINK,
-                label: Client.client.intlGet(guildId, 'linkCap'),
-                url: validURL ? body.url : Constants.DEFAULT_SERVER_URL
-            }));
-    },
-
     getBotMutedInGameButton: function (guildId, isMuted) {
         return new Discord.ActionRowBuilder().addComponents(
             module.exports.getButton({
@@ -480,17 +413,6 @@ module.exports = {
                 customId: 'MapWipeNotifyEveryone',
                 label: '@everyone',
                 style: everyone ? SUCCESS : DANGER
-            }));
-    },
-
-    getItemAvailableNotifyInGameButton: function (guildId, enabled) {
-        return new Discord.ActionRowBuilder().addComponents(
-            module.exports.getButton({
-                customId: 'ItemAvailableNotifyInGame',
-                label: enabled ?
-                    Client.client.intlGet(guildId, 'enabledCap') :
-                    Client.client.intlGet(guildId, 'disabledCap'),
-                style: enabled ? SUCCESS : DANGER
             }));
     },
 
@@ -520,80 +442,5 @@ module.exports = {
                     url: 'https://github.com/alexemanuelol/rustplusplus-Credential-Application/releases/v1.4.0'
                 })
             )];
-    },
-
-    getDisplayInformationBattlemetricsAllOnlinePlayersButton: function (guildId, enabled) {
-        return new Discord.ActionRowBuilder().addComponents(
-            module.exports.getButton({
-                customId: 'DisplayInformationBattlemetricsAllOnlinePlayers',
-                label: enabled ?
-                    Client.client.intlGet(guildId, 'enabledCap') :
-                    Client.client.intlGet(guildId, 'disabledCap'),
-                style: enabled ? SUCCESS : DANGER
-            }));
-    },
-
-    getSubscribeToChangesBattlemetricsButtons: function (guildId) {
-        const instance = Client.client.getInstance(guildId);
-
-        return [
-            new Discord.ActionRowBuilder().addComponents(
-                module.exports.getButton({
-                    customId: 'BattlemetricsServerNameChanges',
-                    label: Client.client.intlGet(guildId, 'battlemetricsServerNameChangesCap'),
-                    style: instance.generalSettings.battlemetricsServerNameChanges ? SUCCESS : DANGER
-                }),
-                module.exports.getButton({
-                    customId: 'BattlemetricsTrackerNameChanges',
-                    label: Client.client.intlGet(guildId, 'battlemetricsTrackerNameChangesCap'),
-                    style: instance.generalSettings.battlemetricsTrackerNameChanges ? SUCCESS : DANGER
-                }),
-                module.exports.getButton({
-                    customId: 'BattlemetricsGlobalNameChanges',
-                    label: Client.client.intlGet(guildId, 'battlemetricsGlobalNameChangesCap'),
-                    style: instance.generalSettings.battlemetricsGlobalNameChanges ? SUCCESS : DANGER
-                })),
-            new Discord.ActionRowBuilder().addComponents(
-                module.exports.getButton({
-                    customId: 'BattlemetricsGlobalLogin',
-                    label: Client.client.intlGet(guildId, 'battlemetricsGlobalLoginCap'),
-                    style: instance.generalSettings.battlemetricsGlobalLogin ? SUCCESS : DANGER
-                }),
-                module.exports.getButton({
-                    customId: 'BattlemetricsGlobalLogout',
-                    label: Client.client.intlGet(guildId, 'battlemetricsGlobalLogoutCap'),
-                    style: instance.generalSettings.battlemetricsGlobalLogout ? SUCCESS : DANGER
-                }))];
-    },
-
-    getRecyclerButtons: function (guildId, serverId, recyclerId) {
-        const SECONDARY = Discord.ButtonStyle.Secondary;
-        const DANGER = Discord.ButtonStyle.Danger;
-        const SUCCESS = Discord.ButtonStyle.Success;
-
-        return [
-            new Discord.ActionRowBuilder().addComponents(
-                module.exports.getButton({
-                    customId: `RecyclerRefresh${serverId}${recyclerId}`,
-                    label: '🔄 Refresh',
-                    style: SECONDARY
-                }),
-                module.exports.getButton({
-                    customId: `RecyclerLinkStorage${serverId}${recyclerId}`,
-                    label: '🔗 Link Storage',
-                    style: SUCCESS
-                }),
-                module.exports.getButton({
-                    customId: `RecyclerUnlinkStorage${serverId}${recyclerId}`,
-                    label: '🔓 Unlink Storage',
-                    style: DANGER
-                }),
-                module.exports.getButton({
-                    customId: `RecyclerDelete${serverId}${recyclerId}`,
-                    label: '🗑️ Delete',
-                    style: DANGER
-                })
-            )
-        ];
     },
 }

@@ -19,11 +19,9 @@
 */
 
 const Fs = require('fs');
-const Gm = require('gm');
 const Jimp = require('jimp');
 const Path = require('path');
 
-const Constants = require('../util/constants.js');
 const Client = require('../../index.ts');
 
 class Map {
@@ -47,26 +45,6 @@ class Map {
             player: {
                 image:
                     Path.join(__dirname, '..', 'resources/images/markers/player.png'), size: 20, type: 1, jimp: null
-            },
-            shop: {
-                image:
-                    Path.join(__dirname, '..', 'resources/images/markers/shop.png'), size: 20, type: 3, jimp: null
-            },
-            chinook: {
-                image:
-                    Path.join(__dirname, '..', 'resources/images/markers/chinook.png'), size: 50, type: 4, jimp: null
-            },
-            cargo: {
-                image:
-                    Path.join(__dirname, '..', 'resources/images/markers/cargo.png'), size: 100, type: 5, jimp: null
-            },
-            blade: {
-                image:
-                    Path.join(__dirname, '..', 'resources/images/markers/blade.png'), size: 25, type: 7, jimp: null
-            },
-            heli: {
-                image:
-                    Path.join(__dirname, '..', 'resources/images/markers/heli.png'), size: 20, type: 8, jimp: null
             },
             tunnels: {
                 image:
@@ -390,12 +368,6 @@ class Map {
             let n = this.height - 2 * this.oceanMargin;
             let y = this.height - (marker.y * (n / this.rustplus.info.mapSize) + this.oceanMargin);
 
-            /* Compensate rotations */
-            if (marker.type === this.rustplus.mapMarkers.types.CargoShip) {
-                x -= 20;
-                y -= 20;
-            }
-
             try {
                 let markerImageMeta = this.getMarkerImageMetaByType(marker.type);
                 let size = this.mapMarkerImageMeta[markerImageMeta].size;
@@ -425,56 +397,6 @@ class Map {
 
         await this.mapMarkerImageMeta.map.jimp.writeAsync(
             this.mapMarkerImageMeta.map.image.replace('clean.png', 'full.png'));
-
-        try {
-            const image = Gm(this.mapMarkerImageMeta.map.image.replace('clean.png', 'full.png'));
-
-            if (this.rustplus.info === null) {
-                this.rustplus.log(Client.client.intlGet(null, 'warningCap'),
-                    Client.client.intlGet(null, 'couldNotAppendMapTracers'));
-                return;
-            }
-
-            if (!markers) return;
-
-            /* Tracer for CargoShip */
-            image.stroke(Constants.COLOR_CARGO_TRACER, 2);
-            for (const [id, coords] of Object.entries(this.rustplus.cargoShipTracers)) {
-                let prev = null;
-                for (const point of coords) {
-                    if (prev === null) {
-                        prev = point;
-                        continue;
-                    }
-                    const point1 = this.calculateImageXY(prev);
-                    const point2 = this.calculateImageXY(point);
-                    image.drawLine(point1.x, point1.y, point2.x, point2.y);
-                    prev = point;
-                }
-            }
-
-            /* Tracer for Patrol Helicopter */
-            image.stroke(Constants.COLOR_PATROL_HELICOPTER_TRACER, 2);
-            for (const [id, coords] of Object.entries(this.rustplus.patrolHelicopterTracers)) {
-                let prev = null;
-                for (const point of coords) {
-                    if (prev === null) {
-                        prev = point;
-                        continue;
-                    }
-                    const point1 = this.calculateImageXY(prev);
-                    const point2 = this.calculateImageXY(point);
-                    image.drawLine(point1.x, point1.y, point2.x, point2.y);
-                    prev = point;
-                }
-            }
-
-            await this.gmWriteAsync(image, this.mapMarkerImageMeta.map.image.replace('clean.png', 'full.png'));
-        }
-        catch (error) {
-            this.rustplus.log(Client.client.intlGet(null, 'warningCap'),
-                Client.client.intlGet(null, 'couldNotAddStepTracers'));
-        }
     }
 
     getMarkerImageMetaByType(type) {
@@ -496,25 +418,6 @@ class Map {
         return matches;
     }
 
-    calculateImageXY(coords) {
-        const x = coords.x * ((this.width - 2 * this.oceanMargin) / this.rustplus.info.mapSize) + this.oceanMargin;
-        const n = this.height - 2 * this.oceanMargin;
-        const y = this.height - (coords.y * (n / this.rustplus.info.mapSize) + this.oceanMargin);
-        return { x: x, y: y };
-    }
-
-    async gmWriteAsync(image, path) {
-        return new Promise(function (resolve, reject) {
-            image.write(path, (err) => {
-                if (err) {
-                    reject(err);
-                }
-                else {
-                    resolve()
-                }
-            })
-        });
-    }
 }
 
 module.exports = Map;

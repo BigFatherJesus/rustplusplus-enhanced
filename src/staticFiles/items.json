@@ -17,7 +17,7 @@
     "4474927": {
         "shortname": "industrial.torch",
         "name": "Industrial Torch",
-        "description": ""
+        "description": "An old mining lamp used as a torch. Lights your way at night and can be used as a weapon"
     },
     "14241751": {
         "shortname": "arrow.fire",
@@ -82,7 +82,7 @@
     "54265286": {
         "shortname": "pie.crocodile",
         "name": "Crocodile Pie",
-        "description": "A pie made from crocodile meat, may cause a reptile dysfunction. Boosts hunger, health and hydration. Gives better night vision, including tree markings and ore hotspots, for a short time."
+        "description": "A pie made from crocodile meat, may cause a reptile dysfunction. Causes most animals to fear the player and keep their distance."
     },
     "54436981": {
         "shortname": "electric.fairylights",
@@ -134,6 +134,11 @@
         "name": "NVGM Scientist Suit",
         "description": "A hazmat suit made from radiation resistant rubber."
     },
+    "91167975": {
+        "shortname": "purewarmingtea.milky",
+        "name": "Milky Pure Warming Tea",
+        "description": "A pure warming tea that temporarily increases both your core and minimum temperature. Enriched with milk to make the effect last longer."
+    },
     "94971664": {
         "shortname": "component.box.stone.large",
         "name": "Stone Storage Box",
@@ -177,7 +182,7 @@
     "112268546": {
         "shortname": "workbench.upgrade.reinforced",
         "name": "Reinforced Workbench Upgrade",
-        "description": ""
+        "description": "Increases the workbench's max HP by 150% and grants explosive damage resistance."
     },
     "120820987": {
         "shortname": "pie.chicken",
@@ -193,6 +198,11 @@
         "shortname": "clone.black.berry",
         "name": "Black Berry Clone",
         "description": "A clipping of a Black Berry Plant."
+    },
+    "139776459": {
+        "shortname": "halloween.string.lights",
+        "name": "Halloween String Lights",
+        "description": "Spooky Halloween string lights for your base. Part of the Spooky Decor Bundle."
     },
     "140006625": {
         "shortname": "ptz.cctv.camera",
@@ -216,8 +226,8 @@
     },
     "162882477": {
         "shortname": "50cal.mounted",
-        "name": "#50cal",
-        "description": "#50cal.desc"
+        "name": "50 Cal Turret",
+        "description": "50 Cal Turret"
     },
     "170758448": {
         "shortname": "vehicle.1mod.cockpit.with.engine",
@@ -294,6 +304,11 @@
         "name": "Coal :(",
         "description": "Crappy Holidays!"
     },
+    "204391867": {
+        "shortname": "wool",
+        "name": "Wool",
+        "description": "A bundle of wool. Might be able to take this to a stable to sell."
+    },
     "204970153": {
         "shortname": "wrappedgift",
         "name": "Wrapped Gift",
@@ -322,7 +337,7 @@
     "225892284": {
         "shortname": "industrial.electric.furnace",
         "name": "Industrial Electric Furnace",
-        "description": ""
+        "description": "An electrical version of a furnace that uses electricity instead of a fuel source."
     },
     "236677901": {
         "shortname": "lumberjack.pickaxe",
@@ -449,6 +464,11 @@
         "name": "Hunters Pie",
         "description": "Tasty hunters pie, made with real deer. Provides a boost to hunger, health and hydration. Reduces bleeding for a short time."
     },
+    "325350919": {
+        "shortname": "milk",
+        "name": "Milk",
+        "description": "A small bottle of milk. Very calorie dense. Store in a fridge to separate it and create Cream."
+    },
     "340210699": {
         "shortname": "frontiermirror.small",
         "name": "Frontier Mirror Small",
@@ -461,8 +481,13 @@
     },
     "343045591": {
         "shortname": "aiming.module.mlrs",
-        "name": "MLRS Aiming Module",
-        "description": "An aiming system computer module for an MLRS vehicle."
+        "name": "Aiming Module",
+        "description": "An aiming system computer module for MLRS vehicles and satellite control terminals."
+    },
+    "346569548": {
+        "shortname": "industrial.garagedoor",
+        "name": "Industrial Garage Door",
+        "description": "A garage door that rolls up and down."
     },
     "349762871": {
         "shortname": "ammo.grenadelauncher.he",
@@ -478,6 +503,11 @@
         "shortname": "sunglasses",
         "name": "Sunglasses",
         "description": "A pair of sunglasses. Functional and stylish!"
+    },
+    "352442426": {
+        "shortname": "gamesroom.minifridge",
+        "name": "Bar Games Minifridge",
+        "description": "A small fridge you can store food into and keep your drink cool!"
     },
     "352499047": {
         "shortname": "guntrap",
@@ -509,6 +539,11 @@
         "name": "Basic Crafting Quality Tea",
         "description": "A basic crafting tea. provides hydration and increases the chances of a higher quality crafting outcome for a short time."
     },
+    "374496151": {
+        "shortname": "charity.plushie.05",
+        "name": "Humane World Charity 2026 Plushie",
+        "description": "TEXT TBD"
+    },
     "375473148": {
         "shortname": "scraptransportheli",
         "name": "Scrap Transport Helicopter",
@@ -525,7 +560,7 @@
         "description": "A Twitch Rivals Light-Up Neon Sign"
     },
     "385099196": {
-        "shortname": "4module car chassis",
+        "shortname": "4module.car.chassis",
         "name": "4 Module Car Chassis",
         "description": "4 Module Car Chassis"
     },
@@ -543,6 +578,11 @@
         "shortname": "crocodilemeat.cooked",
         "name": "Cooked Crocodile Meat",
         "description": "Delicious Crocodile Meat, Eating it will restore some health, hunger, and thirst."
+    },
+    "399522257": {
+        "shortname": "gamesroom.shotgun.trap",
+        "name": "Bar Games Shotgun Trap",
+        "description": "A shotgun trap triggered by movement, place near doorways and load with handmade shells."
     },
     "405904531": {
         "shortname": "ball",
@@ -596,7 +636,7 @@
     },
     "472505338": {
         "shortname": "rifle.ak.med",
-        "name": "Medieval AR",
+        "name": "Medieval Assault Rifle",
         "description": "Medieval themed high damage machine rifle."
     },
     "476066818": {
@@ -686,8 +726,13 @@
     },
     "553967074": {
         "shortname": "wallpaper.wall",
-        "name": "Wallpaper Wall",
-        "description": ""
+        "name": "Wallpaper",
+        "description": null
+    },
+    "556232090": {
+        "shortname": "purewarmingtea.creamy",
+        "name": "Creamy Pure Warming Tea",
+        "description": "A pure warming tea that temporarily increases both your core and minimum temperature. Enriched with cream for a stronger, shorter lived effect."
     },
     "559147458": {
         "shortname": "fishtrap.small",
@@ -752,7 +797,7 @@
     "599591861": {
         "shortname": "m16a2",
         "name": "M16A2",
-        "description": ""
+        "description": "A reliable burst-fire only rifle offering excellent accuracy and firerate."
     },
     "602628465": {
         "shortname": "parachute",
@@ -844,6 +889,11 @@
         "name": "Krieg Storage Crates",
         "description": "Military-grade crates designed for efficient storage and durability. A staple of any well-supplied outpost."
     },
+    "655356057": {
+        "shortname": "base.horizontal.barrel",
+        "name": "Base horizontal storage barrel",
+        "description": "Base horizontal storage barrel"
+    },
     "656371026": {
         "shortname": "carburetor3",
         "name": "High Quality Carburetor",
@@ -934,6 +984,11 @@
         "name": "Tiger Mask",
         "description": "A special tiger mask to celebrate Chinese New Year"
     },
+    "718346230": {
+        "shortname": "beefmeat.cooked",
+        "name": "Cooked Beef",
+        "description": "Delicious Beef, Eating it will restore some health, hunger, and thirst."
+    },
     "721798950": {
         "shortname": "vehicle.car_radio",
         "name": "Car Radio",
@@ -989,6 +1044,16 @@
         "name": "Siren Light",
         "description": "A spinning siren light"
     },
+    "777041831": {
+        "shortname": "woodtea.pure.milky",
+        "name": "Milky Pure Wood Tea",
+        "description": "A pure wood tea, temporarily increases the yield from cutting trees a large amount. Enriched with milk to make the effect last longer."
+    },
+    "782269436": {
+        "shortname": "pie.beef",
+        "name": "Beef Pie",
+        "description": "A pie made of beef, increases the maximum amount of food that can be eaten. High calorie consumption increases chance of recovering from injuries."
+    },
     "782422285": {
         "shortname": "sofa.pattern",
         "name": "Sofa - Pattern",
@@ -1001,13 +1066,18 @@
     },
     "786458957": {
         "shortname": "halfheight.industrial.shelves",
-        "name": "halfheight-industrial-shelves",
+        "name": "Half Height Industrial Shelves",
         "description": "Half height industrial shelves for stacking"
     },
     "789333045": {
         "shortname": "sunken.knife",
         "name": "Sunken Combat Knife",
         "description": "A corroded sunken knife designed for close combat engagements, can attack while sprinting. Best in class at harvesting flesh."
+    },
+    "789540413": {
+        "shortname": "pureharvestingtea.milky",
+        "name": "Milky Pure Harvesting Tea",
+        "description": "A pure harvesting tea, provides hydration and temporarily increases the amount of resources you receive from harvesting corpses a large amount. Enriched with milk to make the effect last longer."
     },
     "794356786": {
         "shortname": "attire.hide.boots",
@@ -1032,7 +1102,7 @@
     "798382300": {
         "shortname": "workbench.upgrade.accelerated",
         "name": "Accelerated Workbench Upgrade",
-        "description": ""
+        "description": "Crafting speed increases by 25% for each item already completed in the same batch."
     },
     "803222026": {
         "shortname": "box.repair.bench",
@@ -1102,7 +1172,7 @@
     "831955134": {
         "shortname": "skylantern.skylantern.purple",
         "name": "Sky Lantern - Purple",
-        "description": "#skylantern.skylantern.purple.desc"
+        "description": "A beautiful purple sky lantern. Can be launched in any direction. Has one inventory slot. Can be Ignited with a lit torch."
     },
     "832133926": {
         "shortname": "wood.armor.pants",
@@ -1239,6 +1309,11 @@
         "name": "Floor grill",
         "description": "A floor grill must be placed in floor frames. Perfect for placing above a large furnace."
     },
+    "939198535": {
+        "shortname": "pie.mutton",
+        "name": "Shepherds Pie",
+        "description": "Hearty mutton pie, provides a boost to hunger, health and hydration. Livestock grow used to you twice as fast, and are far less likely to turn on you, for a short time."
+    },
     "952603248": {
         "shortname": "weapon.mod.flashlight",
         "name": "Weapon flashlight",
@@ -1256,7 +1331,7 @@
     },
     "963150711": {
         "shortname": "ammo.mortar.basic",
-        "name": "ammo-mortar-basic",
+        "name": "Mortar Shell",
         "description": "A high explosive mortar shell that deals minor structural damage on impact."
     },
     "963400638": {
@@ -1291,8 +1366,8 @@
     },
     "972302244": {
         "shortname": "hazmatsuit.kick",
-        "name": "Kick Hazmat",
-        "description": "Hazmat obtained during Kick Drops 2025"
+        "name": "KICK Hazmat",
+        "description": "Unique hazmat suit obtainable during KICK Drops 2025"
     },
     "975983052": {
         "shortname": "trophy",
@@ -1466,7 +1541,7 @@
     },
     "1115193056": {
         "shortname": "wall.frame.lunar2025_a",
-        "name": "Wall Divider Pack",
+        "name": "Lunar Wall Frame Inlay",
         "description": "A Lunar New Year themed decorative wall divider with geometric inlay"
     },
     "1121416193": {
@@ -1487,7 +1562,7 @@
     "1127732084": {
         "shortname": "ballistic.helmet",
         "name": "Ballistic helmet",
-        "description": ""
+        "description": "Ballistic helmet with superior protection."
     },
     "1130729138": {
         "shortname": "fish.spoiled",
@@ -1503,6 +1578,11 @@
         "shortname": "ceilinglight",
         "name": "Ceiling Light",
         "description": "A small ceiling mounted light source."
+    },
+    "1143376304": {
+        "shortname": "wall.animal.fence.gate",
+        "name": "Animal Fence Gate",
+        "description": "A gate for accessing your animal pen."
     },
     "1145722690": {
         "shortname": "catapult",
@@ -1542,7 +1622,7 @@
     "1160881421": {
         "shortname": "hitchtroughcombo",
         "name": "Hitch & Trough",
-        "description": "A Hitching post and Trough. Dismounting your horses here will keep them healthy and fed as long as it is kept stocked with food."
+        "description": "A Hitching post and Trough. Dismounting your horses here will keep them healthy and fed as long as it is kept stocked with food. Livestock will also eat from here if there's not enough grass nearby."
     },
     "1168856825": {
         "shortname": "metal.detector",
@@ -1559,8 +1639,13 @@
         "name": "AND Switch",
         "description": "A logic gate that allows electrical passthrough if BOTH inputs receives power, passthrough amount is the greater of either power source"
     },
+    "1174330346": {
+        "shortname": "halloweenwreath",
+        "name": "Halloween Wreath",
+        "description": "A spooky Halloween Wreath for the doors in your base. Part of the Spooky Decor Bundle."
+    },
     "1174484438": {
-        "shortname": "mini fridge",
+        "shortname": "minifridge",
         "name": "Mini Fridge",
         "description": "Ideal for preserving food and keeping items cool."
     },
@@ -1594,6 +1679,11 @@
         "name": "Spoiled Produce",
         "description": "A spoiled fruit or vegetable. It's so far gone it's hard to tell what it originally was."
     },
+    "1185218972": {
+        "shortname": "cream",
+        "name": "Cream",
+        "description": "The fat skimmed off whole milk. Calorie dense and restorative, but it will barely quench your thirst."
+    },
     "1186655046": {
         "shortname": "vehicle.2mod.fuel.tank",
         "name": "Fuel Tank Vehicle Module",
@@ -1622,7 +1712,7 @@
     "1215602244": {
         "shortname": "workbench.upgrade.efficiency",
         "name": "Efficiency Workbench Upgrade",
-        "description": ""
+        "description": "10% chance to produce a free bonus item when crafting in batches. Ineffective when crafting explosive and raid related items."
     },
     "1221063409": {
         "shortname": "door.double.hinged.toptier",
@@ -1669,6 +1759,11 @@
         "name": "Cursed Cauldron",
         "description": "A spooky cast iron cauldron with a green goo."
     },
+    "1243083208": {
+        "shortname": "oretea.pure.milky",
+        "name": "Milky Pure Ore Tea",
+        "description": "A pure ore tea, provides hydration and temporarily increases your yield when harvesting ores a large amount. Enriched with milk to make the effect last longer."
+    },
     "1248356124": {
         "shortname": "explosive.timed",
         "name": "Timed Explosive Charge",
@@ -1676,8 +1771,8 @@
     },
     "1248383659": {
         "shortname": "50cal.mounted.right",
-        "name": "#50cal",
-        "description": "#50cal.desc"
+        "name": "Dual 50 Cal Turret",
+        "description": "Dual 50 Cal Turret"
     },
     "1254295946": {
         "shortname": "component.box.armor.large",
@@ -1839,6 +1934,11 @@
         "name": "Minecart Planter",
         "description": "A small planter with enough room to plant 2 seeds."
     },
+    "1364112542": {
+        "shortname": "pie.pumpkin.rich",
+        "name": "Rich Pumpkin Pie",
+        "description": "A spooky pumpkin pie enriched with cream. Provides a boost to health, hunger and hydration. Greatly increases maximum health for a short time."
+    },
     "1364514421": {
         "shortname": "blueidtag",
         "name": "Blue ID Tag",
@@ -1924,6 +2024,11 @@
         "name": "Door Closer",
         "description": "Automatically closes your doors when left open."
     },
+    "1412100395": {
+        "shortname": "beefmeat.spoiled",
+        "name": "Spoiled Beef",
+        "description": "Spoiled Beef. Consuming will damage your health."
+    },
     "1412103380": {
         "shortname": "seed.sunflower",
         "name": "Sunflower Seed",
@@ -1974,6 +2079,11 @@
         "name": "Minicopter",
         "description": null
     },
+    "1427291780": {
+        "shortname": "pie.fish.rich",
+        "name": "Rich Fish Pie",
+        "description": "A delightful fish pie enriched with cream. Provides a boost to hunger, health and hydration. Increases base comfort level for a long time."
+    },
     "1428574144": {
         "shortname": "hopper",
         "name": "Hopper",
@@ -2006,7 +2116,7 @@
     },
     "1459828804": {
         "shortname": "mortar.deployable",
-        "name": "mortar-deployable",
+        "name": "Mortar",
         "description": "The Mortar fires in an arcing trajectory and favors volume over precision. Pairs well with binoculars."
     },
     "1463862472": {
@@ -2024,15 +2134,25 @@
         "name": "Pork Pie",
         "description": "Tempting pork pie, provides a boost to hunger, health and hydration. Improves healing rate from other sources for a short time."
     },
+    "1468691829": {
+        "shortname": "pie.mutton.rich",
+        "name": "Rich Shepherds Pie",
+        "description": "A hearty shepherds pie enriched with cream. Provides a boost to hunger, health and hydration. Livestock grow used to you far faster, and are far less likely to turn on you, for a short time."
+    },
     "1468749025": {
         "shortname": "bdu.pants",
         "name": "BDU pants",
-        "description": ""
+        "description": "A pair of standard issue battle dress uniform pants. Old, worn, stained, but provides moderate protection."
+    },
+    "1469787676": {
+        "shortname": "pie.bigcat.rich",
+        "name": "Rich Big Cat Pie",
+        "description": "A jungle cat pie enriched with cream, purrfect temperature. Boosts hunger, health and hydration. Shows nearby animal tracks for a long time."
     },
     "1470387662": {
         "shortname": "workbench.upgrade.range",
         "name": "Range Workbench Upgrade",
-        "description": ""
+        "description": "Doubles the workbench crafting radius, letting you craft from twice as far away."
     },
     "1478091698": {
         "shortname": "weapon.mod.muzzlebrake",
@@ -2045,7 +2165,7 @@
         "description": "A basic ore tea, provides hydration and temporarily increases your yield from harvesting ores a small amount."
     },
     "1482871705": {
-        "shortname": "3module car chassis",
+        "shortname": "3module.car.chassis",
         "name": "3 Module Car Chassis",
         "description": "3 Module Car Chassis"
     },
@@ -2089,6 +2209,11 @@
         "name": "Netting",
         "description": "Netting you can climb."
     },
+    "1519395656": {
+        "shortname": "scraptea.pure.creamy",
+        "name": "Creamy Pure Scrap Tea",
+        "description": "A pure scrap tea, temporarily increases the amount of scrap you receive from barrels a large amount. Enriched with cream for a stronger, shorter lived effect."
+    },
     "1521286012": {
         "shortname": "sign.post.double",
         "name": "Double Sign Post",
@@ -2118,6 +2243,11 @@
         "shortname": "building.planner",
         "name": "Building Plan",
         "description": "A building plan. You can use this to craft buildings - right click when equipped for more options."
+    },
+    "1527700610": {
+        "shortname": "purecoolingtea.creamy",
+        "name": "Creamy Pure Cooling Tea",
+        "description": "A pure cooling tea that temporarily decreases your max and core temperature. Enriched with cream for a stronger, shorter lived effect."
     },
     "1533551194": {
         "shortname": "clone.white.berry",
@@ -2232,7 +2362,7 @@
     "1588298435": {
         "shortname": "rifle.bolt",
         "name": "Bolt Action Rifle",
-        "description": "A High powered, highly accurate, long range rifle."
+        "description": "A high powered, highly accurate, long range rifle."
     },
     "1588492232": {
         "shortname": "drone",
@@ -2354,6 +2484,11 @@
         "name": "Yellow Berry",
         "description": "A yellow berry. Can be eaten or used in mixing table recipes to create teas."
     },
+    "1664052604": {
+        "shortname": "apartment.master_key",
+        "name": "Apartment Key",
+        "description": "An old rusty key that can open the door to an apartment."
+    },
     "1668129151": {
         "shortname": "fish.cooked",
         "name": "Cooked Fish",
@@ -2467,7 +2602,7 @@
     "1730664641": {
         "shortname": "wallpaper.ceiling",
         "name": "Wallpaper Ceiling",
-        "description": ""
+        "description": null
     },
     "1732236518": {
         "shortname": "caboose",
@@ -2484,6 +2619,11 @@
         "name": "Clothing Storage Box",
         "description": "Keep your clothing in this storage box. Stores up to 48 items."
     },
+    "1738714421": {
+        "shortname": "purecoolingtea.milky",
+        "name": "Milky Pure Cooling Tea",
+        "description": "A pure cooling tea that temporarily decreases your max and core temperature. Enriched with milk to make the effect last longer."
+    },
     "1744298439": {
         "shortname": "firework.boomer.blue",
         "name": "Blue Boomer",
@@ -2498,6 +2638,16 @@
         "shortname": "hoodie",
         "name": "Hoodie",
         "description": "A hoodie."
+    },
+    "1751463672": {
+        "shortname": "muttonmeat.spoiled",
+        "name": "Spoiled Mutton",
+        "description": "Spoiled Mutton. Consuming will damage your health."
+    },
+    "1754952075": {
+        "shortname": "thruster.module",
+        "name": "Thruster Module",
+        "description": "A thruster module salvaged from crashed satellite remains. The more fuel left in the satellite when it was brought down, the better its condition."
     },
     "1757265204": {
         "shortname": "easter.silveregg",
@@ -2644,6 +2794,11 @@
         "name": "Road Sign Kilt",
         "description": "A shoddy piece of leg armor made from roadsigns. Moderate protection from melee and projectiles."
     },
+    "1852905808": {
+        "shortname": "sculpture.rock",
+        "name": "Stone Sculpture",
+        "description": "A block of stone you can sculpt."
+    },
     "1856217390": {
         "shortname": "easterbasket",
         "name": "Egg Basket",
@@ -2658,6 +2813,11 @@
         "shortname": "draculamask",
         "name": "Dracula Mask",
         "description": "A classic halloween costume mask which provides decent protection."
+    },
+    "1868984394": {
+        "shortname": "industrial.furnace.large",
+        "name": "Large Industrial Furnace",
+        "description": "Used to smelt large quantities of ore. Difficult to secure, must be placed on terrain."
     },
     "1869224826": {
         "shortname": "motorbike_sidecar",
@@ -2693,6 +2853,11 @@
         "shortname": "metalblade",
         "name": "Metal Blade",
         "description": "A Metal Blade for making melee weapons."
+    },
+    "1883513936": {
+        "shortname": "pie.bear.rich",
+        "name": "Rich Bear Pie",
+        "description": "A bear meat pie enriched with cream. Provides a boost to hunger, health and hydration. Greatly increases effect of harvesting teas but reduces their duration."
     },
     "1883981798": {
         "shortname": "piston1",
@@ -2774,6 +2939,11 @@
         "name": "Spoiled Pork Meat",
         "description": "Spoiled Pork Meat. Consuming will damage your health."
     },
+    "1930628359": {
+        "shortname": "alien.costume",
+        "name": "Alien Costume",
+        "description": "An inflatable alien costume. Acting as a replacement for bone armor, you can equip this item to look as silly as possible. Three varieties."
+    },
     "1931713481": {
         "shortname": "black.raspberries",
         "name": "Black Raspberries",
@@ -2852,12 +3022,17 @@
     "1983541158": {
         "shortname": "ballistic.legarmor",
         "name": "Ballistic leg armour",
-        "description": ""
+        "description": "A pair of ballistic leg armour pieces. worn, used, and a bit grubby, but highly protective."
     },
     "1983621560": {
         "shortname": "floor.triangle.grill",
         "name": "Floor triangle grill",
         "description": "A floor grill must be placed in floor frames. Perfect for placing above a large furnace."
+    },
+    "1988640176": {
+        "shortname": "pie.pork.rich",
+        "name": "Rich Pork Pie",
+        "description": "A tempting pork pie enriched with cream. Provides a boost to hunger, health and hydration. Greatly improves healing rate from other sources for a short time."
     },
     "1989785143": {
         "shortname": "horse.shoes.advanced",
@@ -2884,6 +3059,11 @@
         "name": "Extended Magazine",
         "description": "Larger magazine size"
     },
+    "2006264797": {
+        "shortname": "pie.chicken.rich",
+        "name": "Rich Chicken Pie",
+        "description": "Just like mom used to make, enriched with cream. Provides a boost to hunger, health and hydration. Greatly increases the chance of better genes from crops for a short time."
+    },
     "2009734114": {
         "shortname": "xmasdoorwreath",
         "name": "Christmas Door Wreath",
@@ -2902,7 +3082,7 @@
     "2022157467": {
         "shortname": "crossbowbowless",
         "name": "Bowless Crossbow",
-        "description": ""
+        "description": "A bowless crossbow for fans of DIY"
     },
     "2023888403": {
         "shortname": "electric.battery.rechargable.medium",
@@ -2933,6 +3113,11 @@
         "shortname": "floor.triangle.ladder.hatch",
         "name": "Triangle Ladder Hatch",
         "description": "A hatch that opens and changes into a ladder."
+    },
+    "2045583965": {
+        "shortname": "base.vertical.barrel",
+        "name": "Base vertical storage barrel",
+        "description": "Base vertical storage barrel"
     },
     "2047789913": {
         "shortname": "clothing.mod.armorinsert_lead",
@@ -3019,10 +3204,20 @@
         "name": "Gold Mirror Standing",
         "description": "A standing gold mirror"
     },
+    "2125127001": {
+        "shortname": "smg.uzi",
+        "name": "Uzi",
+        "description": "A compact, fast-firing machine pistol. Hold [+firemode] to extend the stock for better control."
+    },
     "2126889441": {
         "shortname": "santabeard",
         "name": "Santa Beard",
         "description": "A santa beard. Ho Ho ho. This item acts as a hairy bandana."
+    },
+    "2130820927": {
+        "shortname": "charity.plushy.04",
+        "name": "Cancer Research UK 2026 Plushie",
+        "description": "A soft and squishy plush that provides comfort in your base.\n\nCancer Research UK (reg charity nos. 1089464, SC041666, 1103 and 247)\nwill get 100% of the net sales of the Cancer Research UK Plushie*.  \n\n*Net sales being gross sales less refunds and after Steam platform fees (20%) and sales tax typically around 10-11%."
     },
     "2130820932": {
         "shortname": "charity.plushy.01",
@@ -3034,6 +3229,11 @@
         "name": "Ronald McDonald House UK Plushie",
         "description": "A soft and squishy plush that provides comfort in your base. First sold on the Rust store in October 2025 to support Ronald McDonald House Charities UK, helping ease the burden on families by providing free ‘home away from home’ accommodation near hospitals.\n\nwww.rmhc.org.uk"
     },
+    "2130820934": {
+        "shortname": "charity.plushy.03",
+        "name": "Ronald McDonald House UK 2026 Plushie",
+        "description": "A soft and squishy plush that provides comfort in your base. First sold on the Rust store in July 2026 to support Ronald McDonald House Charities UK, helping ease the burden on families by providing free ‘home away from home’ accommodation near hospitals.\n\nwww.rmhc.org.uk"
+    },
     "2133269020": {
         "shortname": "clone.red.berry",
         "name": "Red Berry Clone",
@@ -3044,30 +3244,35 @@
         "name": "High External Frontier Gate",
         "description": "A high wooden gate, allowing access in and out of your compound."
     },
+    "2141654944": {
+        "shortname": "barricade.sandbags.three.quarter",
+        "name": "Barricade Sandbags Three Quarter",
+        "description": "A protective barricade made out of Sand Bags. Deploy another one on top to build it higher, up to a sandbag pillbox."
+    },
     "-226151558": {
-        "shortname": "2module car chassis",
+        "shortname": "2module.car.chassis",
         "name": "2 Module Car Chassis",
         "description": "2 Module Car Chassis"
     },
     "-866121090": {
-        "shortname": "2module car",
+        "shortname": "2module.car",
         "name": "2 Module Car",
         "description": "A motorbike."
     },
     "-831725027": {
-        "shortname": "3module car",
+        "shortname": "3module.car",
         "name": "3 Module Car",
         "description": "3 Module Car"
     },
     "-935322684": {
-        "shortname": "4module car",
+        "shortname": "4module.car",
         "name": "4 Module Car",
         "description": "4 Module Car"
     },
     "-1467876094": {
         "shortname": "50cal.mounted.left",
-        "name": "#50cal",
-        "description": "#50cal.desc"
+        "name": "Dual 50 Cal Turret",
+        "description": "Dual 50 Cal Turret"
     },
     "-880494890": {
         "shortname": "abyss.barrel.horizontal",
@@ -3080,9 +3285,9 @@
         "description": "Vertical Abyss container taken from the depths of the ocean"
     },
     "-1896395719": {
-        "shortname": "advancedblueprintfragment",
-        "name": "Advanced Blueprint Fragment",
-        "description": "Precision schematics with complex information, multiple fragments are necessary for crafting a Tier 3 Workbench."
+        "shortname": "blueprintbook",
+        "name": "Blueprint Book",
+        "description": "A bound collection of precise schematics, used to research Workbench Level 3 items on the tech tree."
     },
     "-1498613415": {
         "shortname": "advancedcoolingtea",
@@ -3287,12 +3492,12 @@
     "-559599960": {
         "shortname": "barricade.sandbags",
         "name": "Sandbag Barricade",
-        "description": "A protective barricade made out of Sand Bags."
+        "description": "A protective barricade made out of Sand Bags. Deploy another one on top to build it higher, up to a sandbag pillbox."
     },
     "-143481979": {
-        "shortname": "basicblueprintfragment",
-        "name": "Basic Blueprint Fragment",
-        "description": "Damaged diagrams containing partial information to constuct a Tier 2 Workbench for advanced crafting. Several fragments are needed.\n\n20 Basic Fragments can be pieced together to make an Advanced Fragment."
+        "shortname": "blueprintfragment",
+        "name": "Blueprint Fragment",
+        "description": "Damaged diagrams containing partial information, used to research Workbench Level 1 items on the tech tree.\n\n10 Blueprint Fragments can be pieced together to make a Blueprint Page."
     },
     "-1274093662": {
         "shortname": "bathtub.planter",
@@ -4366,7 +4571,7 @@
     },
     "-797592358": {
         "shortname": "hazmatsuit.diver",
-        "name": "Abyss Pack",
+        "name": "Abyss Hazmat",
         "description": "A damaged deep-water survival suit was found in the abyss. Although it may no longer serve its original purpose, it functions reliably as a Hazmat suit. Owning this suit also grants access to the Abyss Pickaxe, Abyss Hatchet, Abyss Torch, and Abyss AR."
     },
     "-105415879": {
@@ -4451,7 +4656,7 @@
     },
     "-2068194497": {
         "shortname": "horse.armor.lny26",
-        "name": "horse.armor.lny26.name",
+        "name": "Lunar New Year Horse Armor",
         "description": "A full body Lunar New Year themed armor for a horse. Provides strong protection for you and your steed, at the cost of greatly reduced movement speed."
     },
     "-1323101799": {
@@ -4471,7 +4676,7 @@
     },
     "-1579932985": {
         "shortname": "horsedung",
-        "name": "Horse Dung",
+        "name": "Dung",
         "description": "Fresh and fertile."
     },
     "-1162759543": {
@@ -5371,7 +5576,7 @@
     },
     "-193519904": {
         "shortname": "single.shallow.wall.shelves",
-        "name": "Single Shallow Wall Shelves",
+        "name": "Bamboo Wall Shelves",
         "description": "A shallow bamboo wall shelf for small item stacking"
     },
     "-1056824343": {
@@ -5417,17 +5622,17 @@
     "-1770889433": {
         "shortname": "skylantern.skylantern.green",
         "name": "Sky Lantern - Green",
-        "description": "#skylantern.skylantern.green.desc"
+        "description": "A beautiful green sky lantern. Can be launched in any direction. Has one inventory slot. Can be Ignited with a lit torch."
     },
     "-1824770114": {
         "shortname": "skylantern.skylantern.orange",
         "name": "Sky Lantern - Orange",
-        "description": "#skylantern.skylantern.orange.desc"
+        "description": "A beautiful orange sky lantern. Can be launched in any direction. Has one inventory slot. Can be Ignited with a lit torch."
     },
     "-1433390281": {
         "shortname": "skylantern.skylantern.red",
         "name": "Sky Lantern - Red",
-        "description": "#skylantern.skylantern.red.desc"
+        "description": "A beautiful red sky lantern. Can be launched in any direction. Has one inventory slot. Can be Ignited with a lit torch."
     },
     "-333406828": {
         "shortname": "sled",
@@ -5472,7 +5677,7 @@
     "-695978112": {
         "shortname": "smart.alarm",
         "name": "Smart Alarm",
-        "description": "Sends a notifications to your phone when powered on."
+        "description": "Sends notifications to your phone when powered on."
     },
     "-1758372725": {
         "shortname": "smg.thompson",
@@ -5866,8 +6071,8 @@
     },
     "-551431036": {
         "shortname": "wallpaper.flooring",
-        "name": "Wallpaper Flooring",
-        "description": ""
+        "name": "Flooring",
+        "description": null
     },
     "-1344017968": {
         "shortname": "wantedposter",
@@ -6131,72 +6336,302 @@
     },
     "-486432631": {
         "shortname": "ammo.mortar.fragment",
-        "name": "ammo-mortar-fragment",
+        "name": "Fragmentation Mortar Shell",
         "description": "A fragmentation mortar shell, dealing lethal damage in a large area on impact."
     },
     "-1780402255": {
         "shortname": "ballistic.vest",
         "name": "Ballistic vest",
-        "description": ""
+        "description": "A standard issue military ballstic vest. Worn, used, and dirty, but highly protective."
     },
     "-2127311451": {
         "shortname": "bdu.shirt",
         "name": "BDU shirt",
-        "description": ""
+        "description": "A standard issue battle dress uniform shirt. Old, worn and stained, but provides moderate protection."
     },
     "-1800102806": {
         "shortname": "discord.plushie",
-        "name": "discord-plushie",
+        "name": "Wumpus Plush",
         "description": "Exclusive to the Rust Shop on Discord!"
     },
     "-1019111952": {
         "shortname": "industrial.storage.horizontal",
-        "name": "industrial-storage-horizontal",
+        "name": "Industrial Storage Horizontal Barrel",
         "description": "Horizontal barrel to store industrial materials"
     },
     "-883975138": {
         "shortname": "industrial.storage.vertical",
-        "name": "industrial-storage-vertical",
+        "name": "Industrial Storage Vertical Barrel",
         "description": "Vertical barrel to store industrial materials"
     },
     "-1018026008": {
         "shortname": "salvaged.industrial.shelves",
         "name": "Salvaged Industrial Shelves",
-        "description": ""
+        "description": "Shelves for item stacking"
     },
     "-265202949": {
         "shortname": "wall.shallow.industrial.shelves",
-        "name": "wall-shallow-industrial-shelves",
+        "name": "Industrial Wall Shelves",
         "description": "A shallow industrial wall shelf for small item stacking"
     },
     "-770390391": {
         "shortname": "workbench.upgrade.comfort",
         "name": "Comfort Workbench Upgrade",
-        "description": ""
+        "description": "Provides a 100% comfort zone around the workbench for those long crafting sessions."
     },
     "-1953279770": {
         "shortname": "workbench.upgrade.defensive",
         "name": "Defensive Workbench Upgrade",
-        "description": ""
+        "description": "Armor or clothing compatible with insert slots will roll an additional slot when crafted using this upgrade."
     },
     "-180862419": {
         "shortname": "workbench.upgrade.prototype",
         "name": "Prototype Workbench Upgrade",
-        "description": ""
+        "description": "Allows unlocking any tech tree item regardless of progression. Each attempt has a 25% chance to succeed, and a failed attempt still consumes resources."
     },
     "-286541059": {
         "shortname": "workbench.upgrade.recyclebin",
         "name": "Recycle Bin Workbench Upgrade",
-        "description": ""
+        "description": "Crafting at a workbench with this upgrade has a chance to refund up to 10% of the ingredient costs back to you in raw material form."
     },
     "-160105346": {
         "shortname": "workbench.upgrade.salvage",
         "name": "Salvage Workbench Upgrade",
-        "description": ""
+        "description": "Each blueprint spent on tech tree unlocks at this bench has a 20% chance to not be consumed."
     },
     "-1536343135": {
         "shortname": "workbench.upgrade.surplus",
         "name": "Surplus Workbench Upgrade",
-        "description": ""
+        "description": "20% chance to produce a random surplus part (1-8) when crafting. Surplus parts are used in special alternate recipes."
+    },
+    "-1639742441": {
+        "shortname": "bar.stool.metal",
+        "name": "Metal Bar Stool",
+        "description": "Pull up a stool and have a drink. A decorative item which provides comfort while seated."
+    },
+    "-1444366079": {
+        "shortname": "bar.stool.wood",
+        "name": "Wooden Bar Stool",
+        "description": "Pull up a stool and have a drink. A decorative item which provides comfort while seated."
+    },
+    "-219005627": {
+        "shortname": "barricade.sandbags.half",
+        "name": "Barricade Sandbags Half",
+        "description": "A protective barricade made out of Sand Bags. Deploy another one on top to build it higher, up to a sandbag pillbox."
+    },
+    "-1088645302": {
+        "shortname": "barricade.sandbags.pillbox",
+        "name": "Barricade Sandbags Pillbox",
+        "description": "#barricade.sandbags.pillbox.desc"
+    },
+    "-1024954624": {
+        "shortname": "base.half.shelves",
+        "name": "Base half shelves",
+        "description": "Base half shelves"
+    },
+    "-1695149731": {
+        "shortname": "base.single.shelves",
+        "name": "Base single shelves",
+        "description": "Base single shelves"
+    },
+    "-201824959": {
+        "shortname": "beefmeat",
+        "name": "Raw Beef",
+        "description": "Raw Beef. Eating it will damage your health, try cooking it first."
+    },
+    "-1716287874": {
+        "shortname": "blueprintpage",
+        "name": "Blueprint Page",
+        "description": "A partially restored schematic page, used to research Workbench Level 2 items on the tech tree."
+    },
+    "-909588488": {
+        "shortname": "bread.brioche.loaf",
+        "name": "Brioche Bread",
+        "description": "A loaf of rich brioche bread, eating it provides a large boost to health, hunger and hydration. Feeding to a horse will provide a boost to its digestion and dung production for a short time."
+    },
+    "-593892104": {
+        "shortname": "clothing.mod.armorinsert_wool",
+        "name": "Wool Armor Insert",
+        "description": "Wool insert for clothing and armour. Adds cold, melee and projectile protection."
+    },
+    "-872679147": {
+        "shortname": "dartboard",
+        "name": "Dart Board",
+        "description": "Throw some darts! Compete with others in a leaderboard. Hold the interact key to choose between a single or two-player game."
+    },
+    "-570638754": {
+        "shortname": "discord.zombie.plushie",
+        "name": "Zombie Wumpus Plush",
+        "description": "Exclusive to the Rust Shop on Discord!"
+    },
+    "-18034684": {
+        "shortname": "firework.boomer.white",
+        "name": "White Boomer",
+        "description": "A very large mortar type firework with a white starburst"
+    },
+    "-945548410": {
+        "shortname": "fuse.highgrade",
+        "name": "Heavy Fuse",
+        "description": "Lasts longer than a regular fuse and is compatible with and able to restore a Power Plant. Will have to be replaced after a period of time."
+    },
+    "-1661343913": {
+        "shortname": "generator.biofuel",
+        "name": "Biofuel Generator",
+        "description": "A large pot that can convert organic matter into fuel."
+    },
+    "-1587608109": {
+        "shortname": "hazmat.plague",
+        "name": "Plague Doctor Hazmat Suit",
+        "description": "The Plague Doctor delivers no cure - only death and decay. Bring out your dead, or prepare to join them."
+    },
+    "-132349657": {
+        "shortname": "healingtea.pure.creamy",
+        "name": "Creamy Pure Healing Tea",
+        "description": "A pure healing tea, provides hydration and heals you a large amount over time. Enriched with cream for a stronger, shorter lived effect."
+    },
+    "-1644292642": {
+        "shortname": "healingtea.pure.milky",
+        "name": "Milky Pure Healing Tea",
+        "description": "A pure healing tea, provides hydration and heals you a large amount over time. Enriched with milk to make the effect last longer."
+    },
+    "-786398324": {
+        "shortname": "industrial.autoturret",
+        "name": "Industrial Auto Turret",
+        "description": "This automated electric sentry turret will engage and neutralize any moving targets it has line of sight to. You must equip it with a projectile weapon and the corresponding ammunition. Note : The turret will search for targets in a 180 degree arc facing *you* when you place it. Requires 10 power."
+    },
+    "-1018085504": {
+        "shortname": "jukebox",
+        "name": "Jukebox",
+        "description": "A Jukebox that brings the tunes! Play recorded cassette tapes or stream audio from the internet. Fitted with a matrix display that shows the tuned station. Open the settings to change audio options."
+    },
+    "-1622386500": {
+        "shortname": "kickgems",
+        "name": "Gems",
+        "description": "Looks valuable"
+    },
+    "-1244746477": {
+        "shortname": "maxhealthtea.pure.creamy",
+        "name": "Creamy Pure Max Health Tea",
+        "description": "A pure health tea, provides hydration and temporarily boosts maximum health a large amount. Enriched with cream for a stronger, shorter lived effect."
+    },
+    "-1388103748": {
+        "shortname": "maxhealthtea.pure.milky",
+        "name": "Milky Pure Max Health Tea",
+        "description": "A pure health tea, provides hydration and temporarily boosts maximum health a large amount. Enriched with milk to make the effect last longer."
+    },
+    "-75264812": {
+        "shortname": "medical.honey.bandage",
+        "name": "Medical Honey Bandage",
+        "description": "Heal yourself and others with this medical honey bandage. Left click heals you, right click heals others."
+    },
+    "-319133397": {
+        "shortname": "muttonmeat.cooked",
+        "name": "Cooked Mutton",
+        "description": "Delicious Mutton, Eating it will restore some health, hunger, and thirst."
+    },
+    "-1957595450": {
+        "shortname": "muttonmeat",
+        "name": "Raw Mutton",
+        "description": "Raw Mutton. Eating it will damage your health, try cooking it first."
+    },
+    "-744942541": {
+        "shortname": "oretea.pure.creamy",
+        "name": "Creamy Pure Ore Tea",
+        "description": "A pure ore tea, provides hydration and temporarily increases your yield when harvesting ores a large amount. Enriched with cream for a stronger, shorter lived effect."
+    },
+    "-1846744758": {
+        "shortname": "pie.apple.rich",
+        "name": "Rich Apple Pie",
+        "description": "An apple pie enriched with cream. Provides a boost to hunger, health and hydration. Gives better night vision, including tree markings and ore hotspots, for a long time."
+    },
+    "-867055736": {
+        "shortname": "pie.beef.rich",
+        "name": "Rich Beef Pie",
+        "description": "A pie made of beef, enriched with cream. Increases the maximum amount of food that can be eaten, up to double the normal amount. High calorie consumption increases chance of recovering from injuries."
+    },
+    "-1540865198": {
+        "shortname": "pie.crocodile.rich",
+        "name": "Rich Crocodile Pie",
+        "description": "A crocodile pie enriched with cream, may cause a reptile dysfunction. Causes most animals to fear the player and keep their distance for longer."
+    },
+    "-1188678681": {
+        "shortname": "pie.hunters.rich",
+        "name": "Rich Hunters Pie",
+        "description": "A hunters pie enriched with cream, made with real deer. Provides a boost to hunger, health and hydration. Stops bleeding for a short time."
+    },
+    "-1748166144": {
+        "shortname": "pooltable",
+        "name": "Pool Table",
+        "description": "A classic game of pool to challenge your friends, or foes. Hold the interact key to choose between a single or two-player game."
+    },
+    "-1661676046": {
+        "shortname": "pureharvestingtea.creamy",
+        "name": "Creamy Pure Harvesting Tea",
+        "description": "A pure harvesting tea, provides hydration and temporarily increases the amount of resources you receive from harvesting corpses a large amount. Enriched with cream for a stronger, shorter lived effect."
+    },
+    "-1882497808": {
+        "shortname": "radiationresisttea.pure.creamy",
+        "name": "Creamy Pure Anti-Rad Tea",
+        "description": "A pure tea that provides hydration and temporarily increases your resistance to radiation a large amount. Enriched with cream for a stronger, shorter lived effect."
+    },
+    "-1341272471": {
+        "shortname": "radiationresisttea.pure.milky",
+        "name": "Milky Pure Anti-Rad Tea",
+        "description": "A pure tea that provides hydration and temporarily increases your resistance to radiation a large amount. Enriched with milk to make the effect last longer."
+    },
+    "-1156572922": {
+        "shortname": "rifle.ak.glass.blue",
+        "name": "Crystal Assault Rifle Sapphire",
+        "description": "Machined from the toughest gemstones, this Assault Rifle skin will show each and every shot you take."
+    },
+    "-75136407": {
+        "shortname": "rifle.ak.glass.green",
+        "name": "Crystal Assault Rifle Emerald",
+        "description": "Machined from the toughest gemstones, this Assault Rifle skin will show each and every shot you take."
+    },
+    "-1920964108": {
+        "shortname": "rifle.ak.glass",
+        "name": "Crystal Assault Rifle Diamond",
+        "description": "Machined from the toughest gemstones, this Assault Rifle skin will show each and every shot you take."
+    },
+    "-1795386514": {
+        "shortname": "rifle.ak.glass.pink",
+        "name": "Crystal Assault Rifle Pink Diamond",
+        "description": "Machined from the toughest gemstones, this Assault Rifle skin will show each and every shot you take."
+    },
+    "-1045971123": {
+        "shortname": "rifle.ak.glass.red",
+        "name": "Crystal Assault Rifle Ruby",
+        "description": "Machined from the toughest gemstones, this Assault Rifle skin will show each and every shot you take."
+    },
+    "-1057052157": {
+        "shortname": "scraptea.pure.milky",
+        "name": "Milky Pure Scrap Tea",
+        "description": "A pure scrap tea, temporarily increases the amount of scrap you receive from barrels a large amount. Enriched with milk to make the effect last longer."
+    },
+    "-1953695556": {
+        "shortname": "shears",
+        "name": "Shears",
+        "description": "Used to shear wool from sheep. More effective than other weapons and will never hurt a sheep."
+    },
+    "-1019639625": {
+        "shortname": "skimmedmilk",
+        "name": "Skimmed Milk",
+        "description": "Milk with the cream separated out. Hydrating, but less calorie dense than whole milk."
+    },
+    "-1716340729": {
+        "shortname": "tunalight.skull",
+        "name": "Skull Wall Lamp",
+        "description": "Turn your enemies into something useful with this tasteful lamp."
+    },
+    "-1814195745": {
+        "shortname": "wall.animal.fence",
+        "name": "Animal Fence",
+        "description": "A sturdy fence for penning animals."
+    },
+    "-844428380": {
+        "shortname": "woodtea.pure.creamy",
+        "name": "Creamy Pure Wood Tea",
+        "description": "A pure wood tea, temporarily increases the yield from cutting trees a large amount. Enriched with cream for a stronger, shorter lived effect."
     }
 }

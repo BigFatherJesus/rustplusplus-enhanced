@@ -40,6 +40,16 @@ module.exports = {
                 await errorConnRefused(rustplus, client, err);
             } break;
 
+            case 'RELAY_AUTH_REJECTED': {
+                client.connectionManager.warnRustPlusLogin(rustplus.guildId, rustplus.playerId,
+                    'rustplusLoginRejected');
+                triggerReconnection(rustplus, client, 'rustplus_login');
+            } break;
+
+            case 'RELAY_UNAVAILABLE': {
+                triggerReconnection(rustplus, client, 'rustplus_login');
+            } break;
+
             default: {
                 errorOther(rustplus, client, err);
             } break;

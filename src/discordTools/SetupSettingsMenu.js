@@ -21,7 +21,6 @@
 const Discord = require('discord.js');
 const Path = require('path');
 
-const Config = require('../../config');
 const Constants = require('../util/constants.js');
 const DiscordButtons = require('./discordButtons.js');
 const DiscordEmbeds = require('./discordEmbeds.js');
@@ -61,7 +60,6 @@ module.exports = async (client, guild, forced = false) => {
         await DiscordTools.clearTextChannel(guild.id, instance.channelId.settings, 100);
 
         await setupGeneralSettings(client, guild.id, channel);
-        await setupNotificationSettings(client, guild.id, channel);
 
         instance.firstTime = false;
         client.setInstance(guild.id, instance);
@@ -94,17 +92,6 @@ async function setupGeneralSettings(client, guildId, channel) {
                 }]
         })],
         components: [DiscordSelectMenus.getLanguageSelectMenu(guildId, instance.generalSettings.language)],
-        files: [new Discord.AttachmentBuilder(
-            Path.join(__dirname, '..', 'resources/images/settings_logo.png'))]
-    });
-
-    await client.messageSend(channel, {
-        embeds: [DiscordEmbeds.getEmbed({
-            color: Constants.COLOR_SETTINGS,
-            title: client.intlGet(guildId, 'commandsVoiceGenderDesc'),
-            thumbnail: `attachment://settings_logo.png`
-        })],
-        components: [DiscordSelectMenus.getVoiceGenderSelectMenu(guildId, instance.generalSettings.voiceGender)],
         files: [new Discord.AttachmentBuilder(
             Path.join(__dirname, '..', 'resources/images/settings_logo.png'))]
     });
@@ -191,8 +178,7 @@ async function setupGeneralSettings(client, guildId, channel) {
         components: [
             DiscordButtons.getFcmAlarmNotificationButtons(
                 guildId,
-                instance.generalSettings.fcmAlarmNotificationEnabled,
-                instance.generalSettings.fcmAlarmNotificationEveryone)],
+                instance.generalSettings.fcmAlarmNotificationEnabled)],
         files: [new Discord.AttachmentBuilder(
             Path.join(__dirname, '..', 'resources/images/settings_logo.png'))]
     });
@@ -255,71 +241,4 @@ async function setupGeneralSettings(client, guildId, channel) {
         files: [new Discord.AttachmentBuilder(
             Path.join(__dirname, '..', 'resources/images/settings_logo.png'))]
     });
-
-    await client.messageSend(channel, {
-        embeds: [DiscordEmbeds.getEmbed({
-            color: Constants.COLOR_SETTINGS,
-            title: client.intlGet(guildId, 'itemAvailableNotifyInGameSetting'),
-            thumbnail: `attachment://settings_logo.png`
-        })],
-        components: [DiscordButtons.getItemAvailableNotifyInGameButton(guildId,
-            instance.generalSettings.itemAvailableInVendingMachineNotifyInGame)],
-        files: [new Discord.AttachmentBuilder(
-            Path.join(__dirname, '..', 'resources/images/settings_logo.png'))]
-    });
-
-    if (Config.battlemetrics.token !== '') {
-        await client.messageSend(channel, {
-            embeds: [DiscordEmbeds.getEmbed({
-                color: Constants.COLOR_SETTINGS,
-                title: client.intlGet(guildId, 'displayInformationBattlemetricsAllOnlinePlayers'),
-                thumbnail: `attachment://settings_logo.png`
-            })],
-            components: [DiscordButtons.getDisplayInformationBattlemetricsAllOnlinePlayersButton(guildId,
-                instance.generalSettings.displayInformationBattlemetricsAllOnlinePlayers)],
-            files: [new Discord.AttachmentBuilder(
-                Path.join(__dirname, '..', 'resources/images/settings_logo.png'))]
-        });
-
-        await client.messageSend(channel, {
-            embeds: [DiscordEmbeds.getEmbed({
-                color: Constants.COLOR_SETTINGS,
-                title: client.intlGet(guildId, 'subscribeToChangesBattlemetrics'),
-                thumbnail: `attachment://settings_logo.png`
-            })],
-            components: DiscordButtons.getSubscribeToChangesBattlemetricsButtons(guildId),
-            files: [new Discord.AttachmentBuilder(
-                Path.join(__dirname, '..', 'resources/images/settings_logo.png'))]
-        });
-    }
-}
-
-async function setupNotificationSettings(client, guildId, channel) {
-    const instance = client.getInstance(guildId);
-
-    await client.messageSend(channel, {
-        files: [new Discord.AttachmentBuilder(
-            Path.join(__dirname, '..',
-                `resources/images/settings/notification_settings_logo_${instance.generalSettings.language}.png`))]
-    });
-
-    for (const setting in instance.notificationSettings) {
-        await client.messageSend(channel, {
-            embeds: [DiscordEmbeds.getEmbed({
-                color: Constants.COLOR_SETTINGS,
-                title: client.intlGet(guildId, setting),
-                thumbnail: `attachment://${instance.notificationSettings[setting].image}`
-            })],
-            components: [
-                DiscordButtons.getNotificationButtons(
-                    guildId, setting,
-                    instance.notificationSettings[setting].discord,
-                    instance.notificationSettings[setting].inGame,
-                    instance.notificationSettings[setting].voice)],
-            files: [
-                new Discord.AttachmentBuilder(
-                    Path.join(__dirname, '..',
-                        `resources/images/events/${instance.notificationSettings[setting].image}`))]
-        });
-    }
 }

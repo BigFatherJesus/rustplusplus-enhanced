@@ -19,6 +19,8 @@ services:
             # --- Required ---
             - RPP_DISCORD_CLIENT_ID=your_discord_client_id
             - RPP_DISCORD_TOKEN=your_discord_bot_token
+            # Optional: free Steam Web API key so trackers find a server's address by name
+            # - RPP_STEAM_API_KEY=your_steam_web_api_key
 
             # --- AI assistant (!ai / /ai). OpenAI-compatible endpoint. ---
             # Disable entirely with RPP_AI_ENABLED=false

@@ -1,8 +1,8 @@
 /*
     AI tool definitions + executors.
 
-    Exposes live Rust+ server data (team, server info, time, map markers /
-    vending machines, smart devices) and the AI/ knowledge folder to the model
+    Exposes live Rust+ server data (team, server info, time, smart devices) and the
+    AI/ knowledge folder to the model
     via OpenAI-style function calling. Control tools (toggling switches) are
     gated behind config + caller permissions.
 
@@ -19,12 +19,6 @@ const Map = require('../map.js');
 const Timer = require('../timer.js');
 
 const AI_ITEMS_DIR = Path.join(__dirname, '..', '..', '..', 'AI', 'items');
-
-/* Rust+ map marker type ids (mirror of MapMarkers.types). */
-const MARKER_TYPE = {
-    1: 'Player', 2: 'Explosion', 3: 'VendingMachine', 4: 'CH47',
-    5: 'CargoShip', 6: 'Crate', 7: 'GenericRadius', 8: 'PatrolHelicopter', 9: 'TravelingVendor'
-};
 
 /* ------------------------------------------------------------------ */
 /* Helpers                                                             */
@@ -201,90 +195,6 @@ async function execGetTeam(ctx) {
     return JSON.stringify(members);
 }
 
-async function execGetMapMarkers(ctx, args) {
-    const rustplus = getOperationalRustplus(ctx);
-    if (!rustplus) return 'Not connected to a Rust server.';
-    const filter = (args.type || '').toLowerCase();
-    const itemFilter = (args.item || '').toLowerCase().trim();
-
-    const response = await rustplus.getMapMarkersAsync();
-    if (!await rustplus.isResponseValid(response)) return 'Failed to read map markers.';
-
-    const mapSize = rustplus.info ? rustplus.info.correctedMapSize : null;
-    const out = [];
-    for (const marker of response.mapMarkers.markers) {
-        const typeName = MARKER_TYPE[marker.type] || `Type${marker.type}`;
-        if (filter && !typeName.toLowerCase().includes(filter)) continue;
-
-        const entry = { type: typeName };
-        if (mapSize) entry.grid = Map.getGridPos(marker.x, marker.y, mapSize);
-
-        if (marker.type === 3 && Array.isArray(marker.sellOrders)) {
-            /* Vending machine — list in-stock sell orders. */
-            let sells = marker.sellOrders
-                .filter(o => o.amountInStock > 0)
-                .map(o => ({
-                    item: itemName(ctx, o.itemId) + (o.itemIsBlueprint ? ' (BP)' : ''),
-                    qty: o.quantity,
-                    cost: `${o.costPerItem} ${itemName(ctx, o.currencyId)}`,
-                    stock: o.amountInStock
-                }));
-            /* When searching for a specific item, only keep machines that sell it. */
-            if (itemFilter) {
-                sells = sells.filter(s => s.item.toLowerCase().includes(itemFilter));
-                if (sells.length === 0) continue;
-            }
-            entry.sells = sells;
-        }
-        else if (itemFilter) {
-            /* Item search only cares about vending machines. */
-            continue;
-        }
-        out.push(entry);
-    }
-
-    if (out.length === 0) {
-        if (itemFilter) return `No vending machine currently selling "${args.item}".`;
-        return filter ? `No markers of type "${filter}".` : 'No active map markers.';
-    }
-    /* Cap to keep the tool result compact. */
-    return JSON.stringify(out.slice(0, 40));
-}
-
-async function execGetEvents(ctx, args) {
-    const rustplus = getOperationalRustplus(ctx);
-    if (!rustplus) return 'Not connected to a Rust server.';
-
-    /* Reuse the bot's existing in-game event-status commands (cargo/heli/chinook/oil
-       rig timers). They read tracked spawn/egress state and return ready strings. */
-    const sources = {
-        cargo: () => rustplus.getCommandCargo(),
-        heli: () => rustplus.getCommandHeli(),
-        chinook: () => rustplus.getCommandChinook(),
-        small_oil: () => rustplus.getCommandSmall(),
-        large_oil: () => rustplus.getCommandLarge()
-    };
-
-    const want = (args.event || 'all').toLowerCase();
-    const keys = want === 'all' ? Object.keys(sources) : [want];
-
-    const out = {};
-    for (const key of keys) {
-        const fn = sources[key];
-        if (!fn) continue;
-        try {
-            const result = fn();
-            out[key] = (typeof result === 'string' && result.trim() !== '') ? result : 'no current data';
-        }
-        catch (error) {
-            out[key] = `error: ${error.message}`;
-        }
-    }
-
-    if (Object.keys(out).length === 0) return `Unknown event "${args.event}". Use cargo, heli, chinook, small_oil, large_oil, or all.`;
-    return JSON.stringify(out);
-}
-
 async function execListDevices(ctx) {
     const instance = ctx.client.getInstance(ctx.guildId);
     const rustplus = getOperationalRustplus(ctx);
@@ -417,37 +327,6 @@ const TOOLS = [
             }
         },
         execute: execGetTime
-    },
-    {
-        definition: {
-            type: 'function',
-            function: {
-                name: 'get_map_markers',
-                description: 'Get active map markers. To answer "who sells X", "anyone selling X", "where can I buy X", set type="vending" AND item="<item name>" to get only the machines selling that item (price, stock, grid). Omit item to list all vending machines. Use "cargo"/"heli"/"crate"/"patrol" for events.',
-                parameters: {
-                    type: 'object',
-                    properties: {
-                        type: { type: 'string', description: 'Filter: vending, cargo, ch47, crate, patrol, explosion.' },
-                        item: { type: 'string', description: 'When type=vending, only return machines selling this item, e.g. "low grade fuel".' }
-                    }
-                }
-            }
-        },
-        execute: execGetMapMarkers
-    },
-    {
-        definition: {
-            type: 'function',
-            function: {
-                name: 'get_events',
-                description: 'Get live status/timers for world events: Cargo Ship (when it entered, egress timer, location), Patrol Helicopter, CH47 Chinook, and Small/Large Oil Rig (last crate-call timers). Use for "when does cargo come", "is heli up", "when did oil get called".',
-                parameters: {
-                    type: 'object',
-                    properties: { event: { type: 'string', description: 'cargo, heli, chinook, small_oil, large_oil, or all (default).' } }
-                }
-            }
-        },
-        execute: execGetEvents
     },
     {
         definition: {

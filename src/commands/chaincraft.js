@@ -22,7 +22,7 @@ const Builder = require('@discordjs/builders');
 
 const DiscordEmbeds = require('../discordTools/discordEmbeds.js');
 const DiscordMessages = require('../discordTools/discordMessages.js');
-const RusthelpScraper = require('../util/rusthelpScraper.js');
+const CraftChain = require('../util/craftChain.js');
 
 module.exports = {
 	name: 'chaincraft',
@@ -97,7 +97,7 @@ module.exports = {
 		const quantity = craftItemQuantity === null ? 1 : craftItemQuantity;
 
 		// Get base materials for the item
-		const baseMaterials = await RusthelpScraper.getBaseMaterials(client, itemId, quantity);
+		const baseMaterials = await CraftChain.getBaseMaterials(client, itemId, quantity);
 		if (baseMaterials === null) {
 			const str = client.intlGet(guildId, 'couldNotFindCraftDetails', {
 				name: itemName

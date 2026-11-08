@@ -63,12 +63,10 @@ module.exports = {
             .setDescription('Use these commands directly in Discord with `/` prefix')
             .setColor('#5865F2')
             .addFields(
-                { name: '🔧 **General Commands**', value: '`/help` - Show help information\n`/info` - Display bot information\n`/ping` - Check bot response time', inline: false },
-                { name: '🎮 **Game Information**', value: '`/item <name>` - Get item information\n`/craft <item>` - Show crafting recipe\n`/craftchain <item>` - Show complete crafting chain\n`/research <item>` - Show research costs\n`/recycle <item>` - Show recycling yields\n`/upkeep <item>` - Show upkeep costs', inline: false },
-                { name: '🏭 **Server Management**', value: '`/server` - Manage server connections\n`/players` - Show online players\n`/pop` - Show server population\n`/time` - Show in-game time\n`/wipe` - Show wipe information', inline: false },
-                { name: '🔌 **Smart Devices**', value: '`/switch` - Control smart switches\n`/alarm` - Manage smart alarms\n`/storage` - Monitor storage boxes\n`/camera` - Access CCTV cameras', inline: false },
-                { name: '📊 **Tracking & Events**', value: '`/events` - Configure event notifications\n`/tracker` - Track players\n`/cargo` - Show cargo ship status\n`/heli` - Show helicopter status\n`/chinook` - Show chinook status', inline: false },
-                { name: '⚙️ **Settings**', value: '`/settings` - Configure bot settings\n`/language` - Change language\n`/timezone` - Set timezone\n`/prefix` - Change command prefix', inline: false }
+                { name: '🔧 **General**', value: '`/help` - Show help information\n`/connection` - Connection status and retries\n`/uptime` - Bot and server uptime\n`/ai` - Ask the AI assistant', inline: false },
+                { name: '🎮 **Items**', value: '`/item` - Item information\n`/craft` - Crafting recipe\n`/chaincraft` - Full crafting chain\n`/research` - Research costs\n`/recycle` - Recycling yields\n`/stack` - Stack size\n`/despawn` - Despawn time\n`/decay` - Decay times\n`/upkeep` - Upkeep costs', inline: false },
+                { name: '🔌 **Devices & Map**', value: '`/switch` - Smart switches\n`/alarm` - Smart alarms\n`/storagemonitor` - Storage monitors\n`/recycler` - Recycler tracking\n`/find` - Find an item in storage monitors\n`/cctv` - CCTV camera codes\n`/map` - Map image', inline: false },
+                { name: '⚙️ **Setup**', value: '`/credentials` - Add or remove Rust+ credentials\n`/role` - Bot role\n`/alias` - Command aliases\n`/blacklist` - Block users\n`/leader` - Promote the team leader\n`/reset` - Rebuild channels\n`/reloaddata` - Reload item data', inline: false }
             )
             .setFooter({ text: 'RustPlusPlus Enhanced • Use /help for detailed command information' })
             .setTimestamp();
@@ -76,19 +74,15 @@ module.exports = {
         // Create In-Game Commands embed
         const inGameCommandsEmbed = new Discord.EmbedBuilder()
             .setTitle('🎮 In-Game Commands')
-            .setDescription('Use these commands in Rust game chat (requires Rust+ connection)')
+            .setDescription('Use these commands in Rust team chat (default prefix `!`)')
             .setColor('#CE422B')
             .addFields(
-                { name: '🔧 **General Commands**', value: '`!help` - Show available commands\n`!info` - Display server information\n`!ping` - Check connection status\n`!time` - Show current in-game time', inline: false },
-                { name: '🎯 **Item Information**', value: '`!item <name>` - Get item details\n`!craft <item>` - Show crafting recipe\n`!craftchain <item>` - Show complete crafting chain\n`!research <item>` - Show research costs\n`!recycle <item>` - Show recycling yields', inline: false },
-                { name: '👥 **Player Commands**', value: '`!players` - List online players\n`!pop` - Show server population\n`!team` - Show team information\n`!leader` - Show team leader', inline: false },
-                { name: '🔌 **Smart Device Control**', value: '`!switch <name>` - Toggle smart switch\n`!switches` - List all smart switches\n`!alarm <name>` - Check alarm status\n`!alarms` - List all smart alarms', inline: false },
-                { name: '📦 **Storage Monitoring**', value: '`!storage <name>` - Check storage box\n`!storages` - List all storage monitors\n`!upkeep` - Show upkeep costs for base', inline: false },
-                { name: '🎯 **Events & Tracking**', value: '`!cargo` - Show cargo ship status\n`!heli` - Show patrol helicopter status\n`!chinook` - Show chinook helicopter status\n`!events` - Show recent events', inline: false },
-                { name: '🔍 **Map & Locations**', value: '`!map` - Get map information\n`!monuments` - List monuments\n`!location` - Get current location info\n`!marker <name>` - Add map marker', inline: false },
-                { name: '💬 **Communication**', value: '`!team <message>` - Send team message\n`!discord <message>` - Send to Discord\n`!say <message>` - Broadcast message', inline: false }
+                { name: '🎯 **Items**', value: '`!craft <item>`, `!craftchain <item>`, `!research <item>`, `!recycle <item>`, `!stack <item>`, `!despawn <item>`, `!decay <item>`, `!find <item>`, `!ai <question>`', inline: false },
+                { name: '👥 **Team**', value: '`!team`, `!online`, `!offline`, `!afk`, `!alive`, `!death`, `!connections`, `!leader`, `!prox`, `!steamid`, `!send <name> <message>`', inline: false },
+                { name: '🗺️ **Server**', value: '`!pop`, `!time`, `!wipe`, `!uptime`, `!upkeep`, `!marker <name>`, `!note <text>`, `!timer <time> <text>`', inline: false },
+                { name: '💬 **Chat**', value: '`!tts <text>`, `!tr <language> <text>`, `!mute`, `!unmute`', inline: false }
             )
-            .setFooter({ text: 'RustPlusPlus Enhanced • Commands must be used in Rust game chat' })
+            .setFooter({ text: 'RustPlusPlus Enhanced • Commands must be used in Rust team chat' })
             .setTimestamp();
 
         // Create Usage Tips embed
@@ -97,12 +91,9 @@ module.exports = {
             .setDescription('Get the most out of RustPlusPlus Enhanced')
             .setColor('#57F287')
             .addFields(
-                { name: '🚀 **Getting Started**', value: '1. Connect your Rust+ account using the companion app\n2. Pair your server in the servers channel\n3. Add smart devices in-game using F1 console\n4. Configure notifications in settings', inline: false },
-                { name: '📱 **Smart Device Setup**', value: '• Use F1 console in Rust: `bind f1 consoletoggle`\n• Add switches: `switch.add <name>`\n• Add alarms: `alarm.add <name>`\n• Add storage monitors: `storage.add <name>`', inline: false },
-                { name: '🔔 **Event Notifications**', value: '• Get notified about cargo ship, helicopters, and chinooks\n• Track player connections and deaths\n• Monitor base attacks and smart device triggers\n• Configure which events to receive in settings', inline: false },
-                { name: '🎯 **Advanced Features**', value: '• **Team Chat Bridge**: Chat between Discord and in-game\n• **Player Tracking**: Track specific players across servers\n• **Battlemetrics Integration**: Advanced player statistics\n• **CCTV Access**: View cameras through Discord', inline: false },
-                { name: '⚙️ **Configuration**', value: '• All settings can be configured per-server\n• Language support for multiple languages\n• Timezone settings for accurate time display\n• Customizable command prefixes', inline: false },
-                { name: '🔧 **Troubleshooting**', value: '• Ensure Rust+ companion app is connected\n• Check server connection in servers channel\n• Verify smart devices are properly paired\n• Use `!ping` to test connection status', inline: false }
+                { name: '🚀 **Getting Started**', value: '1. Run `/credentials add` with the command from the credentials site\n2. In game: ESC, Rust+, Pair with server\n3. Pair smart devices in game: look at the device, hold E and choose Pair\n4. Change settings in the settings channel', inline: false },
+                { name: '🎯 **Features**', value: '• **Team chat bridge** between Discord and in game\n• **Trackers**: follow players on any server (trackers channel)\n• **Smart devices**: switches, alarms and storage monitors from Discord\n• **CCTV codes** for monuments', inline: false },
+                { name: '🔧 **Troubleshooting**', value: '• Rust+ logins expire after about 14 days; the bot posts in the activity channel when it needs a new one\n• Servers paired before November 2026 must be paired again in game\n• Use `/connection` to see the connection status', inline: false }
             )
             .setFooter({ text: 'RustPlusPlus Enhanced • For support, contact the server administrators' })
             .setTimestamp();

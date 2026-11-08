@@ -38,10 +38,13 @@ class RustPlusLite extends RustPlusLib {
         this.loadRustPlusLiteEvents();
     }
 
-    /* Same as RustPlus.connect(): relay when possible, legacy direct connection otherwise. */
+    /* The team leader's connection, through the Rust+ relay like RustPlus.connect(). */
     connect() {
         const relay = RustRelay.resolve(this.guildId, this.server, this.port, this.playerId);
-        if (!relay) return super.connect();
+        if (relay.problem) {
+            Client.client.connectionManager.warnRustPlusLogin(this.guildId, this.playerId, relay.problem);
+            return;
+        }
         RustRelay.connect(this, relay);
     }
 
@@ -123,11 +126,6 @@ async function rustPlusLiteConnectedEvent(rustplusLite) {
     }
     rustplusLite.log(Client.client.intlGet(null, 'connectedCap'),
         Client.client.intlGet(null, 'rustplusOperational'));
-
-    if (Client.client.rustplusReconnectTimers[rustplusLite.guildId]) {
-        clearTimeout(Client.client.rustplusReconnectTimers[rustplusLite.guildId]);
-        Client.client.rustplusReconnectTimers[rustplusLite.guildId] = null;
-    }
 }
 
 async function rustPlusLiteConnectingEvent(rustplusLite) {

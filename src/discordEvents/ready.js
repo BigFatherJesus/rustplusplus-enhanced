@@ -21,8 +21,9 @@
 const Discord = require('discord.js');
 const Path = require('path');
 
-const BattlemetricsHandler = require('../handlers/battlemetricsHandler.js');
+const AiExport = require('../util/itemData/aiExport.js');
 const Config = require('../../config');
+const Migrations = require('../util/migrations.js');
 const TrackerHandler = require('../handlers/trackerHandler.js');
 
 module.exports = {
@@ -72,13 +73,13 @@ module.exports = {
             }
             await client.syncCredentialsWithUsers(guild);
             await client.setupGuild(guild);
+            await Migrations(client, guild);
         }
 
-        if (Config.battlemetrics.token !== '') {
-            await client.updateBattlemetricsInstances();
-            BattlemetricsHandler.handler(client, true);
-            client.battlemetricsIntervalId = setInterval(BattlemetricsHandler.handler, 60000, client, false);
-        }
+        /* The AI assistant reads one knowledge file per item from AI/, built from src/staticFiles. */
+        const exported = AiExport.exportAiItems();
+        client.log(client.intlGet(null, 'infoCap'), `AI knowledge export: ${exported.written} items, ` +
+            `${exported.blocks} building blocks, ${exported.errors} errors.`);
 
         TrackerHandler.handler(client);
         client.trackerIntervalId = setInterval(TrackerHandler.handler, 60000, client);
@@ -89,10 +90,6 @@ module.exports = {
         // Start connection manager (health monitoring + reconnection + watchdog)
         client.log(client.intlGet(null, 'infoCap'), 'Starting connection manager...');
         client.connectionManager.start();
-        
-        // Start scheduled scraper for weekly data updates
-        client.log(client.intlGet(null, 'infoCap'), 'Starting scheduled scraper...');
-        client.scheduledScraper.start();
 
         client.log(client.intlGet(null, 'infoCap'), 'Bot initialization completed successfully');
     },

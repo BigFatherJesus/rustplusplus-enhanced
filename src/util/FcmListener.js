@@ -22,17 +22,14 @@ const Discord = require('discord.js');
 const Path = require('path');
 const PushReceiverClient = require('@liamcottle/push-receiver/src/client');
 
-const Battlemetrics = require('../structures/Battlemetrics');
 const Constants = require('../util/constants.js');
 const RustRelay = require('./rustRelay.js');
-const DiscordButtons = require('../discordTools/discordButtons.js');
 const DiscordEmbeds = require('../discordTools/discordEmbeds.js');
 const DiscordMessages = require('../discordTools/discordMessages.js');
 const DiscordTools = require('../discordTools/discordTools.js');
 const InstanceUtils = require('../util/instanceUtils.js');
 const Map = require('../util/map.js');
 const Scrape = require('../util/scrape.js');
-const Config = require('../../config');
 
 module.exports = async (client, guild) => {
     const credentials = InstanceUtils.readCredentialsFile(guild.id);
@@ -215,20 +212,6 @@ module.exports = async (client, guild) => {
                 }
             } break;
 
-            //case 'news': {
-            //    switch (body.type) {
-            //        case 'news': {
-            //            client.log('FCM Host', `GuildID: ${guild.id}, SteamID: ${hoster}, news: news`);
-            //            newsNews(client, guild, full, data, body);
-            //        } break;
-
-            //        default: {
-            //            client.log('FCM Host',
-            //                `GuildID: ${guild.id}, SteamID: ${hoster}, news: other\n${JSON.stringify(full)}`);
-            //        } break;
-            //    }
-            //} break;
-
             default: {
                 client.log('FCM Host', `GuildID: ${guild.id}, SteamID: ${hoster}, other\n${JSON.stringify(data)}`);
             } break;
@@ -259,20 +242,6 @@ async function pairingServer(client, guild, title, message, body) {
     let messageObj = undefined;
     if (server) messageObj = await DiscordTools.getMessageById(guild.id, instance.channelId.servers, server.messageId);
 
-    let battlemetricsId = server?.battlemetricsId ?? null;
-    let connect = server?.connect ?? null;
-    if (Config.battlemetrics.token !== '') {
-        const bmInstance = new Battlemetrics(null, title);
-        await bmInstance.setup();
-        if (bmInstance.lastUpdateSuccessful) {
-            battlemetricsId = bmInstance.id;
-            connect = `connect ${bmInstance.server_ip}:${bmInstance.server_port}`;
-            if (!client.battlemetricsInstances.hasOwnProperty(bmInstance.id)) {
-                client.battlemetricsInstances[bmInstance.id] = bmInstance;
-            }
-        }
-    }
-
     instance.serverList[serverId] = {
         title: title,
         serverIp: address.serverIp,
@@ -290,11 +259,6 @@ async function pairingServer(client, guild, title, message, body) {
         markers: server ? server.markers : {},
         switchGroups: server ? server.switchGroups : {},
         messageId: (messageObj !== undefined) ? messageObj.id : null,
-        battlemetricsId: battlemetricsId,
-        connect: connect,
-        cargoShipEgressTimeMs: server ? server.cargoShipEgressTimeMs : Constants.DEFAULT_CARGO_SHIP_EGRESS_TIME_MS,
-        oilRigLockedCrateUnlockTimeMs: server ? server.oilRigLockedCrateUnlockTimeMs :
-            Constants.DEFAULT_OIL_RIG_LOCKED_CRATE_UNLOCK_TIME_MS,
         timeTillDay: server ? server.timeTillDay : null,
         timeTillNight: server ? server.timeTillNight : null
     };
@@ -582,14 +546,3 @@ async function teamLogin(client, guild, title, message, body) {
             }));
     }
 }
-
-//async function newsNews(client, guild, full, data, body) {
-//    const instance = client.getInstance(guild.id);
-//
-//    const content = {
-//        embeds: [DiscordEmbeds.getNewsEmbed(guild.id, data)],
-//        components: [DiscordButtons.getNewsButton(guild.id, body, isValidUrl(body.url))]
-//    }
-//
-//    await DiscordMessages.sendMessage(guild.id, content, null, instance.channelId.activity);
-//}

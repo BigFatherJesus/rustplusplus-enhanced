@@ -55,20 +55,11 @@ module.exports = {
             return;
         }
 
-        // Get the first connected server
         const instance = client.getInstance(guildId);
-        const serverIds = Object.keys(instance.serverList);
-        
-        if (serverIds.length === 0) {
-            const str = 'No servers connected';
-            await client.interactionEditReply(interaction, DiscordEmbeds.getActionInfoEmbed(1, str));
-            return;
-        }
+        const rustplus = client.rustplusInstances[guildId];
+        const serverId = rustplus ? rustplus.serverId : null;
 
-        const serverId = serverIds[0]; // Use first server for now
-        const rustplus = client.rustplusInstances?.[guildId]?.[serverId];
-        
-        if (!rustplus) {
+        if (!rustplus || !rustplus.isOperational) {
             const str = 'Bot not connected to server';
             await client.interactionEditReply(interaction, DiscordEmbeds.getActionInfoEmbed(1, str));
             return;

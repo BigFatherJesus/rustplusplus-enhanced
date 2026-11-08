@@ -27,11 +27,10 @@ This NodeJS Discord Bot uses the [rustplus.js](https://github.com/liamcottle/rus
 ## **Enhanced Features**
 
 ### **Original Features**
-* Receive notifications for [In-Game Events](docs/discord_text_channels.md#events-channel) (Patrol Helicopter, Cargo Ship, Chinook 47, Oil Rigs triggered)
 * Control [Smart Switches](docs/smart_devices.md#smart-switches) or Groups of Smart Switches via Discord or In-Game Team Chat
 * Setup [Smart Alarms](docs/smart_devices.md#smart-alarms) to notify in Discord or In-Game Team Chat whenever they are triggered
 * Use [Storage Monitors](docs/smart_devices.md#storage-monitors) to keep track of Tool Cupboard Upkeep or Large Wooden Box/Vending Machine content
-* Head over to the [Information Text Channel](docs/images/information_channel.png) to see all sorts of information about the server, ongoing events and team member status
+* Head over to the [Information Text Channel](docs/images/information_channel.png) to see all sorts of information about the server and team member status
 * Communicate with teammates from [Discord to In-Game](docs/discord_text_channels.md#teamchat-channel) and vice versa
 * Keep track of other teams on the server with the [Player Tracker](docs/discord_text_channels.md#trackers-channel)
 * Extensive [QoL Commands](docs/commands.md) that can be used In-Game or from Discord
@@ -44,7 +43,7 @@ This NodeJS Discord Bot uses the [rustplus.js](https://github.com/liamcottle/rus
 * **Optimization Tools** - Performance enhancements and resource optimization
 * **TypeScript Support** - Full TypeScript implementation for better code quality
 * **Enhanced Error Handling** - Improved error management and logging systems
-* **🆕 Automated Item Database Updates** - Weekly automated scraping of the latest Rust item data from rusthelp.com (no API key needed) with manual controls via `/updatedatabase`
+* **🆕 Current Item Data** - Item names, ids and stack sizes from the game files, recipes and recycling from the open rust-items-json dataset (see Item Data below)
 * **🆕 AI Assistant** - Ask game questions in-game (`!ai`) or via `/ai` — answers from live server state + the scraped item/monument database; works with any OpenAI-compatible endpoint (Ollama, GROQ, Gemini)
 
 ## **Quick Start**
@@ -90,16 +89,14 @@ update.bat
 ### **Key Components**
 
 #### Discord Integration
-- Uses Discord.js v14 with gateway intents for guilds, messages, and voice
+- Uses Discord.js v14 with gateway intents for guilds, messages and members
 - Slash commands system with interaction handlers
 - Multi-language support via internationalization
-- Voice channel integration for TTS features
 
 #### Rust+ API Integration
 - FCM (Firebase Cloud Messaging) listeners for push notifications
-- WebSocket connections to Rust+ servers
+- Rust+ connections through Facepunch's relay (game servers refuse direct connections since November 2026)
 - Smart device control (switches, alarms, storage monitors)
-- Real-time game event monitoring
 
 #### Data Storage
 - Instance-based configuration system
@@ -111,9 +108,16 @@ update.bat
 - **Runtime**: Node.js with TypeScript
 - **Discord**: Discord.js v14
 - **Rust+ API**: Custom rustplus.js library
-- **Image Processing**: Jimp and GraphicsMagick
+- **Image Processing**: Jimp
 - **Authentication**: FCM push notifications
-- **Voice**: Discord voice integration with ffmpeg
+
+## **Item Data**
+
+Item names, ids and stack sizes come from the game's own item definitions (`Bundles/items` in a Rust install); recipes, research costs and recycling yields come from [rust-items-json](https://github.com/bobosneefdev/rust-items-json) by bobosneefdev (MIT licence, extracted from the game files). To refresh them on a PC with Rust installed:
+
+    node src/util/itemData/update.js --rust-dir "D:/SteamLibrary/steamapps/common/Rust"
+
+Then commit `src/staticFiles` and rebuild the image. The AI knowledge files in `AI/` are rebuilt from these at startup.
 
 ## **Documentation**
 
@@ -140,7 +144,7 @@ Make sure you use the correct values for DISCORD_CLIENT_ID as well as DISCORD_TO
 ### **Environment Variables**
 - `RPP_DISCORD_CLIENT_ID` - Discord application client ID
 - `RPP_DISCORD_TOKEN` - Discord bot token
-- `RPP_SCRAPER_CRON` - (Optional) Cron override for the scheduled item scraper (default: `0 5 * * 5`, Friday 05:00)
+- `RPP_STEAM_API_KEY` - (Optional) Free Steam Web API key; lets trackers find a server's address by name
 - `RPP_AI_ENABLED` - (Optional) Enable/disable the AI assistant (default: `true`; set `false` to disable)
 - `RPP_AI_BASE_URL` - (Optional) OpenAI-compatible endpoint, e.g. `http://host.docker.internal:11434/v1` for Ollama (default: `http://localhost:11434/v1`)
 - `RPP_AI_API_KEY` - (Optional) API key for the AI endpoint (leave empty for Ollama)
@@ -183,13 +187,6 @@ rustplusplus-enhanced/
 - Multi-language support requires proper locale configuration
 
 ## **New Features: Automated Item Database Updates**
-
-### **RustHelp Data Pipeline**
-The bot includes an automated, keyless system for keeping Rust item data up-to-date by scraping [rusthelp.com](https://rusthelp.com) — no API key required:
-
-- **Weekly Automation**: Runs every Friday at 05:00 by default (the morning after Thursday wipes/force wipes); override the schedule with the `RPP_SCRAPER_CRON` environment variable
-- **Manual Control**: Use the `/updatedatabase` command for immediate updates (admin only)
-- **Polite Scraping**: Built-in rate limiting (stays under rusthelp.com's ~1 req/s limit, backs off on 429s) plus an on-disk HTML cache so unchanged pages are not re-fetched
 
 ### **Commands**
 The `/updatedatabase` command takes a required `target` option and an optional `item-name`:

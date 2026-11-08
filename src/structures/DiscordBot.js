@@ -23,7 +23,7 @@ const Discord = require('discord.js');
 const Fs = require('fs');
 const Path = require('path');
 
-const Battlemetrics = require('../structures/Battlemetrics');
+const AiExport = require('../util/itemData/aiExport.js');
 const Cctv = require('./Cctv');
 const Config = require('../../config');
 const DiscordEmbeds = require('../discordTools/discordEmbeds.js');
@@ -35,7 +35,6 @@ const PermissionHandler = require('../handlers/permissionHandler.js');
 const ConnectionManager = require('../util/connectionManager.js');
 const RustLabs = require('../structures/RustLabs');
 const RustPlus = require('../structures/RustPlus');
-const ScheduledScraper = require('../util/scheduledScraper.js');
 
 class DiscordBot extends Discord.Client {
     constructor(props) {
@@ -54,7 +53,6 @@ class DiscordBot extends Discord.Client {
 
         this.rustplusInstances = new Object();
         this.activeRustplusInstances = new Object();
-        this.rustplusReconnectTimers = new Object();
         this.rustplusLiteReconnectTimers = new Object();
         this.rustplusReconnecting = new Object();
         this.rustplusMaps = new Object();
@@ -66,7 +64,6 @@ class DiscordBot extends Discord.Client {
             this.rustlabs = new RustLabs();
             this.cctv = new Cctv();
             this.connectionManager = new ConnectionManager(this);
-            this.scheduledScraper = new ScheduledScraper(this);
         } catch (error) {
             this.logger.log('ERROR', `Failed to initialize bot components: ${error.message || error.toString()} | Stack: ${error.stack || 'No stack trace'}`, 'error');
             throw error;
@@ -74,12 +71,7 @@ class DiscordBot extends Discord.Client {
 
         this.pollingIntervalMs = Config.general.pollingIntervalMs;
 
-        this.battlemetricsInstances = new Object();
-
-        this.battlemetricsIntervalId = null;
         this.trackerIntervalId = null;
-
-        this.voiceLeaveTimeouts = new Object();
 
         this.loadDiscordCommands();
         this.loadDiscordEvents();
@@ -326,11 +318,6 @@ class DiscordBot extends Discord.Client {
         InstanceUtils.writeInstanceFile(guildId, instance);
     }
 
-    readNotificationSettingsTemplate() {
-        return JSON.parse(Fs.readFileSync(
-            Path.join(__dirname, '..', 'templates/notificationSettingsTemplate.json'), 'utf8'));
-    }
-
     readGeneralSettingsTemplate() {
         return JSON.parse(Fs.readFileSync(
             Path.join(__dirname, '..', 'templates/generalSettingsTemplate.json'), 'utf8'));
@@ -374,10 +361,6 @@ class DiscordBot extends Discord.Client {
         this.rustplusReconnecting[guildId] = false;
         delete this.rustplusMaps[guildId];
 
-        if (this.rustplusReconnectTimers[guildId]) {
-            clearTimeout(this.rustplusReconnectTimers[guildId]);
-            this.rustplusReconnectTimers[guildId] = null;
-        }
         if (this.rustplusLiteReconnectTimers[guildId]) {
             clearTimeout(this.rustplusLiteReconnectTimers[guildId]);
             this.rustplusLiteReconnectTimers[guildId] = null;
@@ -407,67 +390,6 @@ class DiscordBot extends Discord.Client {
             if (!instance.serverList[serverId].switchGroups.hasOwnProperty(randomNumber)) {
                 return randomNumber;
             }
-        }
-    }
-
-    /**
-     *  Check if Battlemetrics instances are missing/not required/need update.
-     */
-    async updateBattlemetricsInstances() {
-        const activeInstances = [];
-
-        /* Check for instances that are missing or need update. */
-        for (const guild of this.guilds.cache) {
-            const guildId = guild[0];
-            const instance = this.getInstance(guildId);
-            const activeServer = instance.activeServer;
-            if (activeServer !== null && instance.serverList.hasOwnProperty(activeServer)) {
-                if (instance.serverList[activeServer].battlemetricsId !== null) {
-                    /* A Battlemetrics ID exist. */
-                    const battlemetricsId = instance.serverList[activeServer].battlemetricsId;
-                    if (!activeInstances.includes(battlemetricsId)) {
-                        activeInstances.push(battlemetricsId);
-                        if (this.battlemetricsInstances.hasOwnProperty(battlemetricsId)) {
-                            /* Update */
-                            await this.battlemetricsInstances[battlemetricsId].evaluation();
-                        }
-                        else {
-                            /* Add */
-                            const bmInstance = new Battlemetrics(battlemetricsId);
-                            await bmInstance.setup();
-                            this.battlemetricsInstances[battlemetricsId] = bmInstance;
-                        }
-                    }
-                }
-                else {
-                    /* Battlemetrics ID is missing, try with server name. */
-                    const name = instance.serverList[activeServer].title;
-                    const bmInstance = new Battlemetrics(null, name);
-                    await bmInstance.setup();
-                    if (bmInstance.lastUpdateSuccessful) {
-                        /* Found an Id, is it a new Id? */
-                        instance.serverList[activeServer].battlemetricsId = bmInstance.id;
-                        this.setInstance(guildId, instance);
-
-                        if (this.battlemetricsInstances.hasOwnProperty(bmInstance.id)) {
-                            if (!activeInstances.includes(bmInstance.id)) {
-                                activeInstances.push(bmInstance.id);
-                                await this.battlemetricsInstances[bmInstance.id].evaluation(bmInstance.data);
-                            }
-                        }
-                        else {
-                            activeInstances.push(bmInstance.id);
-                            this.battlemetricsInstances[bmInstance.id] = bmInstance;
-                        }
-                    }
-                }
-            }
-        }
-
-        /* Find instances that are no longer required and delete them. */
-        const remove = Object.keys(this.battlemetricsInstances).filter(e => !activeInstances.includes(e));
-        for (const id of remove) {
-            delete this.battlemetricsInstances[id];
         }
     }
 
@@ -577,6 +499,7 @@ class DiscordBot extends Discord.Client {
             const rustlabsReloaded = this.rustlabs.reload();
             
             if (itemsReloaded && rustlabsReloaded) {
+                AiExport.exportAiItems();
                 this.log(this.intlGet(null, 'infoCap'), 'Successfully reloaded item and crafting data');
                 return true;
             } else {

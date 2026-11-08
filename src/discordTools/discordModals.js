@@ -33,58 +33,6 @@ module.exports = {
         return modal;
     },
 
-    getServerEditModal(guildId, serverId) {
-        const instance = Client.client.getInstance(guildId);
-        const server = instance.serverList[serverId];
-        const identifier = JSON.stringify({ "serverId": serverId });
-
-        const modal = module.exports.getModal({
-            customId: `ServerEdit${identifier}`,
-            title: Client.client.intlGet(guildId, 'editing')
-        });
-
-        modal.addComponents(
-            new Discord.ActionRowBuilder().addComponents(TextInput.getTextInput({
-                customId: 'ServerBattlemetricsId',
-                label: Client.client.intlGet(guildId, 'battlemetricsId'),
-                value: server.battlemetricsId === null ? '' : server.battlemetricsId,
-                style: Discord.TextInputStyle.Short,
-                required: false,
-                minLength: 0
-            }))
-        );
-
-        return modal;
-    },
-
-    getCustomTimersEditModal(guildId, serverId) {
-        const instance = Client.client.getInstance(guildId);
-        const server = instance.serverList[serverId];
-        const identifier = JSON.stringify({ "serverId": serverId });
-
-        const modal = module.exports.getModal({
-            customId: `CustomTimersEdit${identifier}`,
-            title: Client.client.intlGet(guildId, 'customTimerEditDesc')
-        });
-
-        modal.addComponents(
-            new Discord.ActionRowBuilder().addComponents(TextInput.getTextInput({
-                customId: 'CargoShipEgressTime',
-                label: Client.client.intlGet(guildId, 'customTimerEditCargoShipEgressLabel'),
-                value: `${server.cargoShipEgressTimeMs / 1000}`,
-                style: Discord.TextInputStyle.Short
-            })),
-            new Discord.ActionRowBuilder().addComponents(TextInput.getTextInput({
-                customId: 'OilRigCrateUnlockTime',
-                label: Client.client.intlGet(guildId, 'customTimerEditCrateOilRigUnlockLabel'),
-                value: `${server.oilRigLockedCrateUnlockTimeMs / 1000}`,
-                style: Discord.TextInputStyle.Short
-            }))
-        );
-
-        return modal;
-    },
-
     getSmartSwitchEditModal(guildId, serverId, entityId) {
         const instance = Client.client.getInstance(guildId);
         const entity = instance.serverList[serverId].switches[entityId];

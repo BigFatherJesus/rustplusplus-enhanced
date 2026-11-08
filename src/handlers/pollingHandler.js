@@ -20,7 +20,6 @@
 
 const Info = require('../structures/Info');
 const InformationHandler = require('../handlers/informationHandler.js');
-const MapMarkers = require('../structures/MapMarkers.js');
 const SmartAlarmHandler = require('../handlers/smartAlarmHandler.js');
 const SmartSwitchHandler = require('../handlers/smartSwitchHandler.js');
 const StorageMonitorHandler = require('../handlers/storageMonitorHandler.js');
@@ -28,15 +27,13 @@ const Team = require('../structures/Team');
 const TeamHandler = require('../handlers/teamHandler.js');
 const Time = require('../structures/Time');
 const TimeHandler = require('../handlers/timeHandler.js');
-const VendingMachines = require('../handlers/vendingMachineHandler.js');
 
 module.exports = {
     pollingHandler: async function (rustplus, client) {
-        /* Poll information such as info, mapMarkers, teamInfo and time */
+        /* Poll information such as info, teamInfo and time. Map markers are no longer polled: since
+           August 2026 Rust+ only sends player markers, and team positions come from teamInfo. */
         let info = await rustplus.getInfoAsync();
         if (!(await rustplus.isResponseValid(info))) return;
-        let mapMarkers = await rustplus.getMapMarkersAsync();
-        if (!(await rustplus.isResponseValid(mapMarkers))) return;
         let teamInfo = await rustplus.getTeamInfoAsync();
         if (!(await rustplus.isResponseValid(teamInfo))) return;
         let time = await rustplus.getTimeAsync();
@@ -46,24 +43,21 @@ module.exports = {
             rustplus.info = new Info(info.info);
             rustplus.time = new Time(time.time, rustplus, client);
             rustplus.team = new Team(teamInfo.teamInfo, rustplus);
-            rustplus.mapMarkers = new MapMarkers(mapMarkers.mapMarkers, rustplus, client);
         }
 
-        await module.exports.handlers(rustplus, client, info, mapMarkers, teamInfo, time);
+        await module.exports.handlers(rustplus, client, info, teamInfo, time);
         rustplus.isFirstPoll = false;
     },
 
-    handlers: async function (rustplus, client, info, mapMarkers, teamInfo, time) {
+    handlers: async function (rustplus, client, info, teamInfo, time) {
         await TeamHandler.handler(rustplus, client, teamInfo.teamInfo);
         rustplus.team.updateTeam(teamInfo.teamInfo);
 
         await SmartSwitchHandler.handler(rustplus, client, time.time);
         TimeHandler.handler(rustplus, client, time.time);
-        await VendingMachines.handler(rustplus, client, mapMarkers.mapMarkers);
 
         rustplus.time.updateTime(time.time);
         rustplus.info.updateInfo(info.info);
-        rustplus.mapMarkers.updateMapMarkers(mapMarkers.mapMarkers);
 
         await InformationHandler.handler(rustplus);
         await StorageMonitorHandler.handler(rustplus, client);

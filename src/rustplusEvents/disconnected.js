@@ -49,9 +49,6 @@ module.exports = {
         clearInterval(rustplus.tokensReplenishTaskId);
         clearTimeout(rustplus.inGameChatTimeout);
 
-        /* Reset map markers, timers & arrays */
-        if (rustplus.mapMarkers) rustplus.mapMarkers.reset();
-
         /* Stop all custom timers */
         for (const [id, timer] of Object.entries(rustplus.timers)) timer.timer.stop();
 
@@ -69,12 +66,6 @@ module.exports = {
             rustplus.log(client.intlGet(null, 'reconnectingCap'), client.intlGet(null, 'reconnectingToServer'));
 
             delete client.rustplusInstances[guildId];
-
-            // Clear old reconnection timers
-            if (client.rustplusReconnectTimers[guildId]) {
-                clearTimeout(client.rustplusReconnectTimers[guildId]);
-                client.rustplusReconnectTimers[guildId] = null;
-            }
 
             // Schedule reconnection with exponential backoff
             client.connectionManager.scheduleReconnect(guildId, 'disconnected');

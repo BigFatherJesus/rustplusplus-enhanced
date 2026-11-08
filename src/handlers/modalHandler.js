@@ -20,7 +20,6 @@
 
 const Discord = require('discord.js');
 
-const Battlemetrics = require('../structures/Battlemetrics');
 const Constants = require('../util/constants.js');
 const DiscordMessages = require('../discordTools/discordMessages.js');
 const Keywords = require('../util/keywords.js');
@@ -43,64 +42,7 @@ module.exports = async (client, interaction) => {
         return;
     }
 
-    if (interaction.customId.startsWith('CustomTimersEdit')) {
-        const ids = JSON.parse(interaction.customId.replace('CustomTimersEdit', ''));
-        const server = instance.serverList[ids.serverId];
-        const cargoShipEgressTime = parseInt(interaction.fields.getTextInputValue('CargoShipEgressTime'));
-        const oilRigCrateUnlockTime = parseInt(interaction.fields.getTextInputValue('OilRigCrateUnlockTime'));
-
-        if (!server) {
-            interaction.deferUpdate();
-            return;
-        }
-
-        if (cargoShipEgressTime && ((cargoShipEgressTime * 1000) !== server.cargoShipEgressTimeMs)) {
-            server.cargoShipEgressTimeMs = cargoShipEgressTime * 1000;
-        }
-        if (oilRigCrateUnlockTime && ((oilRigCrateUnlockTime * 1000) !== server.oilRigLockedCrateUnlockTimeMs)) {
-            server.oilRigLockedCrateUnlockTimeMs = oilRigCrateUnlockTime * 1000;
-        }
-        client.setInstance(guildId, instance);
-
-        client.log(client.intlGet(null, 'infoCap'), client.intlGet(null, 'modalValueChange', {
-            id: `${verifyId}`,
-            value: `${server.cargoShipEgressTimeMs}, ${server.oilRigLockedCrateUnlockTimeMs}`
-        }));
-    }
-    else if (interaction.customId.startsWith('ServerEdit')) {
-        const ids = JSON.parse(interaction.customId.replace('ServerEdit', ''));
-        const server = instance.serverList[ids.serverId];
-        const battlemetricsId = interaction.fields.getTextInputValue('ServerBattlemetricsId');
-
-        if (battlemetricsId !== server.battlemetricsId) {
-            if (battlemetricsId === '') {
-                server.battlemetricsId = null;
-            }
-            else if (client.battlemetricsInstances.hasOwnProperty(battlemetricsId)) {
-                const bmInstance = client.battlemetricsInstances[battlemetricsId];
-                server.battlemetricsId = battlemetricsId;
-                server.connect = `connect ${bmInstance.server_ip}:${bmInstance.server_port}`;
-            }
-            else {
-                const bmInstance = new Battlemetrics(battlemetricsId);
-                await bmInstance.setup();
-                if (bmInstance.lastUpdateSuccessful) {
-                    client.battlemetricsInstances[battlemetricsId] = bmInstance;
-                    server.battlemetricsId = battlemetricsId;
-                    server.connect = `connect ${bmInstance.server_ip}:${bmInstance.server_port}`;
-                }
-            }
-        }
-        client.setInstance(guildId, instance);
-
-        client.log(client.intlGet(null, 'infoCap'), client.intlGet(null, 'modalValueChange', {
-            id: `${verifyId}`,
-            value: `${server.battlemetricsId}`
-        }));
-
-        await DiscordMessages.sendServerMessage(interaction.guildId, ids.serverId);
-    }
-    else if (interaction.customId.startsWith('SmartSwitchEdit')) {
+    if (interaction.customId.startsWith('SmartSwitchEdit')) {
         const ids = JSON.parse(interaction.customId.replace('SmartSwitchEdit', ''));
         const server = instance.serverList[ids.serverId];
         const smartSwitchName = interaction.fields.getTextInputValue('SmartSwitchName');

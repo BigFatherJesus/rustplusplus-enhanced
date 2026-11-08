@@ -25,7 +25,6 @@ const Constants = require('../util/constants.js');
 const DiscordTools = require('./discordTools.js');
 const InstanceUtils = require('../util/instanceUtils.js');
 const Timer = require('../util/timer');
-const Config = require('../../config');
 
 function isValidUrl(url) {
     if (url.startsWith('https') || url.startsWith('http')) return true;
@@ -80,33 +79,12 @@ module.exports = {
             hoster = hoster.user.username;
         }
 
-        let description = '';
-        if (Config.battlemetrics.token !== '' && server.battlemetricsId !== null) {
-            const bmId = server.battlemetricsId;
-            const bmIdLink = `[${bmId}](${Constants.BATTLEMETRICS_SERVER_URL}${bmId})`;
-            description += `__**${Client.client.intlGet(guildId, 'battlemetricsId')}:**__ ${bmIdLink}\n`;
-
-            const bmInstance = Client.client.battlemetricsInstances[bmId];
-            if (bmInstance) {
-                description += `__**${Client.client.intlGet(guildId, 'streamerMode')}:**__ `;
-                description += (bmInstance.streamerMode ? Client.client.intlGet(guildId, 'onCap') :
-                    Client.client.intlGet(guildId, 'offCap')) + '\n';
-            }
-        }
-        description += `\n${server.description}`;
-
         return module.exports.getEmbed({
             title: `${server.title}`,
             color: Constants.COLOR_DEFAULT,
-            description: description,
+            description: server.description,
             thumbnail: `${server.img}`,
             fields: [{
-                name: Client.client.intlGet(guildId, 'connect'),
-                value: `\`${server.connect === null ?
-                    Client.client.intlGet(guildId, 'unavailable') : server.connect}\``,
-                inline: true
-            },
-            {
                 name: Client.client.intlGet(guildId, 'hoster'),
                 value: `\`${hoster} (${server.steamId})\``,
                 inline: false
@@ -535,16 +513,6 @@ module.exports = {
         });
     },
 
-    getNewsEmbed: function (guildId, data) {
-        return module.exports.getEmbed({
-            title: `${Client.client.intlGet(guildId, 'newsCap')}: ${data.title}`,
-            color: Constants.COLOR_DEFAULT,
-            description: `${data.message}`,
-            thumbnail: Constants.DEFAULT_SERVER_IMG,
-            timestamp: true
-        });
-    },
-
     getTeamLoginEmbed: function (guildId, body, png) {
         return module.exports.getEmbed({
             color: Constants.COLOR_ACTIVE,
@@ -596,18 +564,6 @@ module.exports = {
                 { name: Client.client.intlGet(guildId, 'message'), value: `\`${entity.message}\``, inline: true }]
         });
 
-    },
-
-    getEventEmbed: function (guildId, serverId, text, image, color = Constants.COLOR_DEFAULT) {
-        const instance = Client.client.getInstance(guildId);
-        const server = instance.serverList[serverId];
-        return module.exports.getEmbed({
-            color: color,
-            thumbnail: `attachment://${image}`,
-            title: text,
-            footer: { text: server.title, iconURL: server.img },
-            timestamp: true
-        });
     },
 
     getActionInfoEmbed: function (color, str, footer = null, ephemeral = true) {
@@ -718,50 +674,7 @@ module.exports = {
             { name: mapSaltFieldName, value: `\`${rustplus.info.salt}\``, inline: true },
             { name: mapFieldName, value: `\`${rustplus.info.map}\``, inline: true });
 
-        if (instance.serverList[rustplus.serverId].connect !== null) {
-            embed.addFields({
-                name: Client.client.intlGet(guildId, 'connect'),
-                value: `\`${instance.serverList[rustplus.serverId].connect}\``,
-                inline: false
-            });
-        }
-
         return embed;
-    },
-
-    getUpdateEventInformationEmbed: function (rustplus) {
-        const guildId = rustplus.guildId;
-        const instance = Client.client.getInstance(guildId);
-
-        const cargoshipFieldName = Client.client.intlGet(guildId, 'cargoship');
-        const patrolHelicopterFieldName = Client.client.intlGet(guildId, 'patrolHelicopter');
-        const smallOilRigFieldName = Client.client.intlGet(guildId, 'smallOilRig');
-        const largeOilRigFieldName = Client.client.intlGet(guildId, 'largeOilRig');
-        const chinook47FieldName = Client.client.intlGet(guildId, 'chinook47');
-        const travelingVendorFieldName = Client.client.intlGet(guildId, 'travelingVendor');
-
-        const cargoShipMessage = rustplus.getCommandCargo(true);
-        const patrolHelicopterMessage = rustplus.getCommandHeli(true);
-        const smallOilMessage = rustplus.getCommandSmall(true);
-        const largeOilMessage = rustplus.getCommandLarge(true);
-        const ch47Message = rustplus.getCommandChinook(true);
-        const travelingVendorMessage = rustplus.getCommandTravelingVendor(true);
-
-        return module.exports.getEmbed({
-            title: Client.client.intlGet(guildId, 'eventInfo'),
-            color: Constants.COLOR_DEFAULT,
-            thumbnail: 'attachment://event_info_logo.png',
-            description: Client.client.intlGet(guildId, 'inGameEventInfo'),
-            footer: { text: instance.serverList[rustplus.serverId].title },
-            fields: [
-                { name: cargoshipFieldName, value: `\`${cargoShipMessage}\``, inline: true },
-                { name: patrolHelicopterFieldName, value: `\`${patrolHelicopterMessage}\``, inline: true },
-                { name: smallOilRigFieldName, value: `\`${smallOilMessage}\``, inline: true },
-                { name: largeOilRigFieldName, value: `\`${largeOilMessage}\``, inline: true },
-                { name: chinook47FieldName, value: `\`${ch47Message}\``, inline: true },
-                { name: travelingVendorFieldName, value: `\`${travelingVendorMessage}\``, inline: true }],
-            timestamp: true
-        });
     },
 
     getUpdateTeamInformationEmbed: function (rustplus) {
@@ -864,86 +777,6 @@ module.exports = {
         });
     },
 
-    getUpdateBattlemetricsOnlinePlayersInformationEmbed: function (rustplus, battlemetricsId) {
-        const bmInstance = Client.client.battlemetricsInstances[battlemetricsId];
-        const guildId = rustplus.guildId;
-
-        const playerIds = bmInstance.getOnlinePlayerIdsOrderedByTime();
-
-        let totalCharacters = 0;
-        let fieldCharacters = 0;
-
-        const title = Client.client.intlGet(guildId, 'battlemetricsOnlinePlayers');
-        const footer = { text: bmInstance.server_name };
-
-        totalCharacters += title.length;
-        totalCharacters += bmInstance.server_name.length;
-        totalCharacters += Client.client.intlGet(guildId, 'andMorePlayers', { number: 100 }).length;
-        totalCharacters += `${Client.client.intlGet(guildId, 'players')}`.length;
-
-        const fields = [''];
-        let fieldIndex = 0;
-        let isEmbedFull = false;
-        let playerCounter = 0;
-        for (const playerId of playerIds) {
-            playerCounter += 1;
-
-            const status = bmInstance.players[playerId]['status'];
-            let time = status ? bmInstance.getOnlineTime(playerId) : bmInstance.getOfflineTime(playerId);
-            time = time !== null ? time[1] : '';
-
-            let playerStr = status ? Constants.ONLINE_EMOJI : Constants.OFFLINE_EMOJI;
-            playerStr += ` [${time}] `;
-
-            const nameMaxLength = Constants.EMBED_FIELD_MAX_WIDTH_LENGTH_3 - (3 + time.length);
-
-            let name = bmInstance.players[playerId]['name'].replace('[', '(').replace(']', ')');
-            name = name.length <= nameMaxLength ? name : name.substring(0, nameMaxLength - 2) + '..';
-
-            playerStr += `[${name}](${Constants.BATTLEMETRICS_PROFILE_URL + `${playerId}`})\n`;
-
-            if (totalCharacters + playerStr.length >= Constants.EMBED_MAX_TOTAL_CHARACTERS) {
-                isEmbedFull = true;
-                break;
-            }
-
-            if (fieldCharacters + playerStr.length >= Constants.EMBED_MAX_FIELD_VALUE_CHARACTERS) {
-                fieldCharacters = 0;
-                fieldIndex += 1;
-                fields.push('');
-            }
-
-            fields[fieldIndex] += playerStr;
-            totalCharacters += playerStr.length;
-            fieldCharacters += playerStr.length;
-        }
-
-        const embed = module.exports.getEmbed({
-            title: title,
-            color: Constants.COLOR_DEFAULT,
-            footer: footer,
-            timestamp: true
-        });
-
-        if (isEmbedFull) {
-            embed.setDescription(Client.client.intlGet(guildId, 'andMorePlayers', {
-                number: playerIds.length - playerCounter
-            }));
-        }
-
-        let fieldCounter = 0;
-        for (const field of fields) {
-            embed.addFields({
-                name: fieldCounter === 0 ? Client.client.intlGet(guildId, 'players') : '\u200B',
-                value: field === '' ? '\u200B' : field,
-                inline: true
-            });
-            fieldCounter += 1;
-        }
-
-        return embed;
-    },
-
     getDiscordCommandResponseEmbed: function (rustplus, response) {
         const instance = Client.client.getInstance(rustplus.guildId);
 
@@ -990,19 +823,6 @@ module.exports = {
                 { name: Client.client.intlGet(guildId, 'name'), value: names, inline: true },
                 { name: 'SteamID', value: steamIds, inline: true },
                 { name: Client.client.intlGet(guildId, 'hoster'), value: hoster, inline: true }]
-        });
-    },
-
-    getItemAvailableVendingMachineEmbed: function (guildId, serverId, str) {
-        const instance = Client.client.getInstance(guildId);
-        const server = instance.serverList[serverId];
-        return module.exports.getEmbed({
-            color: Constants.COLOR_DEFAULT,
-            timestamp: true,
-            footer: { text: server.title },
-            author: {
-                name: str
-            }
         });
     },
 
@@ -1296,35 +1116,6 @@ module.exports = {
                 { name: Client.client.intlGet(guildId, 'calculated'), value: items1, inline: true },
                 { name: '\u200B', value: quantities1, inline: true }]
         });
-    },
-
-    getBattlemetricsEventEmbed: function (guildId, battlemetricsId, title, description, fields = null) {
-        const instance = Client.client.getInstance(guildId);
-        const bmInstance = Client.client.battlemetricsInstances[battlemetricsId];
-
-        const serverId = `${bmInstance.server_ip}-${bmInstance.server_port}`;
-
-        let thumbnail = '';
-        if (instance.serverList.hasOwnProperty(serverId)) {
-            thumbnail = instance.serverList[serverId].img
-        }
-        const embed = module.exports.getEmbed({
-            title: title,
-            color: Constants.COLOR_DEFAULT,
-            timestamp: true,
-            thumbnail: thumbnail,
-            footer: { text: bmInstance.server_name }
-        });
-
-        if (fields !== null) {
-            embed.addFields(fields);
-        }
-
-        if (description !== '') {
-            embed.setDescription(description);
-        }
-
-        return embed;
     },
 
     getItemEmbed: function (guildId, itemName, itemId, type) {

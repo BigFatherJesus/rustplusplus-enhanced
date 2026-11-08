@@ -40,6 +40,9 @@ class ConnectionManager {
         /* Per-guild connection state */
         this.states = new Map();
 
+        /* guildId:steamId pairs already warned about a Rust+ login problem during this outage. */
+        this.loginWarnings = new Set();
+
         this.intervalId = null;
     }
 
@@ -371,6 +374,9 @@ class ConnectionManager {
     onConnectionSuccess(guildId) {
         const state = this.getState(guildId);
         this.client.rustplusReconnecting[guildId] = false;
+        for (const key of this.loginWarnings) {
+            if (key.startsWith(`${guildId}:`)) this.loginWarnings.delete(key);
+        }
 
         if (state.retryCount > 0) {
             this.client.log(this.client.intlGet(null, 'infoCap'),
@@ -387,6 +393,34 @@ class ConnectionManager {
             state.currentDelay = this.config.baseDelay;
             state.resetTimer = null;
         }, this.config.resetAfterSuccess);
+    }
+
+    /**
+     * Tell the credential's owner in #activity, once per outage, that the Rust+ login needs attention.
+     * @param {string} problem Language key: rustplusLoginNoToken, rustplusLoginNoCredentials,
+     *                         rustplusLoginExpired, rustplusLoginRejected or rustplusLoginNotRelayPaired.
+     */
+    async warnRustPlusLogin(guildId, steamId, problem, details = {}) {
+        const key = `${guildId}:${steamId}`;
+        if (this.loginWarnings.has(key)) return;
+        this.loginWarnings.add(key);
+
+        const DiscordEmbeds = require('../discordTools/discordEmbeds.js');
+        const DiscordMessages = require('../discordTools/discordMessages.js');
+        const InstanceUtils = require('./instanceUtils.js');
+
+        const instance = this.client.getInstance(guildId);
+        const server = instance.activeServer !== null ? instance.serverList[instance.activeServer] : null;
+        const credentials = InstanceUtils.readCredentialsFile(guildId);
+        const owner = credentials && credentials[steamId] ? credentials[steamId].discord_user_id : null;
+        const text = this.client.intlGet(guildId, problem, {
+            steamId: steamId, server: server ? server.title : '-', ...details
+        });
+
+        this.client.log(this.client.intlGet(null, 'warningCap'), text, 'warn');
+        const content = DiscordEmbeds.getActionInfoEmbed(1, text);
+        if (owner) content.content = `<@${owner}>`;
+        await DiscordMessages.sendMessage(guildId, content, null, instance.channelId.activity);
     }
 
     /**

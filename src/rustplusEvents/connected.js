@@ -87,11 +87,6 @@ module.exports = {
         if (client.rustplusReconnecting[guildId]) {
             client.rustplusReconnecting[guildId] = false;
 
-            if (client.rustplusReconnectTimers[guildId]) {
-                clearTimeout(client.rustplusReconnectTimers[guildId]);
-                client.rustplusReconnectTimers[guildId] = null;
-            }
-
             await DiscordMessages.sendServerChangeStateMessage(guildId, serverId, 0);
         }
 

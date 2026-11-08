@@ -1,8 +1,5 @@
 FROM node:20-bookworm
 
-# graphicsmagick is required for map image processing
-RUN apt-get update && apt-get install -y graphicsmagick && apt-get clean && rm -rf /var/lib/apt/lists/*
-
 WORKDIR /app
 
 # Install dependencies first for better layer caching

@@ -7,8 +7,6 @@ Program | Version | Download | Note
 `NodeJS` | >= 22.12.0 | [**here**](https://nodejs.org/en/download/) | Since discordjs v14 is used, the version needs to be at least 22.12.0.
 `Git` | Any | [**here**](https://git-scm.com/downloads) | &nbsp;
 
-## Optional Software
-To enable step-trace for cargoship and patrol helicopter, [**GraphicsMagick**](http://www.graphicsmagick.org/download.html) needs to be downloaded.
 
 
 ## Clone the repository
