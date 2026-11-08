@@ -433,6 +433,40 @@ module.exports = {
         });
     },
 
+    getCameraSightingEmbed: function (guildId, serverId, cameraId, names, hasFrame) {
+        const instance = Client.client.getInstance(guildId);
+
+        return module.exports.getEmbed({
+            title: Client.client.intlGet(guildId, 'cameraSighting', { camera: cameraId }),
+            color: Constants.COLOR_INACTIVE,
+            description: names.map(e => `\`${e}\``).join('\n'),
+            ...(hasFrame ? { image: 'attachment://camera.png' } : {}),
+            footer: { text: instance.serverList[serverId].title },
+            timestamp: true
+        });
+    },
+
+    getStorageMonitorLootedEmbed: function (guildId, serverId, entityId, removed) {
+        const instance = Client.client.getInstance(guildId);
+        const entity = instance.serverList[serverId].storageMonitors[entityId];
+        const grid = entity.location !== null ? ` (${entity.location})` : '';
+
+        const lines = removed.slice(0, 20).map(e => `\`${e.quantity}x ${Client.client.items.getName(e.itemId)}` +
+            `${e.itemIsBlueprint ? ' (BP)' : ''}\``);
+        if (removed.length > 20) lines.push(`+${removed.length - 20}`);
+
+        return module.exports.getEmbed({
+            title: Client.client.intlGet(guildId, 'storageMonitorLooted', {
+                device: `${entity.name}${grid}`
+            }),
+            color: Constants.COLOR_INACTIVE,
+            description: `${lines.join('\n')}\n**ID** \`${entityId}\``,
+            thumbnail: `attachment://${entity.image}`,
+            footer: { text: `${entity.server}` },
+            timestamp: true
+        });
+    },
+
     getStorageMonitorDisconnectNotificationEmbed: function (guildId, serverId, entityId) {
         const instance = Client.client.getInstance(guildId);
         const entity = instance.serverList[serverId].storageMonitors[entityId];

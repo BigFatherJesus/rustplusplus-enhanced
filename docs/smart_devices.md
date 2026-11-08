@@ -80,6 +80,8 @@ Tool Cupboard type Storage Monitor have the `@everyone` button that lets you dec
 <br><br>
 Container type Storage Monitor have the `RECYCLE` button which lets you calculate what resources you would get if you recycled the content of the container.
 <br><br>
+The `LOOT ALERT` button (on by default) posts in the `activity` channel with `@everyone` when items leave the Storage Monitor while the whole team is offline, listing what was taken. Vending machines are skipped because sales take items too, and a Tool Cupboard only counts when at least a quarter of its contents goes at once, so upkeep doesn't trigger it. Turn it off for boxes that conveyors empty.
+<br><br>
 By clicking on the `EDIT` button, you can edit the `Name` of the Storage Monitor. To remove the Storage Monitor, just click the trashcan button.
 
 

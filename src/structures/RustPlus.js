@@ -53,6 +53,10 @@ class RustPlus extends RustPlusLib {
         this.leaderRustPlusInstance = null;
         this.uptimeServer = null;
 
+        /* A connection can view one camera at a time; see cameraHandler.js. */
+        this.cameraQueue = Promise.resolve();
+        this.cameraWatch = { lastRun: 0, running: false, sightings: {}, errors: {} };
+
         /* Status flags */
         this.isOperational = false;         /* Connected to the server, and request is verified. */
         this.isDeleted = false;             /* Is the rustplus instance deleted? */
@@ -513,6 +517,25 @@ class RustPlus extends RustPlusLib {
 
             return await this.sendRequestAsync({
                 promoteToLeader: {
+                    steamId: steamId
+                }
+            }, timeout).catch((e) => {
+                return e;
+            });
+        }
+        catch (e) {
+            return e;
+        }
+    }
+
+    async kickFromTeamAsync(steamId, timeout = 10000) {
+        try {
+            if (!(await this.waitForAvailableTokens(1))) {
+                return { error: Client.client.intlGet(null, 'tokensDidNotReplenish') };
+            }
+
+            return await this.sendRequestAsync({
+                kickFromTeam: {
                     steamId: steamId
                 }
             }, timeout).catch((e) => {

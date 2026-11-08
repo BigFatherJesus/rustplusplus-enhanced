@@ -12,12 +12,14 @@ Slash Command | Description
 [**/alarm**](commands.md#alarm) | Operations on Smart Alarms.
 [**/alias**](commands.md#alias) | Create an alias for a command/sequence of characters.
 [**/blacklist**](commands.md#blacklist) | Blacklist a user from using the bot.
+[**/camera**](commands.md#camera) | View and watch your own Rust+ cameras and turrets.
 [**/cctv**](commands.md#cctv) | Posts CCTV codes for a monument.
 [**/craft**](commands.md#craft) | Display the cost to craft an item.
 [**/credentials**](commands.md#credentials) | Set/Clear the Credentials for the user account.
 [**/decay**](commands.md#decay) | Display the decay time of an item.
 [**/help**](commands.md#help) | Display help message.
 [**/item**](commands.md#item) | Get the details of an item.
+[**/kick**](commands.md#kick) | Kick a member from the team.
 [**/leader**](commands.md#leader) | Give or take the leadership from/to a team member.
 [**/map**](commands.md#map) | Get the currently connected server map image.
 [**/recycle**](commands.md#recycle) | Display the output of recycling an item.
@@ -74,6 +76,20 @@ Subcommand | Options | Description | Required
 `show` | &nbsp; | Show blacklisted users. | &nbsp;
 
 ![Discord Slash Command blacklist Image](images/slash_commands/blacklist.png)
+
+
+## **/camera**
+
+> **View and watch your own Rust+ cameras and turrets.**
+
+Subcommand | Options | Description | Required
+---------- | ------- | ----------- | --------
+`view` | `id` | Take a snapshot from a camera and list the players in view. | `True`
+`watch` | `id` | Report players this camera sees while the whole team is offline. | `True`
+`unwatch` | `id` | Stop watching a camera. | `True`
+`list` | &nbsp; | Show the watched cameras. | &nbsp;
+
+The `id` is the identifier set on a CCTV camera, PTZ camera, auto turret or drone in game. Rust+ only allows cameras while the paired player is out of the game, and only cameras the paired player has access to: monument cameras answer "no access" since 2026. A watched camera is checked once a minute while the whole team is offline; a player who isn't on the team is posted in the `activity` channel with a snapshot and `@everyone`, at most once every 10 minutes per player and camera.
 
 
 ## **/cctv**
@@ -154,6 +170,17 @@ Subcommand | Options | Description | Required
 ![Discord Slash Command item Image](images/slash_commands/item.png)
 
 
+## **/kick**
+
+> **Kick a member from the team.**
+
+Subcommand | Options | Description | Required
+---------- | ------- | ----------- | --------
+&nbsp; | `member` | The name of the team member. A partial name has to match exactly one member. | `True`
+
+Rust+ only lets the team leader kick, so the bot sends the kick over the leader's Rust+ login. That works when the leader is the bot's paired player or has added credentials with `/credentials add`.
+
+
 ## **/leader**
 
 > **Give or take the leadership from/to a team member.**
@@ -175,6 +202,8 @@ Subcommand | Options | Description | Required
 `clean` | &nbsp; | Get the clean map. | &nbsp;
 `monuments`| &nbsp; | Get the map including monument names. | &nbsp;
 `markers` | &nbsp; | Get the map including markers. | &nbsp;
+
+Markers are the team's player positions and the map pins of the paired player and the team leader, with their labels.
 
 ![Discord Slash Command map Image](images/slash_commands/map.png)
 

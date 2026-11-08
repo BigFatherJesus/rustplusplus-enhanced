@@ -87,6 +87,21 @@ class RustPlusLite extends RustPlusLib {
         }
     }
 
+    async kickFromTeamAsync(steamId, timeout = 10000) {
+        try {
+            return await this.sendRequestAsync({
+                kickFromTeam: {
+                    steamId: steamId
+                }
+            }, timeout).catch((e) => {
+                return e;
+            });
+        }
+        catch (e) {
+            return e;
+        }
+    }
+
     isResponseValid(response) {
         if (response === undefined) {
             this.log(Client.client.intlGet(null, 'errorCap'),

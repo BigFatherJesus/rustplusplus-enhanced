@@ -213,6 +213,32 @@ module.exports = {
         await module.exports.sendMessage(guildId, content, null, instance.channelId.activity);
     },
 
+    sendCameraSightingMessage: async function (guildId, serverId, cameraId, names, frame) {
+        const instance = Client.client.getInstance(guildId);
+
+        const content = {
+            embeds: [DiscordEmbeds.getCameraSightingEmbed(guildId, serverId, cameraId, names, frame !== null)],
+            files: frame !== null ? [new Discord.AttachmentBuilder(frame, { name: 'camera.png' })] : [],
+            content: '@everyone'
+        }
+
+        await module.exports.sendMessage(guildId, content, null, instance.channelId.activity);
+    },
+
+    sendStorageMonitorLootedMessage: async function (guildId, serverId, entityId, removed) {
+        const instance = Client.client.getInstance(guildId);
+        const entity = instance.serverList[serverId].storageMonitors[entityId];
+
+        const content = {
+            embeds: [DiscordEmbeds.getStorageMonitorLootedEmbed(guildId, serverId, entityId, removed)],
+            files: [new Discord.AttachmentBuilder(
+                Path.join(__dirname, '..', `resources/images/electrics/${entity.image}`))],
+            content: '@everyone'
+        }
+
+        await module.exports.sendMessage(guildId, content, null, instance.channelId.activity);
+    },
+
     sendStorageMonitorDisconnectNotificationMessage: async function (guildId, serverId, entityId) {
         const instance = Client.client.getInstance(guildId);
         const entity = instance.serverList[serverId].storageMonitors[entityId];

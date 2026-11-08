@@ -18,6 +18,7 @@
 
 */
 
+const CameraHandler = require('../handlers/cameraHandler.js');
 const Info = require('../structures/Info');
 const InformationHandler = require('../handlers/informationHandler.js');
 const SmartAlarmHandler = require('../handlers/smartAlarmHandler.js');
@@ -62,5 +63,10 @@ module.exports = {
         await InformationHandler.handler(rustplus);
         await StorageMonitorHandler.handler(rustplus, client);
         await SmartAlarmHandler.handler(rustplus, client);
+
+        /* Not awaited: looking through the cameras takes several seconds each. */
+        CameraHandler.handler(rustplus, client).catch((e) => {
+            rustplus.log(client.intlGet(null, 'errorCap'), `Camera watch failed: ${e.message}`, 'error');
+        });
     },
 };

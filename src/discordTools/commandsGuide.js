@@ -65,8 +65,8 @@ module.exports = {
             .addFields(
                 { name: '🔧 **General**', value: '`/help` - Show help information\n`/connection` - Connection status and retries\n`/uptime` - Bot and server uptime\n`/ai` - Ask the AI assistant', inline: false },
                 { name: '🎮 **Items**', value: '`/item` - Item information\n`/craft` - Crafting recipe\n`/chaincraft` - Full crafting chain\n`/research` - Research costs\n`/recycle` - Recycling yields\n`/stack` - Stack size\n`/despawn` - Despawn time\n`/decay` - Decay times\n`/upkeep` - Upkeep costs', inline: false },
-                { name: '🔌 **Devices & Map**', value: '`/switch` - Smart switches\n`/alarm` - Smart alarms\n`/storagemonitor` - Storage monitors\n`/recycler` - Recycler tracking\n`/find` - Find an item in storage monitors\n`/cctv` - CCTV camera codes\n`/map` - Map image', inline: false },
-                { name: '⚙️ **Setup**', value: '`/credentials` - Add or remove Rust+ credentials\n`/role` - Bot role\n`/alias` - Command aliases\n`/blacklist` - Block users\n`/leader` - Promote the team leader\n`/reset` - Rebuild channels\n`/reloaddata` - Reload item data', inline: false }
+                { name: '🔌 **Devices & Map**', value: '`/switch` - Smart switches\n`/alarm` - Smart alarms\n`/storagemonitor` - Storage monitors\n`/recycler` - Recycler tracking\n`/find` - Find an item in storage monitors\n`/camera` - View and watch your own cameras and turrets\n`/cctv` - Monument CCTV codes (in game)\n`/map` - Map image with team pins', inline: false },
+                { name: '⚙️ **Setup**', value: '`/credentials` - Add or remove Rust+ credentials\n`/role` - Bot role\n`/alias` - Command aliases\n`/blacklist` - Block users\n`/leader` - Promote the team leader\n`/kick` - Kick a team member\n`/reset` - Rebuild channels\n`/reloaddata` - Reload item data', inline: false }
             )
             .setFooter({ text: 'RustPlusPlus Enhanced • Use /help for detailed command information' })
             .setTimestamp();
@@ -92,7 +92,7 @@ module.exports = {
             .setColor('#57F287')
             .addFields(
                 { name: '🚀 **Getting Started**', value: '1. Run `/credentials add` with the command from the credentials site\n2. In game: ESC, Rust+, Pair with server\n3. Pair smart devices in game: look at the device, hold E and choose Pair\n4. Change settings in the settings channel', inline: false },
-                { name: '🎯 **Features**', value: '• **Team chat bridge** between Discord and in game\n• **Trackers**: follow players on any server (trackers channel)\n• **Smart devices**: switches, alarms and storage monitors from Discord\n• **CCTV codes** for monuments', inline: false },
+                { name: '🎯 **Features**', value: '• **Team chat bridge** between Discord and in game\n• **Trackers**: follow players on any server (trackers channel)\n• **Smart devices**: switches, alarms and storage monitors from Discord\n• **Base watch** while the team is offline: players seen on your cameras, items taken from storage monitors', inline: false },
                 { name: '🔧 **Troubleshooting**', value: '• Rust+ logins expire after about 14 days; the bot posts in the activity channel when it needs a new one\n• Servers paired before November 2026 must be paired again in game\n• Use `/connection` to see the connection status', inline: false }
             )
             .setFooter({ text: 'RustPlusPlus Enhanced • For support, contact the server administrators' })

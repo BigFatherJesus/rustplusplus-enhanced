@@ -44,6 +44,8 @@ This NodeJS Discord Bot uses the [rustplus.js](https://github.com/liamcottle/rus
 * **TypeScript Support** - Full TypeScript implementation for better code quality
 * **Enhanced Error Handling** - Improved error management and logging systems
 * **🆕 Current Item Data** - Item names, ids and stack sizes from the game files, recipes and recycling from the open rust-items-json dataset (see Item Data below)
+* **🆕 Base Watch** - While the whole team is offline: players your own cameras and turrets see (`/camera watch`) and items taken from storage monitors are posted in the activity channel
+* **🆕 Team tools** - `/kick` a team member from Discord, team map pins with labels on `/map`
 * **🆕 AI Assistant** - Ask game questions in-game (`!ai`) or via `/ai` — answers from live server state + the scraped item/monument database; works with any OpenAI-compatible endpoint (Ollama, GROQ, Gemini)
 
 ## **Quick Start**
@@ -185,21 +187,6 @@ rustplusplus-enhanced/
 - Smart devices must be paired in-game before Discord control
 - The bot maintains persistent connections to monitor real-time events
 - Multi-language support requires proper locale configuration
-
-## **New Features: Automated Item Database Updates**
-
-### **Commands**
-The `/updatedatabase` command takes a required `target` option and an optional `item-name`:
-- `/updatedatabase target:ALL` - Full database refresh (admin only)
-- `/updatedatabase target:NEW` - Check for new items only
-- `/updatedatabase target:ITEM item-name:<name>` - Update a specific item
-
-### **Setup**
-No setup needed — the scraper is keyless. The bot automatically starts the weekly schedule on startup.
-
-### **Data Output**
-- **Bot Format**: Updates existing static files in `src/staticFiles/` (`items.json`, `rustlabsCraftData.json`, etc.) plus the new `rusthelpExtras.json`, `rusthelpBuildingExtras.json`, `rusthelpMonuments.json` and `rusthelpWorldEntities.json`
-- **AI Knowledge Export**: Per-item/monument/world-entity JSON files in `AI/items/`, `AI/monuments/` and `AI/world/` (gitignored, regenerated after each scrape) used by the AI assistant
 
 ## **Thanks to**
 

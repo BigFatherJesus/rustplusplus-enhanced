@@ -222,6 +222,11 @@ module.exports = {
                 style: entity.inGame ? SUCCESS : DANGER
             }),
             module.exports.getButton({
+                customId: `StorageMonitorLootAlert${identifier}`,
+                label: Client.client.intlGet(guildId, 'lootAlertCap'),
+                style: entity.lootAlert !== false ? SUCCESS : DANGER
+            }),
+            module.exports.getButton({
                 customId: `StorageMonitorEdit${identifier}`,
                 label: Client.client.intlGet(guildId, 'editCap'),
                 style: PRIMARY,
@@ -234,9 +239,16 @@ module.exports = {
     },
 
     getStorageMonitorContainerButton: function (guildId, serverId, entityId) {
+        const instance = Client.client.getInstance(guildId);
+        const entity = instance.serverList[serverId].storageMonitors[entityId];
         const identifier = JSON.stringify({ "serverId": serverId, "entityId": entityId });
 
         return new Discord.ActionRowBuilder().addComponents(
+            module.exports.getButton({
+                customId: `StorageMonitorLootAlert${identifier}`,
+                label: Client.client.intlGet(guildId, 'lootAlertCap'),
+                style: entity.lootAlert !== false ? SUCCESS : DANGER
+            }),
             module.exports.getButton({
                 customId: `StorageMonitorEdit${identifier}`,
                 label: Client.client.intlGet(guildId, 'editCap'),

@@ -258,6 +258,7 @@ async function pairingServer(client, guild, title, message, body) {
         storageMonitors: server ? server.storageMonitors : {},
         markers: server ? server.markers : {},
         switchGroups: server ? server.switchGroups : {},
+        cameraWatch: server ? server.cameraWatch : [],
         messageId: (messageObj !== undefined) ? messageObj.id : null,
         timeTillDay: server ? server.timeTillDay : null,
         timeTillNight: server ? server.timeTillNight : null
@@ -397,6 +398,7 @@ async function pairingEntityStorageMonitor(client, guild, title, message, body) 
         upkeep: entityExist ? storageMonitors[body.entityId].upkeep : null,
         everyone: entityExist ? storageMonitors[body.entityId].everyone : false,
         inGame: entityExist ? storageMonitors[body.entityId].inGame : true,
+        lootAlert: entityExist ? storageMonitors[body.entityId].lootAlert !== false : true,
         image: entityExist ? storageMonitors[body.entityId].image : 'storage_monitor.png',
         location: entityExist ? storageMonitors[body.entityId].location : null,
         server: entityExist ? storageMonitors[body.entityId].server : body.name,

@@ -213,6 +213,9 @@ async function messageBroadcastEntityChangedStorageMonitor(rustplus, client, mes
         setTimeout(updateToolCupboard.bind(null, rustplus, client, message), 2000);
     }
     else {
+        const oldItems = rustplus.storageMonitors[entityId] ? rustplus.storageMonitors[entityId].items : null;
+        await notifyIfLooted(rustplus, client, entityId, oldItems, message.broadcast.entityChanged.payload.items);
+
         rustplus.storageMonitors[entityId] = {
             items: message.broadcast.entityChanged.payload.items,
             expiry: message.broadcast.entityChanged.payload.protectionExpiry,
@@ -237,6 +240,43 @@ async function messageBroadcastEntityChangedStorageMonitor(rustplus, client, mes
     }
 }
 
+/* Items leaving a box while the whole team is offline usually means raiders or a thief. Vending machine
+   sales take items too, so those are skipped, and a tool cupboard pays its upkeep from its own contents,
+   so it only counts when a large share goes at once. */
+async function notifyIfLooted(rustplus, client, entityId, oldItems, newItems) {
+    const instance = client.getInstance(rustplus.guildId);
+    const entity = instance.serverList[rustplus.serverId].storageMonitors[entityId];
+    if (!oldItems || !newItems || !rustplus.team.allOffline) return;
+    if (entity.lootAlert === false || entity.type === 'vendingMachine') return;
+
+    const totals = (items) => {
+        const map = new Map();
+        for (const item of items) {
+            const key = `${item.itemId}:${item.itemIsBlueprint ? 1 : 0}`;
+            map.set(key, (map.get(key) || 0) + item.quantity);
+        }
+        return map;
+    };
+    const before = totals(oldItems);
+    const after = totals(newItems);
+
+    const removed = [];
+    let total = 0;
+    let lost = 0;
+    for (const [key, quantity] of before) {
+        total += quantity;
+        const gone = quantity - (after.get(key) || 0);
+        if (gone <= 0) continue;
+        lost += gone;
+        const [itemId, isBlueprint] = key.split(':');
+        removed.push({ itemId: itemId, quantity: gone, itemIsBlueprint: isBlueprint === '1' });
+    }
+    if (removed.length === 0) return;
+    if (entity.type === 'toolCupboard' && lost < total / 4) return;
+
+    await DiscordMessages.sendStorageMonitorLootedMessage(rustplus.guildId, rustplus.serverId, entityId, removed);
+}
+
 async function updateToolCupboard(rustplus, client, message) {
     const instance = client.getInstance(rustplus.guildId);
     const server = instance.serverList[rustplus.serverId];
@@ -247,6 +287,9 @@ async function updateToolCupboard(rustplus, client, message) {
     client.setInstance(rustplus.guildId, instance);
 
     if (server.storageMonitors[entityId].reachable) {
+        const oldItems = rustplus.storageMonitors[entityId] ? rustplus.storageMonitors[entityId].items : null;
+        await notifyIfLooted(rustplus, client, entityId, oldItems, info.entityInfo.payload.items);
+
         rustplus.storageMonitors[entityId] = {
             items: info.entityInfo.payload.items,
             expiry: info.entityInfo.payload.protectionExpiry,

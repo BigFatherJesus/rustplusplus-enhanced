@@ -383,6 +383,28 @@ class Map {
                 /* Ignore */
             }
         }
+
+        /* Team map pins: the paired player's own and the ones the leader shares. Death spots are left out. */
+        const teamInfo = await this.rustplus.getTeamInfoAsync();
+        if (!(await this.rustplus.isResponseValid(teamInfo))) return;
+
+        const pinColours = ['#E7EA5F', '#327DD9', '#80B53C', '#C83B3A', '#BE61CD', '#01FACD'];
+        const pinSize = 18;
+        const notes = teamInfo.teamInfo.mapNotes.concat(teamInfo.teamInfo.leaderMapNotes).filter(e => e.type === 1);
+        for (const note of notes) {
+            const x = note.x * ((this.width - 2 * this.oceanMargin) / this.rustplus.info.mapSize) + this.oceanMargin;
+            const n = this.height - 2 * this.oceanMargin;
+            const y = this.height - (note.y * (n / this.rustplus.info.mapSize) + this.oceanMargin);
+
+            const colour = pinColours[Math.min(Math.max(note.colourIndex || 0, 0), pinColours.length - 1)];
+            const outline = new Jimp(pinSize + 4, pinSize + 4, '#000000').circle();
+            const pin = new Jimp(pinSize, pinSize, colour).circle();
+            this.mapMarkerImageMeta.map.jimp.composite(outline, x - (pinSize + 4) / 2, y - (pinSize + 4) / 2);
+            this.mapMarkerImageMeta.map.jimp.composite(pin, x - pinSize / 2, y - pinSize / 2);
+            if (note.label) {
+                this.mapMarkerImageMeta.map.jimp.print(this.font, x + pinSize / 2 + 4, y - 10, note.label);
+            }
+        }
     }
 
     async writeMap(markers, monuments) {

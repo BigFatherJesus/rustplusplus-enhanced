@@ -28,7 +28,8 @@ const InstanceUtils = require('./instanceUtils.js');
 const LIB_DIR = Path.dirname(require.resolve('@liamcottle/rustplus.js'));
 const WebSocket = require(require.resolve('ws', { paths: [LIB_DIR] }));
 const protobuf = require(require.resolve('protobufjs', { paths: [LIB_DIR] }));
-const PROTO_PATH = Path.join(LIB_DIR, 'rustplus.proto');
+/* Our own copy: the library's proto lacks fields the current Rust+ uses (kickFromTeam, map note labels). */
+const PROTO_PATH = Path.join(__dirname, 'rustplus.proto');
 
 const RELAY_HOST = 'companion-rust.facepunch.com';
 const RELAY_ORIGIN = 'https://app.playrust.com';

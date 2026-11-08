@@ -621,6 +621,25 @@ module.exports = async (client, interaction) => {
 
         await DiscordMessages.sendStorageMonitorMessage(guildId, ids.serverId, ids.entityId, interaction);
     }
+    else if (interaction.customId.startsWith('StorageMonitorLootAlert')) {
+        const ids = JSON.parse(interaction.customId.replace('StorageMonitorLootAlert', ''));
+        const server = instance.serverList[ids.serverId];
+
+        if (!server || (server && !server.storageMonitors.hasOwnProperty(ids.entityId))) {
+            await interaction.message.delete();
+            return;
+        }
+
+        server.storageMonitors[ids.entityId].lootAlert = server.storageMonitors[ids.entityId].lootAlert === false;
+        client.setInstance(guildId, instance);
+
+        client.log(client.intlGet(null, 'infoCap'), client.intlGet(null, 'buttonValueChange', {
+            id: `${verifyId}`,
+            value: `${server.storageMonitors[ids.entityId].lootAlert}`
+        }));
+
+        await DiscordMessages.sendStorageMonitorMessage(guildId, ids.serverId, ids.entityId, interaction);
+    }
     else if (interaction.customId.startsWith('StorageMonitorEdit')) {
         const ids = JSON.parse(interaction.customId.replace('StorageMonitorEdit', ''));
         const server = instance.serverList[ids.serverId];
