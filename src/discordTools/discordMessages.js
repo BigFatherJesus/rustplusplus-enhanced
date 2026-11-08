@@ -225,6 +225,46 @@ module.exports = {
         await module.exports.sendMessage(guildId, content, null, instance.channelId.activity);
     },
 
+    /* Edits the camera's message in the cameras channel, or posts it. Returns true when it posted a new one. */
+    sendCameraMessage: async function (guildId, serverId, cameraId, snapshot) {
+        const instance = Client.client.getInstance(guildId);
+        const messageId = instance.cameraMessageId.cameras[cameraId] || null;
+
+        const content = {
+            embeds: [DiscordEmbeds.getCameraEmbed(guildId, serverId, cameraId, snapshot)],
+            files: snapshot !== null && snapshot.frame !== null ?
+                [new Discord.AttachmentBuilder(snapshot.frame, { name: 'camera.png' })] : []
+        }
+
+        const message = await module.exports.sendMessage(guildId, content, messageId, instance.channelId.cameras);
+        if (!message) return false;
+
+        instance.cameraMessageId.cameras[cameraId] = message.id;
+        Client.client.setInstance(guildId, instance);
+        return message.id !== messageId;
+    },
+
+    /* moveToBottom posts it again below the camera messages, after a camera message was added. */
+    sendCameraSpottedMessage: async function (guildId, serverId, moveToBottom = false) {
+        const instance = Client.client.getInstance(guildId);
+
+        if (moveToBottom && instance.cameraMessageId.spotted !== null) {
+            await DiscordTools.deleteMessageById(guildId, instance.channelId.cameras, instance.cameraMessageId.spotted);
+            instance.cameraMessageId.spotted = null;
+        }
+
+        const content = {
+            embeds: [DiscordEmbeds.getCameraSpottedEmbed(guildId, serverId)]
+        }
+
+        const message = await module.exports.sendMessage(guildId, content, instance.cameraMessageId.spotted,
+            instance.channelId.cameras);
+        if (!message) return;
+
+        instance.cameraMessageId.spotted = message.id;
+        Client.client.setInstance(guildId, instance);
+    },
+
     sendStorageMonitorLootedMessage: async function (guildId, serverId, entityId, removed) {
         const instance = Client.client.getInstance(guildId);
         const entity = instance.serverList[serverId].storageMonitors[entityId];

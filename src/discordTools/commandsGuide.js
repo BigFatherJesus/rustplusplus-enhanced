@@ -92,7 +92,7 @@ module.exports = {
             .setColor('#57F287')
             .addFields(
                 { name: '🚀 **Getting Started**', value: '1. Run `/credentials add` with the command from the credentials site\n2. In game: ESC, Rust+, Pair with server\n3. Pair smart devices in game: look at the device, hold E and choose Pair\n4. Change settings in the settings channel', inline: false },
-                { name: '🎯 **Features**', value: '• **Team chat bridge** between Discord and in game\n• **Trackers**: follow players on any server (trackers channel)\n• **Smart devices**: switches, alarms and storage monitors from Discord\n• **Base watch** while the team is offline: players seen on your cameras, items taken from storage monitors', inline: false },
+                { name: '🎯 **Features**', value: '• **Team chat bridge** between Discord and in game\n• **Trackers**: follow players on any server (trackers channel)\n• **Smart devices**: switches, alarms and storage monitors from Discord\n• **Base watch**: camera snapshots and spotted players in the cameras channel; while the team is offline, alerts for strangers on camera and items taken from storage monitors', inline: false },
                 { name: '🔧 **Troubleshooting**', value: '• Rust+ logins expire after about 14 days; the bot posts in the activity channel when it needs a new one\n• Servers paired before November 2026 must be paired again in game\n• Use `/connection` to see the connection status', inline: false }
             )
             .setFooter({ text: 'RustPlusPlus Enhanced • For support, contact the server administrators' })

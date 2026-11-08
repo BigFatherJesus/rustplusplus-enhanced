@@ -42,6 +42,7 @@ module.exports = (client, guild) => {
                 switchGroups: null,
                 alarms: null,
                 storageMonitors: null,
+                cameras: null,
                 recycler: null,
                 activity: null,
                 trackers: null
@@ -50,6 +51,11 @@ module.exports = (client, guild) => {
                 map: null,
                 server: null,
                 team: null
+            },
+            cameraMessageId: {
+                serverId: null,
+                spotted: null,
+                cameras: {}
             },
             activeServer: null,
             serverList: {},
@@ -100,6 +106,7 @@ module.exports = (client, guild) => {
                 switchGroups: null,
                 alarms: null,
                 storageMonitors: null,
+                cameras: null,
                 recycler: null,
                 activity: null,
                 trackers: null
@@ -117,6 +124,7 @@ module.exports = (client, guild) => {
             if (!instance.channelId.hasOwnProperty('switchGroups')) instance.channelId.switchGroups = null;
             if (!instance.channelId.hasOwnProperty('alarms')) instance.channelId.alarms = null;
             if (!instance.channelId.hasOwnProperty('storageMonitors')) instance.channelId.storageMonitors = null;
+            if (!instance.channelId.hasOwnProperty('cameras')) instance.channelId.cameras = null;
             if (!instance.channelId.hasOwnProperty('recycler')) instance.channelId.recycler = null;
             if (!instance.channelId.hasOwnProperty('activity')) instance.channelId.activity = null;
             if (!instance.channelId.hasOwnProperty('trackers')) instance.channelId.trackers = null;
@@ -135,6 +143,7 @@ module.exports = (client, guild) => {
             if (!instance.informationMessageId.hasOwnProperty('team')) instance.informationMessageId.team = null;
         }
 
+        if (!instance.hasOwnProperty('cameraMessageId')) instance.cameraMessageId = { serverId: null, spotted: null, cameras: {} };
         if (!instance.hasOwnProperty('activeServer')) instance.activeServer = null;
         if (!instance.hasOwnProperty('serverList')) instance.serverList = {};
         if (!instance.hasOwnProperty('serverListLite')) instance.serverListLite = {};
@@ -167,6 +176,7 @@ module.exports = (client, guild) => {
     for (const [serverId, content] of Object.entries(instance.serverList)) {
         if (!content.hasOwnProperty('customCameraGroups')) content.customCameraGroups = {};
         if (!content.hasOwnProperty('cameraWatch')) content.cameraWatch = [];
+        if (!content.hasOwnProperty('cameraSpotted')) content.cameraSpotted = {};
     }
 
     client.setInstance(guild.id, instance);

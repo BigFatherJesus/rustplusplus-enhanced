@@ -53,6 +53,7 @@
     "ceilingLight": "Ceiling Light",
     "channelNameActivity": "📊│activity",
     "channelNameAlarms": "🚨│alarms",
+    "channelNameCameras": "📷│cameras",
     "channelNameCommands": "❓│commands",
     "channelNameCommandsGuide": "📚│commands-guide",
     "channelNameInformation": "📋│information",
@@ -691,11 +692,18 @@
     "cameraError": "Camera {camera} did not answer: {error}.",
     "cameraPlayersInView": "Players in view: {players}",
     "cameraNoPlayersInView": "No players in view.",
+    "cameraSnapshotTaken": "Snapshot {time}",
+    "cameraWaitingForSnapshot": "Waiting for the first snapshot. Cameras only work while the paired player is out of the game.",
     "cameraViewNoCameras": "Give a camera ID, or add cameras with /camera watch to view them all at once.",
     "cameraWatchAdded": "Watching camera {camera}. Players it sees while the whole team is offline are reported in the activity channel.",
     "cameraWatchRemoved": "Stopped watching camera {camera}.",
     "cameraWatchList": "Watched cameras: {cameras}",
     "cameraWatchListEmpty": "No cameras are watched.",
     "cameraSighting": "Camera {camera} sees a player while the whole team is offline",
-    "cameraWatchFailed": "Camera watch: {camera} did not answer ({error})."
+    "cameraWatchFailed": "Camera watch: {camera} did not answer ({error}).",
+    "cameraSpottedTitle": "Spotted on cameras",
+    "cameraSpottedLine": "{name} on {cameras}, {time}",
+    "cameraSpottedNobody": "Nobody outside the team has been seen on the cameras yet.",
+    "cameraSpottedNoCameras": "No cameras saved. Add them with /camera watch.",
+    "cameraSpottedLastCheck": "Last checked {time}. Snapshots refresh every 5 minutes, every minute while the whole team is offline."
 }

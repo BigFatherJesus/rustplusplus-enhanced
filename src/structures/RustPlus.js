@@ -55,7 +55,7 @@ class RustPlus extends RustPlusLib {
 
         /* A connection can view one camera at a time; see cameraHandler.js. */
         this.cameraQueue = Promise.resolve();
-        this.cameraWatch = { lastRun: 0, running: false, sightings: {}, errors: {} };
+        this.cameraWatch = { lastRun: 0, running: false, paused: null, sightings: {}, errors: {} };
 
         /* Status flags */
         this.isOperational = false;         /* Connected to the server, and request is verified. */

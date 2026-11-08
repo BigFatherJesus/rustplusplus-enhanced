@@ -44,7 +44,7 @@ This NodeJS Discord Bot uses the [rustplus.js](https://github.com/liamcottle/rus
 * **TypeScript Support** - Full TypeScript implementation for better code quality
 * **Enhanced Error Handling** - Improved error management and logging systems
 * **🆕 Current Item Data** - Item names, ids and stack sizes from the game files, recipes and recycling from the open rust-items-json dataset (see Item Data below)
-* **🆕 Base Watch** - While the whole team is offline: players your own cameras and turrets see (`/camera watch`) and items taken from storage monitors are posted in the activity channel
+* **🆕 Base Watch** - A cameras channel with snapshots from your own cameras and turrets (`/camera watch`), refreshed every 5 minutes, and a list of the players outside the team they spotted. While the whole team is offline, strangers on camera and items taken from storage monitors are posted in the activity channel
 * **🆕 Team tools** - `/kick` a team member from Discord, team map pins with labels on `/map`
 * **🆕 AI Assistant** - Ask game questions in-game (`!ai`) or via `/ai` — answers from live server state + the scraped item/monument database; works with any OpenAI-compatible endpoint (Ollama, GROQ, Gemini)
 

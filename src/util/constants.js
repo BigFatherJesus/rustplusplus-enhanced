@@ -74,6 +74,14 @@ module.exports = {
     COLOR_SETTINGS: '#861C0C',
     COLOR_TEAMCHAT_DEFAULT: '#CE412B',
 
+    /* Rust+ camera error codes, with what the official Rust+ app tells the player. */
+    CAMERA_ERRORS: {
+        player_online: 'cameraErrorPlayerOnline',
+        access_denied: 'cameraErrorAccessDenied',
+        not_found: 'cameraErrorNotFound',
+        no_player: 'cameraErrorNoPlayer'
+    },
+
     GET_STEAM_PROFILE_LINK: function (steamId) {
         return `[${steamId}](${this.STEAM_PROFILES_URL}${steamId})`;
     }

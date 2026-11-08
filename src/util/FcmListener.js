@@ -259,6 +259,7 @@ async function pairingServer(client, guild, title, message, body) {
         markers: server ? server.markers : {},
         switchGroups: server ? server.switchGroups : {},
         cameraWatch: server ? server.cameraWatch : [],
+        cameraSpotted: server ? server.cameraSpotted : {},
         messageId: (messageObj !== undefined) ? messageObj.id : null,
         timeTillDay: server ? server.timeTillDay : null,
         timeTillNight: server ? server.timeTillNight : null

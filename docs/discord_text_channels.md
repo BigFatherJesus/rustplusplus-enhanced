@@ -11,6 +11,7 @@
 * [**Switchgroups**](discord_text_channels.md#switch-groups-channel)
 * [**Alarms**](discord_text_channels.md#alarms-channel)
 * [**Storagemonitors**](discord_text_channels.md#storagemonitors-channel)
+* [**Cameras**](discord_text_channels.md#cameras-channel)
 * [**Activity**](discord_text_channels.md#activity-channel)
 * [**Trackers**](discord_text_channels.md#trackers-channel)
 
@@ -89,6 +90,10 @@ There are a few buttons for each server. The `CONNECT` button lets you start a c
 ## Storagemonitors Channel
 
 > The Storagemonitors Channel lists all the paired Storage Monitors. See [Smart Devices](smart_devices.md#storage-monitors).
+
+## Cameras Channel
+
+> The Cameras Channel shows a snapshot from each camera saved with `/camera watch`, with the players in view, refreshed every 5 minutes (every minute while the whole team is offline). Below them is a list of the last 25 players outside the team the cameras spotted, with the cameras and when they were last seen. Rust+ only allows cameras while the paired player is out of the game; while they play, the snapshots stay as they were and the list says why. See [/camera](commands.md#camera).
 
 ## Activity Channel
 

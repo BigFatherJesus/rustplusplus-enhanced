@@ -25,14 +25,8 @@ const Discord = require('discord.js');
 const CameraHandler = require('../handlers/cameraHandler.js');
 const Constants = require('../util/constants.js');
 const DiscordEmbeds = require('../discordTools/discordEmbeds.js');
-
-/* Rust+ error codes for a camera, with what the official Rust+ app tells the player. */
-const CAMERA_ERRORS = {
-    player_online: 'cameraErrorPlayerOnline',
-    access_denied: 'cameraErrorAccessDenied',
-    not_found: 'cameraErrorNotFound',
-    no_player: 'cameraErrorNoPlayer'
-};
+const DiscordMessages = require('../discordTools/discordMessages.js');
+const DiscordTools = require('../discordTools/discordTools.js');
 
 module.exports = {
     name: 'camera',
@@ -108,7 +102,7 @@ module.exports = {
                 for (const id of cameraIds) {
                     const look = await CameraHandler.look(rustplus, id);
                     if (look.error) {
-                        const str = client.intlGet(interaction.guildId, CAMERA_ERRORS[look.error] || 'cameraError', {
+                        const str = client.intlGet(interaction.guildId, Constants.CAMERA_ERRORS[look.error] || 'cameraError', {
                             camera: id,
                             error: look.error
                         });
@@ -129,21 +123,12 @@ module.exports = {
                         continue;
                     }
 
-                    const frame = await CameraHandler.render(look);
+                    const snapshot = await CameraHandler.snapshot(look);
                     const fileName = `camera${views.length}.png`;
-                    const players = CameraHandler.playersInView(look)
-                        .map(e => `\`${e === null ? client.intlGet(interaction.guildId, 'unknown') : e}\``);
                     views.push({
-                        embed: DiscordEmbeds.getEmbed({
-                            title: id,
-                            color: Constants.COLOR_DEFAULT,
-                            description: players.length > 0 ? client.intlGet(interaction.guildId, 'cameraPlayersInView', {
-                                players: players.join(', ')
-                            }) : client.intlGet(interaction.guildId, 'cameraNoPlayersInView'),
-                            ...(frame !== null ? { image: `attachment://${fileName}` } : {}),
-                            footer: { text: server.title }
-                        }),
-                        file: frame !== null ? new Discord.AttachmentBuilder(frame, { name: fileName }) : null
+                        embed: DiscordEmbeds.getCameraEmbed(interaction.guildId, rustplus.serverId, id, snapshot,
+                            fileName),
+                        file: snapshot.frame !== null ? new Discord.AttachmentBuilder(snapshot.frame, { name: fileName }) : null
                     });
                 }
 
@@ -164,21 +149,36 @@ module.exports = {
                 /* Check the camera answers before it goes on the list, so a typo isn't watched forever. */
                 const look = await CameraHandler.look(rustplus, cameraId);
                 if (look.error && look.error !== 'player_online') {
-                    await reply(true, client.intlGet(interaction.guildId, CAMERA_ERRORS[look.error] || 'cameraError', {
+                    await reply(true, client.intlGet(interaction.guildId, Constants.CAMERA_ERRORS[look.error] || 'cameraError', {
                         camera: cameraId,
                         error: look.error
                     }));
                     return;
                 }
 
-                if (!server.cameraWatch.includes(cameraId)) server.cameraWatch.push(cameraId);
+                const isNew = !server.cameraWatch.includes(cameraId);
+                if (isNew) server.cameraWatch.push(cameraId);
                 client.setInstance(interaction.guildId, instance);
+
+                /* A camera that answered shows its snapshot right away; one that can't be seen yet gets a placeholder. */
+                if (!look.error || isNew) {
+                    const snapshot = look.error ? null : await CameraHandler.snapshot(look);
+                    if (await DiscordMessages.sendCameraMessage(interaction.guildId, rustplus.serverId, cameraId, snapshot)) {
+                        await DiscordMessages.sendCameraSpottedMessage(interaction.guildId, rustplus.serverId, true);
+                    }
+                }
                 await reply(false, client.intlGet(interaction.guildId, 'cameraWatchAdded', { camera: cameraId }));
             } break;
 
             case 'unwatch': {
                 server.cameraWatch = server.cameraWatch.filter(e => e !== cameraId);
+                if (instance.cameraMessageId.cameras[cameraId]) {
+                    await DiscordTools.deleteMessageById(interaction.guildId, instance.channelId.cameras,
+                        instance.cameraMessageId.cameras[cameraId]);
+                    delete instance.cameraMessageId.cameras[cameraId];
+                }
                 client.setInstance(interaction.guildId, instance);
+                await DiscordMessages.sendCameraSpottedMessage(interaction.guildId, rustplus.serverId);
                 await reply(false, client.intlGet(interaction.guildId, 'cameraWatchRemoved', { camera: cameraId }));
             } break;
 

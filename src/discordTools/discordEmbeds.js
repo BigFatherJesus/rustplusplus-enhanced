@@ -446,6 +446,74 @@ module.exports = {
         });
     },
 
+    /* snapshot: { frame, players, time } from CameraHandler.snapshot, or null before the first one. */
+    getCameraEmbed: function (guildId, serverId, cameraId, snapshot, fileName = 'camera.png') {
+        const instance = Client.client.getInstance(guildId);
+
+        let description = Client.client.intlGet(guildId, 'cameraWaitingForSnapshot');
+        if (snapshot !== null) {
+            const players = snapshot.players
+                .map(e => `\`${e === null ? Client.client.intlGet(guildId, 'unknown') : e}\``);
+            description = (players.length > 0 ?
+                Client.client.intlGet(guildId, 'cameraPlayersInView', { players: players.join(', ') }) :
+                Client.client.intlGet(guildId, 'cameraNoPlayersInView')) + '\n' +
+                Client.client.intlGet(guildId, 'cameraSnapshotTaken', {
+                    time: `<t:${Math.floor(snapshot.time / 1000)}:R>`
+                });
+        }
+
+        return module.exports.getEmbed({
+            title: cameraId,
+            color: Constants.COLOR_DEFAULT,
+            description: description,
+            ...(snapshot !== null && snapshot.frame !== null ? { image: `attachment://${fileName}` } : {}),
+            footer: { text: instance.serverList[serverId].title }
+        });
+    },
+
+    getCameraSpottedEmbed: function (guildId, serverId) {
+        const instance = Client.client.getInstance(guildId);
+        const server = instance.serverList[serverId];
+        const rustplus = Client.client.rustplusInstances[guildId];
+        const watch = rustplus && rustplus.serverId === serverId ? rustplus.cameraWatch : null;
+
+        const lines = Object.entries(server.cameraSpotted)
+            .sort((a, b) => b[1].lastSeen - a[1].lastSeen)
+            .map(([name, spotted]) => Client.client.intlGet(guildId, 'cameraSpottedLine', {
+                name: `\`${name}\``,
+                cameras: spotted.cameras.map(e => `\`${e}\``).join(', '),
+                time: `<t:${Math.floor(spotted.lastSeen / 1000)}:R>`
+            }));
+        if (lines.length === 0) lines.push(Client.client.intlGet(guildId, 'cameraSpottedNobody'));
+
+        const status = [];
+        if (server.cameraWatch.length === 0) {
+            status.push(Client.client.intlGet(guildId, 'cameraSpottedNoCameras'));
+        }
+        else if (watch !== null) {
+            if (watch.paused) status.push(Client.client.intlGet(guildId, Constants.CAMERA_ERRORS[watch.paused]));
+            for (const [cameraId, error] of Object.entries(watch.errors)) {
+                if (!server.cameraWatch.includes(cameraId)) continue;
+                status.push(Client.client.intlGet(guildId, Constants.CAMERA_ERRORS[error] || 'cameraError', {
+                    camera: cameraId,
+                    error: error
+                }));
+            }
+            if (watch.lastRun !== 0) {
+                status.push(Client.client.intlGet(guildId, 'cameraSpottedLastCheck', {
+                    time: `<t:${Math.floor(watch.lastRun / 1000)}:R>`
+                }));
+            }
+        }
+
+        return module.exports.getEmbed({
+            title: Client.client.intlGet(guildId, 'cameraSpottedTitle'),
+            color: Constants.COLOR_DEFAULT,
+            description: lines.concat(status.length > 0 ? ['', ...status] : []).join('\n'),
+            footer: { text: server.title }
+        });
+    },
+
     getStorageMonitorLootedEmbed: function (guildId, serverId, entityId, removed) {
         const instance = Client.client.getInstance(guildId);
         const entity = instance.serverList[serverId].storageMonitors[entityId];
