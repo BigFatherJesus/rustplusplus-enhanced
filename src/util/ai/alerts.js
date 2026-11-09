@@ -10,6 +10,11 @@
 const Config = require('../../../config');
 const Ai = require('./index.js');
 
+/* A raid fires the alarm every few seconds for minutes, with pauses of a few minutes between waves.
+   Only the first trigger after this much quiet gets an AI alert, so one raid gets one alert. */
+const RAID_QUIET_MS = 10 * 60 * 1000;
+const lastTriggerByGuild = new Map();
+
 module.exports = {
     /**
      * Generate and post an AI tactical note for a triggered smart/raid alarm.
@@ -22,11 +27,19 @@ module.exports = {
         if (!Config.ai.alertsEnabled) return;
         if (!rustplus || rustplus.isDeleted || !rustplus.isOperational) return;
 
+        const now = Date.now();
+        const lastTrigger = lastTriggerByGuild.get(rustplus.guildId);
+        lastTriggerByGuild.set(rustplus.guildId, now);
+        if (lastTrigger !== undefined && now - lastTrigger < RAID_QUIET_MS) return;
+
+        /* Asked for "tactical" advice, the model invented strategy-game moves ("place bandits on high
+           ground"). It cannot see the fight, so it only reports what get_team says. */
         const question =
             `A smart alarm just triggered. Alarm name: "${alarmName}". ` +
-            `Alarm message: "${alarmMessage}". This usually means a base event or a raid. ` +
-            `Check who on the team is online and where, then give ONE short tactical ` +
-            `heads-up for the team. Plain text, one sentence.`;
+            `Alarm message: "${alarmMessage}". This usually means the base is being raided. ` +
+            `Call get_team, then say in one short sentence which teammates are online (alive or dead, ` +
+            `and their grid) and who is offline. Report only those facts. Give no advice or tactics: ` +
+            `you cannot see the fight.`;
 
         try {
             const result = await Ai.askAi(client, question, {
