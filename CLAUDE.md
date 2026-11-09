@@ -52,8 +52,9 @@ update.bat
 - Relay websocket per guild (auth token from `/credentials add`; the bot warns in #activity when it is missing, expired or rejected)
 - Smart device control (switches, alarms, storage monitors) via `src/handlers/`
 - Protocol: `src/util/rustplus.proto`, the library's proto plus fields the official Rust+ web app uses (`kickFromTeam`, map note labels/icons, `camerasEnabled`, camera ray extras)
-- Cameras (`src/handlers/cameraHandler.js`, `/camera`): own CCTV/PTZ/turret cameras by ID, only while the paired player is offline; monument cameras answer `access_denied` since 2026. The watched cameras get a message each in the cameras channel (`SetupCameras.js`, message ids in `instance.cameraMessageId`), refreshed every 5 minutes, every minute while the whole team is offline, plus a list of spotted non-team players (`serverList[].cameraSpotted`, last 25); strangers are also reported in #activity while the whole team is offline
+- Cameras (`src/handlers/cameraHandler.js`, `/camera`): own CCTV/PTZ/turret cameras by ID, only while the paired player is offline; monument cameras answer `access_denied` since 2026. The watched cameras get a message each in the cameras channel (`SetupCameras.js`, message ids in `instance.cameraMessageId`), refreshed every 5 minutes, every minute while the whole team is offline, plus a list of spotted non-team players (`serverList[].cameraSpotted`, last 25); strangers are also reported in #alerts while the whole team is offline
 - Storage monitor loot alerts (`notifyIfLooted` in `src/rustplusEvents/message.js`): items leaving a monitored box while the whole team is offline, per-monitor `LOOT ALERT` toggle
+- Alerts channel (`channelId.alerts`): smart alarm triggers (both paths), the Raid Alarm plugin push, camera sightings, loot and decay alerts, so #activity (team joins/deaths/AFK, trackers, server state, device not found) can be muted
 - No map events or shops: Rust+ stopped sending those markers in August 2026, so those features were removed in v1.27.0
 
 #### Data Management

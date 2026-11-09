@@ -43,6 +43,7 @@ module.exports = (client, guild) => {
                 alarms: null,
                 storageMonitors: null,
                 cameras: null,
+                alerts: null,
                 recycler: null,
                 activity: null,
                 trackers: null
@@ -107,6 +108,7 @@ module.exports = (client, guild) => {
                 alarms: null,
                 storageMonitors: null,
                 cameras: null,
+                alerts: null,
                 recycler: null,
                 activity: null,
                 trackers: null
@@ -125,6 +127,7 @@ module.exports = (client, guild) => {
             if (!instance.channelId.hasOwnProperty('alarms')) instance.channelId.alarms = null;
             if (!instance.channelId.hasOwnProperty('storageMonitors')) instance.channelId.storageMonitors = null;
             if (!instance.channelId.hasOwnProperty('cameras')) instance.channelId.cameras = null;
+            if (!instance.channelId.hasOwnProperty('alerts')) instance.channelId.alerts = null;
             if (!instance.channelId.hasOwnProperty('recycler')) instance.channelId.recycler = null;
             if (!instance.channelId.hasOwnProperty('activity')) instance.channelId.activity = null;
             if (!instance.channelId.hasOwnProperty('trackers')) instance.channelId.trackers = null;

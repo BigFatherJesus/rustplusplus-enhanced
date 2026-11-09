@@ -12,6 +12,7 @@
 * [**Alarms**](discord_text_channels.md#alarms-channel)
 * [**Storagemonitors**](discord_text_channels.md#storagemonitors-channel)
 * [**Cameras**](discord_text_channels.md#cameras-channel)
+* [**Alerts**](discord_text_channels.md#alerts-channel)
 * [**Activity**](discord_text_channels.md#activity-channel)
 * [**Trackers**](discord_text_channels.md#trackers-channel)
 
@@ -95,9 +96,13 @@ There are a few buttons for each server. The `CONNECT` button lets you start a c
 
 > The Cameras Channel shows a snapshot from each camera saved with `/camera watch`, with the players in view, refreshed every 5 minutes (every minute while the whole team is offline). Below them is a list of the last 25 players outside the team the cameras spotted, with the cameras and when they were last seen. Rust+ only allows cameras while the paired player is out of the game; while they play, the snapshots stay as they were and the list says why. See [/camera](commands.md#camera).
 
+## Alerts Channel
+
+> The Alerts Channel only gets the messages that may need you in game: Smart Alarm triggers, the raid alarm of servers running the Raid Alarm plugin, players outside the team on the watched cameras while the whole team is offline, Storage Monitor loot alerts and decaying notifications. Mute the activity channel and keep notifications on for this one.
+
 ## Activity Channel
 
-> The Activity Channel is used to display a bunch of different things such as team member joined/ left/ connected/ disconnected/ killed/ offline killed, Not found notifications from Smart Devices, Smart Alarm notifications, Decaying notifications, Tracker information, Server went down/up notifications and Rust+ login warnings.
+> The Activity Channel is used to display a bunch of different things such as team member joined/ left/ connected/ disconnected/ killed/ offline killed, Not found notifications from Smart Devices, Tracker information, Server went down/up notifications and Rust+ login warnings.
 
 ![Discord Text Channel Activity](images/channels/activity_channel.png)
 

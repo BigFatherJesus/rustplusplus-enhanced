@@ -210,7 +210,7 @@ module.exports = {
             content: entity.everyone ? '@everyone' : ''
         }
 
-        await module.exports.sendMessage(guildId, content, null, instance.channelId.activity);
+        await module.exports.sendMessage(guildId, content, null, instance.channelId.alerts);
     },
 
     sendCameraSightingMessage: async function (guildId, serverId, cameraId, names, frame) {
@@ -222,7 +222,7 @@ module.exports = {
             content: '@everyone'
         }
 
-        await module.exports.sendMessage(guildId, content, null, instance.channelId.activity);
+        await module.exports.sendMessage(guildId, content, null, instance.channelId.alerts);
     },
 
     /* Edits the camera's message in the cameras channel, or posts it. Returns true when it posted a new one. */
@@ -276,7 +276,7 @@ module.exports = {
             content: '@everyone'
         }
 
-        await module.exports.sendMessage(guildId, content, null, instance.channelId.activity);
+        await module.exports.sendMessage(guildId, content, null, instance.channelId.alerts);
     },
 
     sendStorageMonitorDisconnectNotificationMessage: async function (guildId, serverId, entityId) {
@@ -345,7 +345,7 @@ module.exports = {
             content: entity.everyone ? '@everyone' : ''
         }
 
-        await module.exports.sendMessage(guildId, content, null, instance.channelId.activity);
+        await module.exports.sendMessage(guildId, content, null, instance.channelId.alerts);
     },
 
     sendServerChangeStateMessage: async function (guildId, serverId, state) {

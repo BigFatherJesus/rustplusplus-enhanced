@@ -53,6 +53,7 @@
     "ceilingLight": "Ceiling Light",
     "channelNameActivity": "📊│activity",
     "channelNameAlarms": "🚨│alarms",
+    "channelNameAlerts": "🔔│alerts",
     "channelNameCameras": "📷│cameras",
     "channelNameCommands": "❓│commands",
     "channelNameCommandsGuide": "📚│commands-guide",

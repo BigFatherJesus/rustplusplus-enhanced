@@ -77,5 +77,6 @@
 - Easily access rustplusplus settings via the Discord Text-Channel `settings`.
 - Run In-Game commands either from In-Game teamchat or from Discord Text-Channel `commands`.
 - Communicate with teammates from In-Game to Discord and vice versa.
-- Get activity information in the `activity` Text-Channel on Discord. Information such as Smart Devices not reachable, Teammate connect/disconnect/leave/join/death, Smart Alarms notify when triggered, Server went offline/online, Map Wipe Detection, Storage Monitor Decay Notification, Tracker notifications etc...
+- Get activity information in the `activity` Text-Channel on Discord. Information such as Smart Devices not reachable, Teammate connect/disconnect/leave/join/death, Server went offline/online, Map Wipe Detection, Tracker notifications etc...
+- Get the messages that may need you in game in their own `alerts` Text-Channel: Smart Alarm triggers, the raid alarm of servers running the Raid Alarm plugin, strangers on camera, Storage Monitor loot alerts and decay notifications. The busier `activity` channel can then be muted without missing a raid.
 - Create Trackers to follow players or groups on any server.

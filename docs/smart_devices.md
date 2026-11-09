@@ -63,7 +63,7 @@ Smart Switch Groups can also be controlled from within the game through teamchat
 
 The image above is what a paired Smart Alarm looks like in Discord. In this case the Smart Alarm is called `Alarm` and is located at E16. All Smart Devices have an Entity Id which is used to identify it. From the `Last Trigger` you can see when the Smart Alarm was last triggered. Under `Message` you can see the Message is that will be broadcast when the Smart Alarm gets triggered. The Custom Command for this alarm is `!alarm` which can be used from the in-game teamchat. The Custom Command will tell you when it was last triggered.
 <br><br>
-By clicking the `@everyone` button you decide if the @everyone tag should be used in Discord when the Smart Alarm gets triggered. By clicking on the `EDIT` button, you can edit things such as the `Name`, `Message` and the `Custom Command` for the Smart Alarm. To remove the Smart Alarm, just click the trashcan button.
+By clicking the `@everyone` button you decide if the @everyone tag should be used in Discord when the Smart Alarm gets triggered. Triggers are posted in the `alerts` channel. By clicking on the `EDIT` button, you can edit things such as the `Name`, `Message` and the `Custom Command` for the Smart Alarm. To remove the Smart Alarm, just click the trashcan button.
 <br><br>
 There are a few more settings for Smart Alarms that can be found in the `settings` channel. The first one lets you decide if Smart Alarms that are not part of the currently connected server still should notify when triggered. The second one lets you decide if Smart Alarms should notify In-Game when triggered.
 
@@ -80,7 +80,7 @@ Tool Cupboard type Storage Monitor have the `@everyone` button that lets you dec
 <br><br>
 Container type Storage Monitor have the `RECYCLE` button which lets you calculate what resources you would get if you recycled the content of the container.
 <br><br>
-The `LOOT ALERT` button (on by default) posts in the `activity` channel with `@everyone` when items leave the Storage Monitor while the whole team is offline, listing what was taken. Vending machines are skipped because sales take items too, and a Tool Cupboard only counts when at least a quarter of its contents goes at once, so upkeep doesn't trigger it. Turn it off for boxes that conveyors empty.
+The `LOOT ALERT` button (on by default) posts in the `alerts` channel with `@everyone` when items leave the Storage Monitor while the whole team is offline, listing what was taken. Vending machines are skipped because sales take items too, and a Tool Cupboard only counts when at least a quarter of its contents goes at once, so upkeep doesn't trigger it. Turn it off for boxes that conveyors empty.
 <br><br>
 By clicking on the `EDIT` button, you can edit the `Name` of the Storage Monitor. To remove the Storage Monitor, just click the trashcan button.
 
